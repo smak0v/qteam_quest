@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="col-12">
+            <div class="content">
+                <h2 class="empty_h_1">Создание игры</h2>
+                <form href="{% url 'games:create' %}" enctype="multipart/form-data" method="post"
+                      class="add_edit_form">
+                    {% csrf_token %}
+                    {% for error in form.errors %}
+                        {{ error }}
+                    {% endfor %}
+                    {% for edit in form %}
+                        {% if edit.label == "Возврат денег в случае отмены" or edit.label == "Только женщины" or edit.label == "Отменить" %}
+                            <div class="d-flex">
+                                <p class="form_p">{{ edit.label }}</p>
+                                <p class="form_edit">{{ edit }}</p>
+                            </div>
+                        {% else %}
+                            <p class="form_p">{{ edit.label }}</p>
+                            <p class="form_edit">{{ edit }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success add_btn">Создать игру</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

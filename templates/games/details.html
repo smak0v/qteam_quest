@@ -1,0 +1,192 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="col-12">
+            <div class="content">
+                <div class="d-flex">
+                    <h2 class="empty_h_1">Обзор игры</h2>
+                    <a href="{% url 'games:edit' game.pk %}" class="non_href ml-auto">
+                        <button class="btn btn-warning game_info_btn">Редактировать</button>
+                    </a>
+                    <a href="{% url 'games:delete' game.pk %}" class="non_href">
+                        <button class="btn btn-danger game_info_btn">Удалить</button>
+                    </a>
+                    {% if game.cancel == True %}
+                        <span class="big_details_text red ml-auto canceled">Отменена!</span>
+                        <a href="{% url 'games:renew' game.pk %}" class="non_href">
+                            <button class="btn btn-block game_info_btn">Возобновить</button>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'games:cancel' game.pk %}" class="non_href">
+                            <button class="btn btn-block game_info_btn">Отменить</button>
+                        </a>
+                    {% endif %}
+                </div>
+                <hr>
+                {% if game.registration_available == True %}
+                    <p class="details_block">
+                        <span class="big_details_text green">Открыта для регистрации!</span>
+                    </p>
+                {% else %}
+                    <p class="details_block">
+                        <span class="big_details_text red">Закрыта для регистрации!</span>
+                    </p>
+                {% endif %}
+                <p class="details_block">
+                    <span class="big_details_text">Название:</span>
+                    <span class="small_details_text"> {{ game.title }}</span>
+                </p>
+                {% if game.description %}
+                    <p class="details_block">
+                        <span class="big_details_text">Описание:</span>
+                        <span class="small_details_text"> {{ game.description }}</span>
+                    </p>
+                {% endif %}
+                {% if game.cover_image %}
+                    <p class="details_block">
+                        <span class="big_details_text">Обложка:</span>
+                        <br>
+                        <img src="{{ game.cover_image.url }}" alt="Game cover image" title="Game cover image"
+                             class="cover">
+                    </p>
+                {% endif %}
+                {% if game.photo %}
+                    <p class="details_block">
+                        <span class="big_details_text">Фото игры:</span>
+                        <br>
+                        <img src="{{ game.photo.url }}" alt="Game photo" title="Game photo"
+                             class="cover">
+                    </p>
+                {% endif %}
+                <p class="details_block">
+                    <span class="big_details_text">Время и дата:</span>
+                    <span class="small_details_text"> {{ game.timespan }}</span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">Длительность (в минутах):</span>
+                    <span class="small_details_text"> {{ game.duration }} минут</span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">Площадка:</span>
+                    <span class="small_details_text">
+                        <a href="{% url 'venues:details' game.venue.pk %}" class="object_link">
+                            {{ game.venue }}
+                        </a>
+                    </span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">Способ оплаты:</span>
+                    <span class="small_details_text"> {{ game.get_payment_method_display }}</span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">Уровень:</span>
+                    <span class="small_details_text"> {{ game.get_level_display }}</span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">Цена:</span>
+                    <span class="small_details_text"> {{ game.price }} {{ game.currency }}</span>
+                </p>
+                {% if game.refund_money_if_game_is_cancelled == True %}
+                    <p class="details_block">
+                        <span class="big_details_text">Возврат денег в случае отмены и предоставления уведомления за
+                            <span class="red">{{ game.refundable_days }}</span> дней!
+                        </span>
+                    </p>
+                {% endif %}
+                <p class="details_block">
+                    <span class="big_details_text">Статус:</span>
+                    <span class="small_details_text"> {{ game.get_game_status_display }}</span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">Количество игроков:</span>
+                    <span class="small_details_text"> {{ game.get_a_side_players_count_display }}</span>
+                </p>
+            </div>
+            <div class="content">
+                <h2 class="empty_h_1">Команды</h2>
+                <hr>
+                <div class="d_flex">
+                    <div class="content_small">
+                        <h4 class="empty_h_1">{{ team_1.name }}</h4>
+                        <hr>
+                        {% if team_1_players|length != 0 %}
+                            <h5 class="empty_h_1">Игроки</h5>
+                            <div class="d_flex">
+                                {% for team_1_player in team_1_players %}
+                                    <div class="user_div">
+                                        {% if team_1_player.user.cover_image %}
+                                            <img src="{{ team_1_player.user.cover_image }}" alt="Player icon"
+                                                 title="Player icon" class="player_icon">
+                                        {% else %}
+                                            <img src="{% static 'img/no_user.png' %}" alt="Player icon"
+                                                 title="Player icon" class="player_icon">
+                                        {% endif %}
+                                        <p>{{ team_1_player.user.first_name }} {{ team_1_player.user.last_name }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <h6 class="empty_h_1">Не зарегестрировано ни одного игрока!</h6>
+                        {% endif %}
+                        <hr>
+                        {% if team_1_reserved_places|length != 0 %}
+                            <h5 class="empty_h_1">Зарезервированные места</h5>
+                            <div class="d_flex">
+                                {% for team_1_reserved_place in team_1_reserved_places %}
+                                    <div class="user_div">
+                                        <img src="{% static 'img/no_user.png' %}" alt="Player icon"
+                                             title="Player icon" class="player_icon">
+                                        <p>{{ team_1_reserved_place.title }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <h6 class="empty_h_1">Не зарезервировано ни одного места!</h6>
+                        {% endif %}
+                    </div>
+                    <div class="content_small">
+                        <h4 class="empty_h_1">{{ team_2.name }}</h4>
+                        <hr>
+                        {% if team_2_players|length != 0 %}
+                            <h5 class="empty_h_1">Игроки</h5>
+                            <div class="d_flex">
+                                {% for team_2_player in team_2_players %}
+                                    <div class="user_div">
+                                        {% if team_2_player.user.cover_image %}
+                                            <img src="{{ team_2_player.user.cover_image }}" alt="Player icon"
+                                                 title="Player icon" class="player_icon">
+                                        {% else %}
+                                            <img src="{% static 'img/no_user.png' %}" alt="Player icon"
+                                                 title="Player icon" class="player_icon">
+                                        {% endif %}
+                                        <p>{{ team_2_player.user.first_name }} {{ team_2_player.user.last_name }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <h6 class="empty_h_1">Не зарегестрировано ни одного игрока!</h6>
+                        {% endif %}
+                        <hr>
+                        {% if team_2_reserved_places|length != 0 %}
+                            <h5 class="empty_h_1">Зарезервированные места</h5>
+                            <div class="d_flex">
+                                {% for team_2_reserved_place in team_2_reserved_places %}
+                                    <div class="user_div">
+                                        <img src="{% static 'img/no_user.png' %}" alt="Player icon"
+                                             title="Player icon" class="player_icon">
+                                        <p>{{ team_2_reserved_place.title }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <h6 class="empty_h_1">Не зарезервировано ни одного места!</h6>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

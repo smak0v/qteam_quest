@@ -1,0 +1,115 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="col-12">
+            <div class="content">
+                <div class="d-flex">
+                    <h2 class="content_header">Активные купоны</h2>
+                    <a href="{% url 'coupons:create' %}" class="non_href ml-auto">
+                        <button class="btn btn-success add_btn">Создать купон</button>
+                    </a>
+                </div>
+                <hr class="content_hr">
+                {% if active_coupons %}
+                    <div class="table_content">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="id">ID</th>
+                                <th>Код</th>
+                                <th class="date_time">Начало действия</th>
+                                <th class="date_time">Окончание действия</th>
+                                <th>Скидка</th>
+                                <th>Единицы измерения</th>
+                                <th>Тип</th>
+                                <th>Пользователь</th>
+                                <th class="actions">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for avtive_coupon in active_coupons %}
+                                <tr>
+                                    <td>{{ avtive_coupon.id }}</td>
+                                    <td>{{ avtive_coupon.code }}</td>
+                                    <td>{{ avtive_coupon.start_date }}</td>
+                                    <td>{{ avtive_coupon.end_date }}</td>
+                                    <td>{{ avtive_coupon.discount }}</td>
+                                    <td>{{ avtive_coupon.units }}</td>
+                                    <td>{{ avtive_coupon.type }}</td>
+                                    <td>{{ avtive_coupon.user }}</td>
+                                    <td class="d_flex justify-content-center">
+                                        <a href="{% url 'coupons:edit' avtive_coupon.pk %}" class="non_href">
+                                            <button class="btn btn-warning edit_btn">Редактировать</button>
+                                        </a>
+                                        <a href="{% url 'coupons:delete' avtive_coupon.pk %}" class="non_href">
+                                            <button class="btn btn-danger delete_btn">Удалить</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <h4 class="empty_h_1">Список активных купонов пуст!</h4>
+                {% endif %}
+            </div>
+            <div class="content">
+                <div class="d-flex">
+                    <h2 class="content_header">Отработанные купоны</h2>
+                </div>
+                <hr class="content_hr">
+                {% if not_active_coupons %}
+                    <div class="table_content">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="id">ID</th>
+                                <th>Код</th>
+                                <th class="date_time">Начало действия</th>
+                                <th class="date_time">Окончание действия</th>
+                                <th>Скидка</th>
+                                <th>Единицы измерения</th>
+                                <th>Тип</th>
+                                <th>Пользователь</th>
+                                <th class="actions">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for not_active_coupon in not_active_coupons %}
+                                <tr>
+                                    <td class="id">
+                                        <a href="{% url 'coupons:details' not_active_coupon.pk %}" class="object_link">
+                                            {{ not_active_coupon.pk }}
+                                        </a>
+                                    </td>
+                                    <td>{{ not_active_coupon.code }}</td>
+                                    <td>{{ not_active_coupon.start_date }}</td>
+                                    <td>{{ not_active_coupon.end_date }}</td>
+                                    <td>{{ not_active_coupon.discount }}</td>
+                                    <td>{{ not_active_coupon.units }}</td>
+                                    <td>{{ not_active_coupon.type }}</td>
+                                    <td>{{ not_active_coupon.user }}</td>
+                                    <td class="d_flex justify-content-center">
+                                        <a href="{% url 'coupons:edit' not_active_coupon.pk %}" class="non_href">
+                                            <button class="btn btn-warning edit_btn">Редактировать</button>
+                                        </a>
+                                        <a href="{% url 'coupons:delete' not_active_coupon.pk %}" class="non_href">
+                                            <button class="btn btn-danger delete_btn">Удалить</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <h4 class="empty_h_1">Список отработанных купонов пуст!</h4>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

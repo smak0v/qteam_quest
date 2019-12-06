@@ -1,0 +1,28 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="col-12">
+            <div class="content">
+                <h2 class="empty_h_1">Редактирование площадки</h2>
+                <form enctype="multipart/form-data" method="post" class="add_edit_form">
+                    {% csrf_token %}
+                    {% for error in form.errors %}
+                        {{ error }}
+                    {% endfor %}
+                    {% for edit in form %}
+                        <p class="form_p">{{ edit.label }}</p>
+                        {% if edit.label == "Обложка" and edit.value %}
+                            <img src="/media/{{ edit.value }}" alt="Venue cover image" title="Venue cover image"
+                                 class="cover">
+                        {% endif %}
+                        <p class="form_edit">{{ edit }}</p>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success add_btn">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

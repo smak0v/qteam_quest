@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <div class="content">
+        <h2 class="content_header">Общая статистика</h2>
+        <hr>
+        <p class="details_block">
+            <span class="big_details_text">Общее количество игр:</span>
+            <span class="small_details_text"> {{ games|length }}</span>
+        </p>
+        <p class="details_block">
+            <span class="big_details_text">Количество открытых для регистрации игр:</span>
+            <span class="small_details_text"> {{ opened_for_registration_games|length }}</span>
+        </p>
+        <p class="details_block">
+            <span class="big_details_text">Количество отмененных игр:</span>
+            <span class="small_details_text"> {{ canceled_games|length }}</span>
+        </p>
+    </div>
+    <div class="content">
+        <h2 class="content_header">Статистика на сегодня</h2>
+        <hr>
+        <p class="details_block">
+            <span class="big_details_text">Количество состоявшихся игр:</span>
+            <span class="small_details_text"> {{ today_held_games|length }}</span>
+        </p>
+        <p class="details_block">
+            <span class="big_details_text">Количество несостоявшихся игр:</span>
+            <span class="small_details_text"> {{ today_failed_games|length }}</span>
+        </p>
+        <p class="details_block">
+            <span class="big_details_text">Количество отмененных игр:</span>
+            <span class="small_details_text"> {{ today_canceled_games|length }}</span>
+        </p>
+    </div>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

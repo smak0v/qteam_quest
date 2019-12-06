@@ -1,0 +1,33 @@
+{% extends 'base/login_signup_base.html' %}
+{% load staticfiles %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <h1 class="login_signup_title">Вход</h1>
+    <form action="{% url 'accounts:login' %}" method="post">
+        {% csrf_token %}
+        <p class="login_signup_error">{{ error }}</p>
+        <div class="login_signup_inputs_div">
+            <label for="username" class="login_signup_label">
+                Имя пользователя*
+                <br>
+                <input type="text" name="username" class="login_signup_input" value="{{ username }}" required>
+            </label>
+            <br>
+            <label for="password" class="login_signup_label">
+                Пароль*
+                <br>
+                <input type="password" name="password" class="login_signup_input" required>
+            </label>
+            <br>
+            <label class="align_left small_text">
+                Нет учётной записи?
+                <a href="{% url 'accounts:signup' %}">Зарегестрируйтесь!</a>
+            </label>
+            <br>
+            <label class="login_signup_label">
+                <button type="submit" class="btn btn-success login_signup_btn">Войти</button>
+            </label>
+        </div>
+    </form>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

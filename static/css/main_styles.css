@@ -1,0 +1,455 @@
+html, body, * {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+html, body {
+    overflow-x: hidden;
+}
+
+.login_signup_header {
+    background-color: #EEF1FF;
+    height: 60px;
+    padding: 5px 20px 5px 20px !important;
+}
+
+.header {
+    background-color: #FFFFFF;
+    height: 60px;
+    padding: 5px 20px 5px 20px !important;
+}
+
+.login_signup_header {
+    font-family: Roboto, sans-serif;
+    font-weight: 900;
+    color: #27AE60;
+}
+
+.header_text {
+    font-family: Roboto, sans-serif;
+    font-weight: 900;
+    color: #167BFE;
+}
+
+.header_text:hover,
+.header_text:active,
+.logout_href:hover,
+.logout_href:active {
+    cursor: pointer;
+    color: #167BFE;
+    text-decoration: none;
+}
+
+.logout_href {
+    font-family: Roboto, sans-serif;
+    font-weight: 400;
+    color: #167BFE;
+    margin-top: 15px !important;
+    margin-right: 20px !important;
+}
+
+.login_signup_header:hover,
+.login_signup_header:active {
+    cursor: pointer;
+    color: #167BFE;
+    text-decoration: none;
+}
+
+.login_signup_body {
+    background-color: #FFFFFF;
+}
+
+.login_signup_center_block {
+    background-color: #EEF1FF;
+    border-radius: 15px;
+    margin: 20px 0 50px 0 !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.login_signup_title {
+    font-family: Roboto, sans-serif;
+    font-weight: 900;
+    text-align: center;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    color: #27AE60;
+}
+
+.login_signup_error {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: red;
+    font-family: Roboto, sans-serif;
+    font-weight: 200;
+    font-size: 0.9rem;
+}
+
+.login_signup_inputs_div {
+    text-align: center;
+}
+
+.login_signup_input {
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    height: 35px;
+    font-size: 20px;
+    font-family: Roboto, sans-serif;
+    padding: 5px !important;
+}
+
+.login_signup_label {
+    text-align: left;
+    margin: 15px 20px !important;
+    padding-bottom: 10px !important;
+}
+
+.login_signup_btn {
+    background-color: #27AE60 !important;
+    height: 35px;
+    font-family: Roboto, sans-serif;
+    width: 12rem;
+}
+
+.small_text {
+    font-family: Roboto, sans-serif;
+    font-size: 15px;
+}
+
+.align_left {
+    text-align: left;
+}
+
+.left_sidebar {
+    width: 15%;
+    min-height: calc(100vh - 60px);
+    background-color: #0E0C28;
+}
+
+.main_part {
+    width: 85%;
+    background-color: #EFEFF6;
+}
+
+.list_href {
+    font-family: Roboto, sans-serif;
+    font-weight: 600;
+    color: #91A6DB;
+    margin-top: 15px !important;
+    margin-right: 20px !important;
+}
+
+.list_href:hover,
+.list_href:active {
+    cursor: pointer;
+    color: #EFEFF6 !important;
+    text-decoration: underline #EFEFF6 !important;
+}
+
+.left_sidebar_list {
+    list-style: none;
+}
+
+.left_sidebar_list li {
+    padding-top: 20px !important;
+    margin-left: 22px !important;
+}
+
+.content {
+    width: 97%;
+    border: none;
+    border-radius: 5px;
+    margin: 20px !important;
+    background-color: #FFFFFF;
+    webkit-box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22);
+    -moz-box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22);
+    box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22)
+}
+
+.content_small {
+    width: 47%;
+    border: none;
+    border-radius: 5px;
+    margin: 20px !important;
+    background-color: #FFFFFF;
+    webkit-box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22);
+    -moz-box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22);
+    box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22)
+}
+
+.content_header {
+    padding: 10px !important;
+}
+
+.add_btn {
+    height: 35px;
+    margin-right: 20px !important;
+    margin-top: 10px !important;
+    padding: 5px 15px !important;
+    border-radius: 4px !important;
+}
+
+.edit_btn, .delete_btn, .cancel_btn, .renew_btn {
+    height: 35px;
+    padding: 5px 15px !important;
+    border-radius: 4px !important;
+}
+
+.game_info_btn, .venue_info_btn {
+    height: 35px;
+    padding: 5px 15px !important;
+    border-radius: 4px !important;
+    margin-top: 10px !important;
+}
+
+.non_href {
+    cursor: pointer;
+    margin-right: 10px !important;
+}
+
+.red {
+    color: #FF0000;
+}
+
+.green {
+    color: #008000;
+}
+
+.non_href:hover,
+.non_href:focus {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.content_hr {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.table_content {
+    padding: 20px !important;
+}
+
+.empty_h_1 {
+    padding: 10px !important;
+}
+
+.add_edit_form {
+    padding: 10px !important;
+}
+
+.form_p {
+    text-align: left;
+    font-size: 18px;
+    padding-bottom: 10px !important;
+    font-weight: 600;
+}
+
+.form_edit > input,
+.form_edit > select {
+    margin-bottom: 20px !important;
+}
+
+.form_edit > input[type='checkbox'] {
+    margin-left: 15px !important;
+    margin-top: 8px !important;
+}
+
+.form_edit > input[type='text'],
+.form_edit > select {
+    border-radius: 5px;
+    border: 1px solid #E6E6F2;
+    outline: none;
+    height: 35px;
+    font-size: 20px;
+    font-family: Roboto, sans-serif;
+    padding: 5px !important;
+}
+
+.id {
+    width: 3%;
+    text-align: center;
+}
+
+.date_time {
+    width: 11%;
+}
+
+.rating {
+    width: 15%;
+}
+
+.d_flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cover {
+    width: 15%;
+    height: 15%;
+    margin-bottom: 20px !important;
+    border-radius: 5px;
+    webkit-box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22);
+    -moz-box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22);
+    box-shadow: 0 1px 2px 1px rgba(154, 154, 204, 0.22)
+}
+
+.form_edit > a:first-child {
+    display: inline !important;
+}
+
+#cover_image-clear_id {
+    margin-left: 50px !important;
+}
+
+#id_refund_money_if_game_is_cancelled {
+    display: inline !important;
+}
+
+.object_link:hover,
+.object_link:focus,
+.object_link {
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+}
+
+.details_block {
+    padding: 10px !important;
+}
+
+.big_details_text {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.small_details_text {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.actions {
+    width: 26%;
+}
+
+.canceled_actions {
+    width: 28%;
+}
+
+.canceled {
+    margin-right: 20px !important;
+    margin-top: 15px !important;
+}
+
+.player_icon {
+    margin: 10px !important;
+}
+
+.user_div {
+    text-align: center;
+}
+
+.user_div > p {
+    margin-bottom: 10px !important;
+}
+
+.err {
+    color: #721C24;
+    background-color: #F8D7DA;
+    border-color: #F8D7DA;
+}
+
+table {
+    width: 100%;
+}
+
+table, tr, th, td {
+    border: 1px solid #E6E6F2;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+td, th {
+    padding: 4px !important;
+    font-family: Roboto, sans-serif;
+    font-size: 15px;
+}
+
+
+
+@media screen and (max-height: 900px) {
+    .login_signup_center_block {
+        margin: 150px 0 50px 0 !important;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .login_signup_center_block {
+        margin: 250px 0 50px 0 !important;
+    }
+}
+
+@media screen and (max-height: 400px) {
+    .login_signup_center_block {
+        margin: 350px 0 50px 0 !important;
+    }
+}
+
+@media screen and (max-width: 1856px) {
+    .cancel_btn {
+        margin-top: 10px !important;
+    }
+}
+
+@media screen and (max-width: 1828px) {
+    .renew_btn {
+        margin-top: 10px !important;
+    }
+}
+
+@media screen and (max-width: 1310px) {
+    .delete_btn {
+        margin-top: 10px !important;
+    }
+}
+
+@media screen and (max-width: 1631px) {
+    .content_small {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 1410px) {
+    .cancel_btn {
+        margin-top: 10px !important;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .content {
+        width: 96%;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .left_sidebar {
+        width: 25%;
+        height: calc(100vh - 60px);
+    }
+
+    .main_part {
+        width: 75%;
+        background-color: #EFEFF6;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .content {
+        width: 94%;
+    }
+}

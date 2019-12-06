@@ -1,0 +1,57 @@
+{% extends 'base/login_signup_base.html' %}
+{% load staticfiles %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <h1 class="login_signup_title">Регистрация</h1>
+    <form action="{% url 'accounts:signup' %}" method="post">
+        {% csrf_token %}
+        <p class="login_signup_error">{{ error }}</p>
+        <div class="login_signup_inputs_div">
+            <label for="username" class="login_signup_label">
+                Имя пользователя*
+                <br>
+                <input type="text" name="username" class="login_signup_input" value="{{ username }}" required>
+            </label>
+            <br>
+            <label for="email" class="login_signup_label">
+                Почта*
+                <br>
+                <input type="email" name="email" class="login_signup_input" value="{{ email }}" required>
+            </label>
+            <br>
+            <label for="first_name" class="login_signup_label">
+                Имя*
+                <br>
+                <input type="text" name="first_name" class="login_signup_input" value="{{ first_name }}" required>
+            </label>
+            <br>
+            <label for="last_name" class="login_signup_label">
+                Фамилия*
+                <br>
+                <input type="text" name="last_name" class="login_signup_input" value="{{ last_name }}" required>
+            </label>
+            <br>
+            <label for="password1" class="login_signup_label">
+                Пароль*
+                <br>
+                <input type="password" name="password1" class="login_signup_input">
+            </label>
+            <br>
+            <label for="password2" class="login_signup_label">
+                Подтвердите пароль*
+                <br>
+                <input type="password" name="password2" class="login_signup_input">
+            </label>
+            <br>
+            <label class="align_left small_text">
+                Уже есть учётная запись?
+                <a href="{% url 'accounts:login' %}">Войдите!</a>
+            </label>
+            <br>
+            <label class="login_signup_label">
+                <button type="submit" class="btn btn-success login_signup_btn">Зарегистрироваться</button>
+            </label>
+        </div>
+    </form>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

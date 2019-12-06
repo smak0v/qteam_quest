@@ -1,0 +1,55 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Korobka Games | {{ title }}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/main_styles.css' %}">
+    {% block styles %}{% endblock styles %}
+</head>
+<body>
+<header class="header d-flex">
+    <h1>
+        <a href="{% url 'dashboard:dashboard' %}" class="header_text">Korobka Games</a>
+    </h1>
+    {% if user.is_authenticated %}
+        <a href="{% url 'accounts:logout' %}" class="logout_href ml-auto">Выйти</a>
+    {% endif %}
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <div class="left_sidebar">
+            <ul class="left_sidebar_list">
+                <li>
+                    <a href="{% url 'dashboard:dashboard' %}" class="list_href">Дашборд</a>
+                </li>
+                <li>
+                    <a href="{% url 'games:list' %}" class="list_href">Игры</a>
+                </li>
+                <li>
+                    <a href="{% url 'venues:list' %}" class="list_href">Площадки</a>
+                </li>
+                <li>
+                    <a href="{% url 'coupons:list' %}" class="list_href">Купоны</a>
+                </li>
+            </ul>
+        </div>
+        <div class="main_part">
+            {% block content %}{% endblock content %}
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+{% block scripts %}{% endblock scripts %}
+</body>
+</html>
