@@ -6,51 +6,54 @@ class UserManager(BaseUserManager):
 
     use_in_migrations = True
 
-    def create_user(self, username, first_name, last_name, email, location='', gender='NOT_SET', nationality='',
-                    favourite_position='NOT_SET', password=None):
+    def create_user(self, phone, is_active_phone=False, username='', first_name='', last_name='', location='',
+                    gender='NOT_SET', birthday_date=None, password=None, about=''):
         user = self.model(
+            phone=phone,
+            is_active_phone=is_active_phone,
             username=username,
             first_name=first_name,
             last_name=last_name,
-            email=self.normalize_email(email),
             location=location,
             gender=gender,
-            nationality=nationality,
-            favourite_position=favourite_position,
+            birthday_date=birthday_date,
+            about=about,
         )
         user.set_password(password)
         user.save(using=self.db)
         return user
 
-    def create_staffuser(self, username, first_name, last_name, email, password, location='', gender='NOT_SET',
-                         nationality='', favourite_position='NOT_SET'):
+    def create_staffuser(self, phone, is_active_phone=False, username='', first_name='', last_name='', password='',
+                         location='', gender='NOT_SET', birthday_date=None, about=''):
         user = self.create_user(
+            phone=phone,
+            is_active_phone=is_active_phone,
             username=username,
             first_name=first_name,
             last_name=last_name,
-            email=email,
             password=password,
             location=location,
             gender=gender,
-            nationality=nationality,
-            favourite_position=favourite_position,
+            birthday_date=birthday_date,
+            about=about,
         )
         user.staff = True
         user.save(using=self.db)
         return user
 
-    def create_superuser(self, username, first_name, last_name, email, password, location='', gender='NOT_SET',
-                         nationality='', favourite_position='NOT_SET'):
+    def create_superuser(self, phone, is_active_phone=True, username='', first_name='', last_name='', password='',
+                         location='', gender='NOT_SET', birthday_date=None, about=''):
         user = self.create_user(
+            phone=phone,
+            is_active_phone=is_active_phone,
             username=username,
             first_name=first_name,
             last_name=last_name,
-            email=email,
             password=password,
             location=location,
             gender=gender,
-            nationality=nationality,
-            favourite_position=favourite_position,
+            birthday_date=birthday_date,
+            about=about,
         )
         user.staff = True
         user.admin = True

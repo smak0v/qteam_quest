@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as DjangoUserCreationForm, UserChangeForm as DjangoUserChangeForm
 
-from users.models import User, GENDERS, POSITIONS
+from users.models import User, GENDERS
 
 
 class UserCreationForm(DjangoUserCreationForm):
@@ -13,11 +13,8 @@ class UserCreationForm(DjangoUserCreationForm):
             'username',
             'first_name',
             'last_name',
-            'email',
             'location',
             'gender',
-            'nationality',
-            'favourite_position',
         ]
 
 
@@ -31,13 +28,6 @@ class UserChangeForm(DjangoUserChangeForm):
         choices=GENDERS,
         required=False,
     )
-    nationality = forms.CharField(
-        required=False,
-    )
-    favourite_position = forms.ChoiceField(
-        choices=POSITIONS,
-        required=False,
-    )
 
     class Meta:
         model = User
@@ -45,9 +35,6 @@ class UserChangeForm(DjangoUserChangeForm):
             'username',
             'first_name',
             'last_name',
-            'email',
             'location',
             'gender',
-            'nationality',
-            'favourite_position',
         ]

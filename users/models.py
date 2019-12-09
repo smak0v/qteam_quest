@@ -1,21 +1,13 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 
-from korobka_games.settings import ROOT_URL
+from qteam_quest.settings import ROOT_URL
 from users.managers import UserManager
 
 GENDERS = [
     ('NOT_SET', 'Не установлена'),
     ('MALE', 'Мужчина'),
     ('FEMALE', 'Женщина'),
-]
-
-POSITIONS = [
-    ('NOT_SET', 'Не установлена'),
-    ('GOALIE', 'Вратарь'),
-    ('DEFENDER', 'Защитник'),
-    ('MIDFIELDER', 'Полузащитник'),
-    ('FORWARD', 'Нападающий'),
 ]
 
 
@@ -31,64 +23,10 @@ class User(AbstractBaseUser):
             return ROOT_URL + '/static/img/no_user.png'
         return ROOT_URL + self.profile_image.url
 
-    username = models.CharField(
-        verbose_name='Имя пользователя',
-        max_length=255,
-        unique=True,
-    )
-    first_name = models.CharField(
-        verbose_name='Имя',
-        max_length=255,
-    )
-    last_name = models.CharField(
-        verbose_name='Фамилия',
-        max_length=255,
-    )
-    email = models.EmailField(
-        verbose_name='Почта',
-        max_length=255,
-        unique=True,
-    )
-    location = models.CharField(
-        verbose_name='Локация',
-        max_length=255,
-        default='',
-    )
-    gender = models.CharField(
-        verbose_name='Пол',
-        max_length=255,
-        choices=GENDERS,
-        default='NOT_SET',
-    )
-    nationality = models.CharField(
-        verbose_name='Национальность',
-        max_length=255,
-        default='',
-    )
-    favourite_position = models.CharField(
-        verbose_name='Любимая позиция',
-        max_length=255,
-        choices=POSITIONS,
-        default='NOT_SET',
-    )
-    active = models.BooleanField(
-        verbose_name='Активный',
-        default=True,
-    )
-    staff = models.BooleanField(
-        verbose_name='Персонал',
-        default=False,
-    )
-    admin = models.BooleanField(
-        verbose_name='Администратор',
-        default=False,
-    )
     phone = models.CharField(
         verbose_name='Номер телефона',
         max_length=15,
-        null=True,
-        blank=True,
-        default='',
+        unique=True,
     )
     phone_activation_code = models.IntegerField(
         verbose_name='Последний код активации номера телефона',
@@ -99,6 +37,41 @@ class User(AbstractBaseUser):
     is_active_phone = models.BooleanField(
         verbose_name='Номер телефона подтвержден',
         default=False,
+    )
+    username = models.CharField(
+        verbose_name='Логин',
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    first_name = models.CharField(
+        verbose_name='Имя',
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    last_name = models.CharField(
+        verbose_name='Фамилия',
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    birthday_date = models.DateField(
+        verbose_name='Дата рождения',
+        default=None,
+        null=True,
+        blank=True,
+    )
+    gender = models.CharField(
+        verbose_name='Пол',
+        max_length=255,
+        choices=GENDERS,
+        default='NOT_SET',
+    )
+    location = models.CharField(
+        verbose_name='Локация',
+        max_length=255,
+        default='',
     )
     reliability = models.DecimalField(
         verbose_name='Надежность',
@@ -113,18 +86,32 @@ class User(AbstractBaseUser):
         null=True,
         blank=True,
     )
+    about = models.TextField(
+        verbose_name='Про себя',
+        max_length=1000,
+        blank=True,
+        default='',
+    )
+    active = models.BooleanField(
+        verbose_name='Активный',
+        default=True,
+    )
+    staff = models.BooleanField(
+        verbose_name='Персонал',
+        default=False,
+    )
+    admin = models.BooleanField(
+        verbose_name='Администратор',
+        default=False,
+    )
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = [
-        'first_name',
-        'last_name',
-        'email',
-    ]
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = []
 
     objects = UserManager()
 
     def __str__(self):
-        return '{}'.format(self.username)
+        return '{}'.format(self.phone)
 
     def get_full_name(self):
         return '{} {}'.format(self.first_name, self.last_name)
@@ -151,22 +138,6 @@ class User(AbstractBaseUser):
     @property
     def is_admin(self):
         return self.admin
-
-
-class UserAuthToken(models.Model):
-    """Class that represents user auth token model"""
-
-    class Meta:
-        verbose_name = 'Токен авторизации'
-        verbose_name_plural = 'Токены авторизации'
-
-    token = models.CharField(
-        verbose_name='Токен',
-        max_length=255,
-    )
-
-    def __str__(self):
-        return self.token
 
 
 class UserChangePhone(models.Model):

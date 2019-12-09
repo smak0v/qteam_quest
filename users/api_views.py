@@ -2,9 +2,9 @@ import random
 import re
 
 import requests
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth.models import AnonymousUser
 from django.utils import timezone
-from rest_auth.registration.views import RegisterView
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView, \
@@ -19,11 +19,13 @@ from apps.games.serializers import GameSerializer
 from apps.teams.models import UserInTeam
 from apps.venues.models import VenueSubscription
 from apps.venues.serializers import VenueSubscriptionSerializer
-from korobka_games.utils import get_env_value
+from qteam_quest.utils import get_env_value
 from users.models import User, UserSubscription
 from users.serializers import UserSerializer, UserSubscriptionSerializer, UserSubscriptionCreateSerializer, \
-    UserChangePasswordSerializer, UpdateUserProfileSerializer, UserAuthTokenSerializer, UserChangePhoneNumberSerializer, \
-    UserChangePhoneNumberConfirmSerializer
+    UserChangePasswordSerializer, UpdateUserProfileSerializer, UserAuthTokenSerializer, \
+    UserChangePhoneNumberSerializer, UserChangePhoneNumberConfirmSerializer, UserRegisterSerializer, \
+    UserLoginSerializer, UserLoginConfirmSerializer
+from users.utils import send_sms_code
 
 
 class UserListView(ListAPIView):
@@ -33,10 +35,106 @@ class UserListView(ListAPIView):
     serializer_class = UserSerializer
 
 
-class UserRegisterView(RegisterView):
+class UserRegisterView(APIView):
     """Class that implements user register view API endpoint"""
 
-    queryset = User.objects.all()
+    @staticmethod
+    def post(request, **kwargs):
+        serializer = UserRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.validated_data.get('phone')
+            if re.match('^((\+38|\+7|\+8)+([0-9]){10})$', phone):
+                try:
+                    user = User.objects.get(phone=phone)
+                except User.DoesNotExist:
+                    one_time_password = random.randint(10000, 99999)
+                    user = User.objects.create(phone=phone)
+                    user.set_password(one_time_password)
+                    user.save()
+                    Token.objects.create(user=user)
+                    sms_text = f'Вы были успешно зарегестрированы!\nВойдите, используя код: {one_time_password}'
+                    send_sms_code(phone, sms_text)
+                    return Response({
+                        'success': f'User was registered successfully.\nCode was sent by number {phone}.',
+                    }, status=status.HTTP_201_CREATED)
+                if user:
+                    return Response({
+                        'error': 'User with this phone number already exist!',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'error': 'Number is not in russian number format!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'error': 'Phone is required!',
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLoginView(APIView):
+    """Class that implements user login view API endpoint"""
+
+    @staticmethod
+    def post(request, **kwargs):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.validated_data.get('phone')
+            if re.match('^((\+38|\+7|\+8)+([0-9]){10})$', phone):
+                try:
+                    user = User.objects.get(phone=phone)
+                except User.DoesNotExist:
+                    return Response({
+                        'error': 'User with this phone number does not exist!',
+                    })
+                one_time_password = random.randint(10000, 99999)
+                user.set_password(one_time_password)
+                user.save()
+                sms_text = f'Войдите, используя код: {one_time_password}'
+                send_sms_code(phone, sms_text)
+                return Response({
+                    'success': f'Code was sent by number {phone}.',
+                }, status=status.HTTP_200_OK)
+            return Response({
+                'error': 'Number is not in russian number format!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'error': 'Phone is required!',
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLoginConfirmView(APIView):
+    """Class that implements user login confirm view API endpoint"""
+
+    @staticmethod
+    def post(request, **kwargs):
+        serializer = UserLoginConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            phone = serializer.validated_data.get('phone')
+            sms_code = serializer.validated_data.get('sms_code')
+            if re.match('^((\+38|\+7|\+8)+([0-9]){10})$', phone):
+                user = authenticate(username=phone, password=sms_code)
+                if not user:
+                    return Response({
+                        'error': 'User with this credentials does not exist!',
+                    })
+                return Response({
+                    'token': Token.objects.get(user=user).key,
+                })
+            return Response({
+                'error': 'Number is not in russian number format!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'error': 'Phone and SMS_code are required!',
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserLogoutView(APIView):
+    """Class that implements user logout view API endpoint"""
+
+    @staticmethod
+    def get(request, **kwargs):
+        logout(request=request)
+        return Response({
+            'success': 'Logged out successfully!',
+        })
 
 
 class UserChangePasswordView(UpdateAPIView):
@@ -103,7 +201,6 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
             'location': user_for_response.location,
             'gender': user_for_response.gender,
             'nationality': user_for_response.nationality,
-            'favourite_position': user_for_response.favourite_position,
             'active': user_for_response.active,
             'staff': user_for_response.staff,
             'admin': user_for_response.admin,
@@ -169,7 +266,6 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
             user.location = serializer.validated_data.get('location', user.location)
             user.gender = serializer.validated_data.get('gender', user.gender)
             user.nationality = serializer.validated_data.get('nationality', user.nationality)
-            user.favourite_position = serializer.validated_data.get('favourite_position', user.favourite_position)
             user.save()
             return Response({
                 'success': 'User profile updated successfully!',
@@ -193,21 +289,21 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
 class UserProfileView(APIView):
     """Class that implements user profile view API endpoint"""
 
-    queryset = User.objects.all()
     permission_classes = [
         IsAuthenticated,
     ]
-    parser_classes = [
-        JSONParser,
-    ]
 
     @staticmethod
-    def post(request):
-        serialzer = UserAuthTokenSerializer(data=request.data)
-        if serialzer.is_valid():
+    def post(request, **kwargs):
+        serializer = UserAuthTokenSerializer(data=request.data)
+        if serializer.is_valid():
+            if request.META.get('HTTP_AUTHORIZATION').split(' ')[1] != serializer.validated_data.get('token'):
+                return Response({
+                    'error': 'Invalid authorization token!',
+                })
             try:
-                token = Token.objects.get(key=request.data['token'])
-                user = User.objects.get(username=token.user)
+                token = Token.objects.get(key=serializer.validated_data.get('token'))
+                user = User.objects.get(phone=token.user)
             except Token.DoesNotExist:
                 return Response({
                     'error': 'User with this token does not exist!',
@@ -391,7 +487,7 @@ class ChangePhoneView(APIView):
                 response = requests.get(url=send_sms_url)
                 if response.content == b'not enough credits':
                     return Response({
-                        'message': 'Not enough credits in Prostor SMS account!',
+                        'message': 'Not enough credits on Prostor SMS account!',
                     }, status=status.HTTP_400_BAD_REQUEST)
                 if response.content == b'invalid mobile phone':
                     return Response({
@@ -404,7 +500,7 @@ class ChangePhoneView(APIView):
                 if response.content == b'accepted':
                     return Response({
                         'message': 'Phone successfully changed!',
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                    }, status=status.HTTP_200_OK)
                 return Response({
                     'message': f'Activation code was sent by number {phone}',
                 }, status=status.HTTP_200_OK)

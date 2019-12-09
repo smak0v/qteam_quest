@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from apps.venues.models import Venue, VenueComment, VenueSubscription, MetroStation
 from users.serializers import UserSerializer
-from korobka_games.settings import ROOT_URL
+from qteam_quest.settings import ROOT_URL
 
 
 class MetroStationSerializer(serializers.ModelSerializer):

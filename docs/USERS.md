@@ -7,41 +7,46 @@
 - ```/api/users/register/``` (POST)
 
     ```
-    username (required)
-    first_name (required)
-    last_name (required)
-    email (required)
-    password1 (required)
-    password2 (required)
-    location (default '')
-    gender (NOT_SET, MALE, FEMALE, default NOT_SET)
-    nationality (default '')
-    favourite_position (NOT_SET, GOALIE, DEFENDER, MIDFIELDER, FORWARD, default NOT_SET)
-    phone (default '')
-    is_active_phone (default False)
-    reliability (default 100%)
+    phone (required)
     ```
-  
-    Register user in system.
+
+    Register user in system and send SMS to phone number with one time password for user.
     
+    After registration you need to send request (POST) to url ```/api/users/login/confirm/``` with ```phone``` and 
+    ```sms_code``` from SMS to login user in system and get authentication token.
+
     ### Validators:
-    
-    - ```username``` - unique;
-    
-    - ```email``` - unique, must be in email format;
-    
-    - ```password1``` and ```password2``` - equal to each other, must include numbers and should not be in ordinary words.
-  
+
+    - ```phone``` - unique, must be in russian number format.
+
 - ```/api/users/login/``` (POST)
 
     ```
-    username (required) OR email (required)
-    password (required)
+    phone (required)
     ```
-  
-    Login user in system.
-    
-- ```/api/users/logout/``` (GET, POST)
+
+    Send SMS to phone number with one time password for user.
+
+     ### Validators:
+
+    - ```phone``` - must be in russian number format and must be registered in system.
+
+- ```/api/users/login/confirm/``` (POST)
+
+    ```
+    phone (required)
+    sms_code (required)
+    ```
+
+    Login user in system using ```sms_code``` like password and ```phone``` like username.
+
+     ### Validators:
+
+    - ```phone``` - must be equal to sent earlier by SMS;
+
+    - ```sms_code``` - must be in russian number format and must be registered in system.
+
+- ```/api/users/logout/``` (GET)
 
     Logout user from system.
     
@@ -58,7 +63,8 @@
     
     ### Validators
     
-    - ```token``` - must be valid user authorization token.
+    - ```token``` - must be valid user authorization token and must be equal to ```HTTP_AUTHORIZATION``` token from 
+    ```HEADERS```.
     
 - ```/api/users/user_pk/``` (DELETE)
 
@@ -89,7 +95,6 @@
     location
     gender (NOT_SET, MALE, FEMALE)
     nationality
-    favourite_position (NOT_SET, GOALIE, DEFENDER, MIDFIELDER, FORWARD)
     profile_image (base64)
     ```
   

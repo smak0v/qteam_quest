@@ -1,6 +1,6 @@
 from django.db import models
 
-from korobka_games.settings import AUTH_USER_MODEL
+from qteam_quest.settings import AUTH_USER_MODEL
 
 VENUE_SCORES = [
     ('1', '1'),

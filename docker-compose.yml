@@ -2,14 +2,14 @@ version: '3'
 
 services:
   web:
-    container_name: koroka_games
+    container_name: qteam_quest
     build: .
-    command: gunicorn -b 0.0.0.0:8000 korobka_games.wsgi:application
+    command: gunicorn -b 0.0.0.0:8000 qteam_quest.wsgi:application
     restart: always
     depends_on:
       - postgres
     volumes:
-      - .:/usr/src/korobka_games
+      - .:/usr/src/qteam_quest
     ports:
       - "8000:8000"
     env_file:

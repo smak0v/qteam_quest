@@ -1,12 +1,12 @@
 """
-Django settings for korobka_games project.
+Django settings for qteam_quest project.
 """
 
 import os
 
 from dotenv import load_dotenv
 
-from korobka_games.utils import get_env_value
+from qteam_quest.utils import get_env_value
 
 load_dotenv()
 
@@ -36,19 +36,6 @@ INSTALLED_APPS = [
     # Installed apps
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth',
-    'rest_auth.registration',
-    'allauth',
-    'allauth.account',
-    'corsheaders',
-    'rest_social_auth',
-    'social_django',
-    'oauth2_provider',
-    'rest_framework_social_oauth2',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.vk',
-    'allauth.socialaccount.providers.instagram',
 
     # Created apps
     'users',
@@ -71,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-ROOT_URLCONF = 'korobka_games.urls'
+ROOT_URLCONF = 'qteam_quest.urls'
 
 TEMPLATES = [
     {
@@ -86,14 +73,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'korobka_games.wsgi.application'
+WSGI_APPLICATION = 'qteam_quest.wsgi.application'
 
 # Database settings
 DATABASES = {
@@ -150,11 +135,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Authentication settings
 AUTH_USER_MODEL = 'users.User'
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'phone'
 
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_AUTHENTICATION_METHOD = 'phone'
 
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 
 ACCOUNT_UNIQUE_EMAIL = True
 
@@ -163,51 +148,6 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_USER_EMAIL_FIELD = 'email'
 
 ACCOUNT_LOGOUT_ON_GET = True
-
-AUTHENTICATION_BACKENDS = [
-    'social_core.backends.facebook.FacebookAppOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-# Social auth settings
-DRFSO2_URL_NAMESPACE = ""
-
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-
-SOCIAL_AUTH_RAISE_EXCEPTIONS = True
-
-SOCIAL_AUTH_URL_NAMESPACE = 'social'
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = get_env_value('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = get_env_value('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_FIELDS = [
-    'email',
-    'username',
-]
-
-SOCIAL_AUTH_FACEBOOK_KEY = get_env_value('FACEBOOK_APP_ID')
-
-SOCIAL_AUTH_FACEBOOK_SECRET = get_env_value('FACEBOOK_SECRET_KEY')
-
-SOCIAL_AUTH_FACEBOOK_SCOPE = [
-    'email',
-    'first_name',
-    'lsat_name',
-]
-
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'locale': 'ru_RU',
-    'fields': 'id, name, email',
-}
-
-SOCIAL_AUTH_VK_OAUTH2_SCOPE = [
-    'email',
-    'first_name',
-    'lsat_name',
-]
 
 # REST settings
 REST_AUTH_SERIALIZERS = {
@@ -221,8 +161,6 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ],
 }
 

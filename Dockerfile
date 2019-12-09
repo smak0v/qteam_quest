@@ -2,9 +2,9 @@ FROM python:3.7-alpine
 
 RUN apk update && apk add build-base postgresql postgresql-dev libpq jpeg-dev zlib-dev
 
-RUN mkdir /usr/src/korobka_games
+RUN mkdir /usr/src/qteam_quest
 
-WORKDIR /usr/src/korobka_games
+WORKDIR /usr/src/qteam_quest
 
 COPY ./requirements.txt .
 

@@ -1,17 +1,5 @@
 from django.db import models
 
-from users.models import POSITIONS
-
-NUMBER_OF_PLAYERS_PER_TEAM = [
-    ('5', '5 со стороны'),
-    ('6', '6 со стороны'),
-    ('7', '7 со стороны'),
-    ('8', '8 со стороны'),
-    ('9', '9 со стороны'),
-    ('10', '10 со стороны'),
-    ('11', '11 со стороны'),
-]
-
 
 class Team(models.Model):
     """Class that represents the team"""
@@ -28,11 +16,6 @@ class Team(models.Model):
     name = models.CharField(
         verbose_name='Название',
         max_length=255,
-    )
-    players_count_per_team = models.CharField(
-        verbose_name='Количество игроков в команде',
-        max_length=255,
-        choices=NUMBER_OF_PLAYERS_PER_TEAM,
     )
 
     def __str__(self):
@@ -60,11 +43,6 @@ class UserInTeam(models.Model):
         verbose_name='Игрок',
         to='users.User',
         on_delete=models.CASCADE,
-    )
-    user_position = models.CharField(
-        verbose_name='Позиция',
-        max_length=255,
-        choices=POSITIONS,
     )
 
     def __str__(self):
@@ -96,11 +74,6 @@ class ReservedPlaceInTeam(models.Model):
     title = models.CharField(
         verbose_name='Название',
         max_length=255,
-    )
-    reserved_position = models.CharField(
-        verbose_name='Позиция',
-        max_length=255,
-        choices=POSITIONS,
     )
 
     def __str__(self):

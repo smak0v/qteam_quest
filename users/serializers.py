@@ -1,10 +1,13 @@
 from drf_extra_fields.fields import Base64ImageField
-from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 
-from korobka_games.settings import ROOT_URL
-from users.models import User, GENDERS, POSITIONS, UserSubscription, UserAuthToken, UserChangePhone, \
-    UserChangePhoneConfirm
+from qteam_quest.settings import ROOT_URL
+from users.models import User, GENDERS, UserSubscription, UserChangePhone, UserChangePhoneConfirm
+
+IMAGE_EXTENSIONS = [
+    ('.jpg', 'JPG, JPEG'),
+    ('.png', 'PNG'),
+]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,37 +25,55 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id',
+            'phone',
+            'is_active_phone',
             'username',
             'first_name',
             'last_name',
-            'email',
             'location',
             'gender',
-            'nationality',
-            'favourite_position',
             'active',
             'staff',
             'admin',
-            'phone',
-            'is_active_phone',
             'reliability',
             'profile_image',
         ]
 
 
-class UserAuthTokenSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.Serializer):
+    """Class that implements user register serializer"""
+
+    phone = serializers.CharField(
+        required=True,
+    )
+
+
+class UserLoginSerializer(serializers.Serializer):
+    """Class that implements user login serializer"""
+
+    phone = serializers.CharField(
+        required=True,
+    )
+
+
+class UserLoginConfirmSerializer(serializers.Serializer):
+    """Class that implements user login confirm serializer"""
+
+    phone = serializers.CharField(
+        required=True,
+    )
+    sms_code = serializers.CharField(
+        required=True,
+    )
+
+
+class UserAuthTokenSerializer(serializers.Serializer):
     """Class that implements user auth token serializer"""
 
     token = serializers.CharField(
         max_length=255,
         required=True
     )
-
-    class Meta:
-        model = UserAuthToken
-        fields = [
-            'token',
-        ]
 
 
 class UserChangePhoneNumberSerializer(serializers.ModelSerializer):
@@ -85,75 +106,6 @@ class UserChangePhoneNumberConfirmSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserRegisterSerializer(RegisterSerializer):
-    """Class that implements user register serializer"""
-
-    username = serializers.CharField(
-        required=True,
-    )
-    password1 = serializers.CharField(
-        write_only=True,
-    )
-    first_name = serializers.CharField(
-        required=True,
-    )
-    last_name = serializers.CharField(
-        required=True,
-    )
-    email = serializers.EmailField(
-        required=True,
-    )
-    location = serializers.CharField(
-        required=False,
-    )
-    gender = serializers.ChoiceField(
-        required=False,
-        choices=GENDERS,
-    )
-    nationality = serializers.CharField(
-        required=False,
-    )
-    favourite_position = serializers.ChoiceField(
-        required=False,
-        choices=POSITIONS,
-    )
-    phone = serializers.CharField(
-        required=False,
-    )
-    is_active_phone = serializers.BooleanField(
-        required=False,
-        default=False,
-    )
-
-    def get_cleaned_data(self):
-        super(UserRegisterSerializer, self).get_cleaned_data()
-        return {
-            'username': self.validated_data.get('username', ''),
-            'password1': self.validated_data.get('password1', ''),
-            'first_name': self.validated_data.get('first_name', ''),
-            'last_name': self.validated_data.get('last_name', ''),
-            'email': self.validated_data.get('email', ''),
-            'location': self.validated_data.get('location', ''),
-            'gender': self.validated_data.get('gender', 'NOT_SET'),
-            'nationality': self.validated_data.get('nationality', ''),
-            'favourite_position': self.validated_data.get('favourite_position', 'NOT_SET'),
-            'phone': self.validated_data.get('phone', ''),
-            'is_active_phone': self.validated_data.get('is_active_phone', False),
-        }
-
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        pass
-
-
-IMAGE_EXTENSIONS = [
-    ('.jpg', 'JPG, JPEG'),
-    ('.png', 'PNG'),
-]
-
-
 class UpdateUserProfileSerializer(serializers.Serializer):
     """Class that represents update user profile serializer"""
 
@@ -166,7 +118,7 @@ class UpdateUserProfileSerializer(serializers.Serializer):
     last_name = serializers.CharField(
         required=False,
     )
-    email = serializers.EmailField(
+    birthday_date = serializers.DateField(
         required=False,
     )
     location = serializers.CharField(
@@ -176,14 +128,10 @@ class UpdateUserProfileSerializer(serializers.Serializer):
         required=False,
         choices=GENDERS,
     )
-    nationality = serializers.CharField(
-        required=False,
-    )
-    favourite_position = serializers.ChoiceField(
-        required=False,
-        choices=POSITIONS,
-    )
     profile_image = Base64ImageField(
+        required=False,
+    )
+    about = serializers.CharField(
         required=False,
     )
 
@@ -223,7 +171,7 @@ class UserSubscriptionCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         try:
-            user_subscription = UserSubscription.objects.get(user=data['user'], subscriber=data['subscriber'])
+            UserSubscription.objects.get(user=data['user'], subscriber=data['subscriber'])
             raise serializers.ValidationError('Subscription already exists!')
         except UserSubscription.DoesNotExist:
             if data['user'] == data['subscriber']:

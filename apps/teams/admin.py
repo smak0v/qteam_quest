@@ -9,15 +9,10 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = [
         'game',
         'name',
-        'players_count_per_team',
     ]
     ordering = [
         'game',
         'name',
-        'players_count_per_team',
-    ]
-    list_filter = [
-        'players_count_per_team',
     ]
     list_per_page = 50
 
@@ -28,15 +23,10 @@ class UserInTeamAdmin(admin.ModelAdmin):
     list_display = [
         'team',
         'user',
-        'user_position',
     ]
     ordering = [
         'team',
         'user',
-        'user_position',
-    ]
-    list_filter = [
-        'user_position',
     ]
     list_per_page = 50
 
@@ -48,16 +38,11 @@ class ReservedPlaceInTeamAdmin(admin.ModelAdmin):
         'team',
         'user',
         'title',
-        'reserved_position',
     ]
     ordering = [
         'team',
         'user',
         'title',
-        'reserved_position',
-    ]
-    list_filter = [
-        'reserved_position',
     ]
     list_per_page = 50
 

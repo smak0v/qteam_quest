@@ -4,7 +4,7 @@ from apps.games.models import Game, GameComment, GamePlayerEvaluation
 from apps.teams.models import Team, UserInTeam
 from apps.venues.serializers import VenueSerializer
 from users.serializers import UserSerializer
-from korobka_games.settings import ROOT_URL
+from qteam_quest.settings import ROOT_URL
 
 
 class GameCreateUpdateSerializer(serializers.ModelSerializer):
