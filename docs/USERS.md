@@ -4,28 +4,15 @@
 
     Returns info about all users.
 
-- ```/api/users/register/``` (POST)
-
-    ```
-    phone (required)
-    ```
-
-    Register user in system and send SMS to phone number with one time password for user.
-    
-    After registration you need to send request (POST) to url ```/api/users/login/confirm/``` with ```phone``` and 
-    ```sms_code``` from SMS to login user in system and get authentication token.
-
-    ### Validators:
-
-    - ```phone``` - unique, must be in russian number format.
-
 - ```/api/users/login/``` (POST)
 
     ```
     phone (required)
     ```
 
-    Send SMS to phone number with one time password for user.
+    Register user if phone not registered in system and sends SMS to phone number with one time password for user.
+    
+    Or if phone is registered in system only sends SMS to phone number with one time password for user.
 
      ### Validators:
 
