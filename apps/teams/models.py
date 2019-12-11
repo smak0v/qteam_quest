@@ -10,7 +10,7 @@ class Team(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='Game',
+        to='quests.Game',
         on_delete=models.CASCADE,
     )
     name = models.CharField(
@@ -31,7 +31,7 @@ class UserInTeam(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='Game',
+        to='quests.Game',
         on_delete=models.CASCADE,
     )
     team = models.ForeignKey(
@@ -58,7 +58,7 @@ class ReservedPlaceInTeam(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='Game',
+        to='quests.Game',
         on_delete=models.CASCADE,
     )
     team = models.ForeignKey(

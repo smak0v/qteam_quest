@@ -143,8 +143,6 @@ class Game(models.Model):
 
     def check_game_filling(self):
         total_players_count = int(self.a_side_players_count) * 2
-        players_count = 0
-        reserved_places_count = 0
         try:
             players_count = UserInTeam.objects.filter(game=self).count()
         except UserInTeam.DoesNotExist:
@@ -181,7 +179,7 @@ class GameComment(models.Model):
     )
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='quests.Game',
+        to='Game',
         on_delete=models.CASCADE,
     )
     timestamp = models.DateTimeField(
@@ -206,7 +204,7 @@ class GamePlayerEvaluation(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='quests.Game',
+        to='Game',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
