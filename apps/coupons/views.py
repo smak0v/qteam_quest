@@ -29,7 +29,7 @@ def create_coupon_view(request):
     if request.method == 'POST':
         form = CouponForm(request.POST)
         if form.is_valid():
-            venue = form.save()
+            form.save()
             return redirect(to='coupons:list')
         else:
             context = {

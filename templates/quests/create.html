@@ -1,12 +1,12 @@
 {% extends 'base/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block styles %}{% endblock styles %}
 {% block content %}
     <div class="container-fluid">
         <div class="col-12">
             <div class="content">
-                <h2 class="empty_h_1">Создание игры</h2>
-                <form href="{% url 'games:create' %}" enctype="multipart/form-data" method="post"
+                <h2 class="empty_h_1">Создание квеста</h2>
+                <form href="{% url 'quests:create' %}" enctype="multipart/form-data" method="post"
                       class="add_edit_form">
                     {% csrf_token %}
                     {% for error in form.errors %}
@@ -23,7 +23,7 @@
                             <p class="form_edit">{{ edit }}</p>
                         {% endif %}
                     {% endfor %}
-                    <button type="submit" class="btn btn-success add_btn">Создать игру</button>
+                    <button type="submit" class="btn btn-success add_btn">Создать квест</button>
                 </form>
             </div>
         </div>

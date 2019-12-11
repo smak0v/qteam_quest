@@ -70,7 +70,7 @@ class VenueComment(models.Model):
 
     venue = models.ForeignKey(
         verbose_name='Площадка',
-        to='venues.Venue',
+        to='Venue',
         on_delete=models.CASCADE,
         related_name='comments'
     )
@@ -94,7 +94,7 @@ class VenueComment(models.Model):
     )
 
     def __str__(self):
-        return '{} : {}'.format(self.user.username, self.scores)
+        return '{} : {}'.format(self.user.phone, self.scores)
 
 
 class VenueSubscription(models.Model):
@@ -112,7 +112,7 @@ class VenueSubscription(models.Model):
     )
     venue = models.ForeignKey(
         verbose_name='Площадка',
-        to='venues.Venue',
+        to='Venue',
         on_delete=models.CASCADE,
     )
 

@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -26,7 +26,7 @@
                     <a href="{% url 'dashboard:dashboard' %}" class="list_href">Дашборд</a>
                 </li>
                 <li>
-                    <a href="{% url 'games:list' %}" class="list_href">Квесты</a>
+                    <a href="{% url 'quests:list' %}" class="list_href">Квесты</a>
                 </li>
                 <li>
                     <a href="{% url 'venues:list' %}" class="list_href">Площадки</a>

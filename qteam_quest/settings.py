@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     # Created apps
     'users',
     'apps.dashboard',
-    'apps.games',
+    'apps.quests',
     'apps.venues',
     'apps.teams',
     'apps.coupons',

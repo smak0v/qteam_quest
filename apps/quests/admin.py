@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.games.models import Game, GameComment, GamePlayerEvaluation
+from apps.quests.models import Game, GameComment, GamePlayerEvaluation
 
 
 class GameAdmin(admin.ModelAdmin):

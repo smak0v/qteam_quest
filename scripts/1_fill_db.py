@@ -100,7 +100,7 @@ print("Games creation")
 current_dt = GAMES_START_DT
 while current_dt < GAMES_END_DT:
     current_date = current_dt.strftime('%Y-%m-%d')
-    current_games = requests.get(f'{ENDPOINT}api/games/?date={current_date}').json()
+    current_games = requests.get(f'{ENDPOINT}api/quests/?date={current_date}').json()
     if len(current_games) == 0:
         for i in range(GAMES_PER_DAY_COUNT):
             game = {
@@ -116,17 +116,17 @@ while current_dt < GAMES_END_DT:
                 'a_side_players_count': random.randrange(5, 11),
                 'cancel': (i + 1) % 3 == 0,
             }
-            requests.post(ENDPOINT + 'api/games/', data=json.dumps(game), headers=HEADERS)
+            requests.post(ENDPOINT + 'api/quests/', data=json.dumps(game), headers=HEADERS)
             print('.', end='', flush=True)
     else:
-        print(f'There is already {len(current_games)} games for {current_date}.'
+        print(f'There is already {len(current_games)} quests for {current_date}.'
               f' Run 0_clear_db.py if you want to delete them!')
     current_dt += timezone.timedelta(days=1)
 print()
 
 if need_create_users:
     users = requests.get(ENDPOINT + 'api/users/').json()
-    games = requests.get(ENDPOINT + 'api/games/').json()
+    games = requests.get(ENDPOINT + 'api/quests/').json()
 
     print("Users actions")
     for user in users:
@@ -154,7 +154,7 @@ if need_create_users:
                 'game': int(game[0]['id']),
                 'text': 'Comment for {} from {}. Cool game!'.format(game[0]['title'], username)
             }
-            comment_response = requests.post(ENDPOINT + 'api/games/{}/comments/'.format(int(game[0]['id'])),
+            comment_response = requests.post(ENDPOINT + 'api/quests/{}/comments/'.format(int(game[0]['id'])),
                                              data=json.dumps(comment_for_game), headers=HEADERS)
 
         # Venues commenting
@@ -192,20 +192,20 @@ if need_create_users:
         # Register user for a game
         for i in range(USER_GAME_REGISTRATION_LIMIT):
             game = random.choices(games)
-            game_teams = requests.get(ENDPOINT + 'api/games/{}/teams/'.format(int(game[0]['id']))).json()
+            game_teams = requests.get(ENDPOINT + 'api/quests/{}/teams/'.format(int(game[0]['id']))).json()
             user_in_team = {
                 'game': int(game[0]['id']),
                 'user': int(user['id']),
                 'team': int(random.choices(game_teams)[0]['id']),
                 'user_position': random.choices(['GOALIE', 'DEFENDER', 'MIDFIELDER', 'FORWARD'])[0]
             }
-            game_registration_response = requests.post(ENDPOINT + 'api/games/{}/players/'.format(int(game[0]['id'])),
+            game_registration_response = requests.post(ENDPOINT + 'api/quests/{}/players/'.format(int(game[0]['id'])),
                                                        data=json.dumps(user_in_team), headers=HEADERS)
 
         # Reservation places for a game
         for i in range(random.randrange(1, USER_GAME_RESERVATION_PLACES_LIMIT)):
             game = random.choices(games)
-            game_teams = requests.get(ENDPOINT + 'api/games/{}/teams/'.format(int(game[0]['id']))).json()
+            game_teams = requests.get(ENDPOINT + 'api/quests/{}/teams/'.format(int(game[0]['id']))).json()
             reserved_place_in_team = {
                 'title': '{}`s friend'.format(username),
                 'game': int(game[0]['id']),
@@ -214,7 +214,7 @@ if need_create_users:
                 'reserved_position': random.choices(['GOALIE', 'DEFENDER', 'MIDFIELDER', 'FORWARD'])[0]
             }
             game_place_reservation_response = requests.post(
-                ENDPOINT + 'api/games/{}/reserved_places/'.format(int(game[0]['id'])),
+                ENDPOINT + 'api/quests/{}/reserved_places/'.format(int(game[0]['id'])),
                 data=json.dumps(reserved_place_in_team),
                 headers=HEADERS,
             )

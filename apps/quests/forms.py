@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 
-from apps.games.models import Game
+from apps.quests.models import Game
 
 
 class GameForm(forms.ModelForm):

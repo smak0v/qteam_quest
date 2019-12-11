@@ -3,7 +3,7 @@ import os
 from django.core.files import File
 from django.core.management.base import BaseCommand
 
-from apps.games.models import Game
+from apps.quests.models import Game
 from apps.venues.models import Venue
 from users.models import User
 

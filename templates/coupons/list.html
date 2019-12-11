@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block styles %}{% endblock styles %}
 {% block content %}
     <div class="container-fluid">
@@ -40,10 +40,10 @@
                                     <td>{{ avtive_coupon.type }}</td>
                                     <td>{{ avtive_coupon.user }}</td>
                                     <td class="d_flex justify-content-center">
-                                        <a href="{% url 'coupons:edit' avtive_coupon.pk %}" class="non_href">
+                                        <a href="{% url 'coupons:edit' active_coupon.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>
                                         </a>
-                                        <a href="{% url 'coupons:delete' avtive_coupon.pk %}" class="non_href">
+                                        <a href="{% url 'coupons:delete' active_coupon.pk %}" class="non_href">
                                             <button class="btn btn-danger delete_btn">Удалить</button>
                                         </a>
                                     </td>
@@ -80,11 +80,7 @@
                             <tbody>
                             {% for not_active_coupon in not_active_coupons %}
                                 <tr>
-                                    <td class="id">
-                                        <a href="{% url 'coupons:details' not_active_coupon.pk %}" class="object_link">
-                                            {{ not_active_coupon.pk }}
-                                        </a>
-                                    </td>
+                                    <td class="id">{{ not_active_coupon.pk }}</td>
                                     <td>{{ not_active_coupon.code }}</td>
                                     <td>{{ not_active_coupon.start_date }}</td>
                                     <td>{{ not_active_coupon.end_date }}</td>

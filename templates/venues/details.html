@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block styles %}{% endblock styles %}
 {% block content %}
     <div class="container-fluid">
@@ -93,7 +93,7 @@
                 {% if games %}
                     <div class="d-flex">
                         <h2 class="empty_h_1">Игры по площадке</h2>
-                        <a href="{% url 'games:create' %}" class="non_href ml-auto">
+                        <a href="{% url 'quests:create' %}" class="non_href ml-auto">
                             <button class="btn btn-success add_btn">Добавить игру</button>
                         </a>
                     </div>
@@ -117,7 +117,7 @@
                             {% for game in games %}
                                 <tr>
                                     <td class="id">
-                                        <a href="{% url 'games:details' game.pk %}" class="object_link">
+                                        <a href="{% url 'quests:details' game.pk %}" class="object_link">
                                             {{ game.pk }}
                                         </a>
                                     </td>
@@ -133,13 +133,13 @@
                                     <td>{{ game.get_game_status_display }}</td>
                                     <td>{{ game.get_a_side_players_count_display }}</td>
                                     <td class="d_flex justify-content-center">
-                                        <a href="{% url 'games:edit' game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:edit' game.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>
                                         </a>
-                                        <a href="{% url 'games:delete' game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:delete' game.pk %}" class="non_href">
                                             <button class="btn btn-danger delete_btn">Удалить</button>
                                         </a>
-                                        <a href="{% url 'games:cancel' game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:cancel' game.pk %}" class="non_href">
                                             <button class="btn btn-block cancel_btn">Отменить</button>
                                         </a>
                                     </td>
@@ -151,7 +151,7 @@
                 {% else %}
                     <div class="d-flex">
                         <h2 class="empty_h_1">Для этой площадки нет игр!</h2>
-                        <a href="{% url 'games:create' %}" class="non_href ml-auto">
+                        <a href="{% url 'quests:create' %}" class="non_href ml-auto">
                             <button class="btn btn-success add_btn">Добавить игру</button>
                         </a>
                     </div>
@@ -182,7 +182,7 @@
                             {% for canceled_game in canceled_games %}
                                 <tr>
                                     <td class="id">
-                                        <a href="{% url 'games:details' canceled_game.pk %}" class="object_link">
+                                        <a href="{% url 'quests:details' canceled_game.pk %}" class="object_link">
                                             {{ canceled_game.pk }}
                                         </a>
                                     </td>
@@ -198,13 +198,13 @@
                                     <td>{{ canceled_game.get_game_status_display }}</td>
                                     <td>{{ canceled_game.get_a_side_players_count_display }}</td>
                                     <td class="d_flex justify-content-center">
-                                        <a href="{% url 'games:edit' canceled_game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:edit' canceled_game.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>
                                         </a>
-                                        <a href="{% url 'games:delete' canceled_game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:delete' canceled_game.pk %}" class="non_href">
                                             <button class="btn btn-danger delete_btn">Удалить</button>
                                         </a>
-                                        <a href="{% url 'games:renew' canceled_game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:renew' canceled_game.pk %}" class="non_href">
                                             <button class="btn btn-block renew_btn">Возобновить</button>
                                         </a>
                                     </td>

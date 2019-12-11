@@ -1,5 +1,5 @@
 {% extends 'base/login_signup_base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block styles %}{% endblock styles %}
 {% block content %}
     <h1 class="login_signup_title">Вход</h1>
@@ -7,10 +7,10 @@
         {% csrf_token %}
         <p class="login_signup_error">{{ error }}</p>
         <div class="login_signup_inputs_div">
-            <label for="username" class="login_signup_label">
-                Имя пользователя*
+            <label for="phone" class="login_signup_label">
+                Номер телефона*
                 <br>
-                <input type="text" name="username" class="login_signup_input" value="{{ username }}" required>
+                <input type="text" name="phone" class="login_signup_input" value="{{ phone }}" required>
             </label>
             <br>
             <label for="password" class="login_signup_label">

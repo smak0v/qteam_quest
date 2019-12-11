@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from apps.games.models import Game
-from apps.games.serializers import GameSerializer
+from apps.quests.models import Game
+from apps.quests.serializers import GameSerializer
 from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
 from users.models import User
 from users.serializers import UserSerializer
@@ -36,7 +36,6 @@ class UserInTeamCreateUpdateSerializer(serializers.ModelSerializer):
         user_from_request = data.get('user')
         game_from_request = data.get('game')
         user_position = data.get('user_position')
-        user_in_game = None
         if user_position == 'NOT_SET':
             raise serializers.ValidationError('You need to choose the position in game!')
         try:
@@ -68,7 +67,7 @@ class ReservedPlaceInTeamCreateUpdateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         try:
-            player = UserInTeam.objects.get(user=User.objects.get(pk=data.get('user').pk),
+            UserInTeam.objects.get(user=User.objects.get(pk=data.get('user').pk),
                                             game=Game.objects.get(pk=data.get('game').pk))
         except UserInTeam.DoesNotExist:
             raise serializers.ValidationError('User must be the participant of the game!')

@@ -1,25 +1,25 @@
 {% extends 'base/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block styles %}{% endblock styles %}
 {% block content %}
     <div class="container-fluid">
         <div class="col-12">
             <div class="content">
                 <div class="d-flex">
-                    <h2 class="empty_h_1">Обзор игры</h2>
-                    <a href="{% url 'games:edit' game.pk %}" class="non_href ml-auto">
+                    <h2 class="empty_h_1">Обзор квеста</h2>
+                    <a href="{% url 'quests:edit' game.pk %}" class="non_href ml-auto">
                         <button class="btn btn-warning game_info_btn">Редактировать</button>
                     </a>
-                    <a href="{% url 'games:delete' game.pk %}" class="non_href">
+                    <a href="{% url 'quests:delete' game.pk %}" class="non_href">
                         <button class="btn btn-danger game_info_btn">Удалить</button>
                     </a>
                     {% if game.cancel == True %}
                         <span class="big_details_text red ml-auto canceled">Отменена!</span>
-                        <a href="{% url 'games:renew' game.pk %}" class="non_href">
+                        <a href="{% url 'quests:renew' game.pk %}" class="non_href">
                             <button class="btn btn-block game_info_btn">Возобновить</button>
                         </a>
                     {% else %}
-                        <a href="{% url 'games:cancel' game.pk %}" class="non_href">
+                        <a href="{% url 'quests:cancel' game.pk %}" class="non_href">
                             <button class="btn btn-block game_info_btn">Отменить</button>
                         </a>
                     {% endif %}

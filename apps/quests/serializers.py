@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.games.models import Game, GameComment, GamePlayerEvaluation
+from apps.quests.models import Game, GameComment, GamePlayerEvaluation
 from apps.teams.models import Team, UserInTeam
 from apps.venues.serializers import VenueSerializer
 from users.serializers import UserSerializer

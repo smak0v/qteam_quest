@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.games.models import Game, GameComment
-from apps.games.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
+from apps.quests.models import Game, GameComment
+from apps.quests.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
     GameCommentCreateUpdateSerializer, GamePlayerEvaluationCreateSerializer
 from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
 from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, ReservedPlaceInTeamSerializer, \

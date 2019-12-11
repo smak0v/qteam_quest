@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ('game_level', models.PositiveIntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)], verbose_name='Уровень игры')),
                 ('enjoyed_playing', models.PositiveIntegerField(default=1, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(10)], verbose_name='Понравилось играть')),
                 ('appraiser', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Оценщик')),
-                ('game', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='games.Game', verbose_name='Игра')),
+                ('game', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='quests.Game', verbose_name='Игра')),
                 ('ranked_user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ranked_user', to=settings.AUTH_USER_MODEL, verbose_name='Оцениваемый')),
             ],
             options={
@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name='Дата и время')),
                 ('text', models.CharField(max_length=900, verbose_name='Комментарий')),
-                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='games.Game', verbose_name='Игра')),
+                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='quests.Game', verbose_name='Игра')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
             ],
             options={

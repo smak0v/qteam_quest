@@ -3,8 +3,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 
-from apps.games.models import Game
-from apps.games.serializers import GameSerializer
+from apps.quests.models import Game
+from apps.quests.serializers import GameSerializer
 from apps.venues.models import Venue, VenueSubscription, VenueComment
 from apps.venues.serializers import VenueSerializer, VenueSubscriptionSerializer, VenueCommentSerializer, \
     VenueCommentCreateUpdateSerializer, VenueSubscriptionCreateSerializer
@@ -65,7 +65,7 @@ class VenueSubscribersListView(ListCreateAPIView):
 
 
 class VenueGamesListView(ListAPIView):
-    """Class that implements venue`s games list view API endpoint"""
+    """Class that implements venue`s quests list view API endpoint"""
 
     queryset = VenueSubscription.objects.all()
 
@@ -74,7 +74,7 @@ class VenueGamesListView(ListAPIView):
         games = Game.objects.filter(venue=pk)
         data = GameSerializer(games, many=True).data
         return Response({
-            'games': data,
+            'quests': data,
             'count': int(games.count()),
         })
 

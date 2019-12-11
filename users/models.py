@@ -43,6 +43,7 @@ class User(AbstractBaseUser):
         max_length=255,
         blank=True,
         default='',
+        unique=True,
     )
     first_name = models.CharField(
         verbose_name='Имя',

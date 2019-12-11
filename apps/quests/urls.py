@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 
-from apps.games.api_views import GameRetrieveUpdateDestroyView, GameCommentListCreateView, \
+from apps.quests.api_views import GameRetrieveUpdateDestroyView, GameCommentListCreateView, \
     GameTeamsListView, GamePlayersListCreateView, GameReservedPlacesListCreateView, GamePlayersRetrieveDestroyView, \
     GameReservedPlacesRetrieveDestroyView, GameListCreateView, GamePlacesStatusView, EvaluatePlayerView
-from apps.games.views import GamesListView, create_game_view, edit_game_view, delete_game_view, details_game_view, \
+from apps.quests.views import GamesListView, create_game_view, edit_game_view, delete_game_view, details_game_view, \
     cancel_game_view, renew_game_view
 
 games_urls = (
@@ -16,7 +16,7 @@ games_urls = (
         path('details/<int:pk>/', login_required(details_game_view), name='details'),
         path('cancel/<int:pk>/', login_required(cancel_game_view), name='cancel'),
         path('renew/<int:pk>/', login_required(renew_game_view), name='renew'),
-    ], 'games')
+    ], 'quests')
 
 games_api_urls = (
     [
@@ -32,4 +32,4 @@ games_api_urls = (
              name='game_reserved_places_detail'),
         path('<int:pk>/places_status/', GamePlacesStatusView.as_view(), name='game_places_status'),
         path('<int:pk>/evaluate_player/', EvaluatePlayerView.as_view(), name='game_player_evaluation'),
-    ], 'api:games')
+    ], 'api:quests')

@@ -14,26 +14,7 @@ class CouponSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        if data['end_date'] < data['start_date']:
-            raise ValidationError({
-                'end_date': 'End date can`t be less than start_date!',
-            })
-        if data['type'] == 'GENERAL' and data['user']:
-            raise ValidationError({
-                'user': 'Must be NULL for GENERAL type of coupon!',
-            })
-        if data['type'] == 'INDIVIDUAL' and data['user'] is None:
-            raise ValidationError({
-                'user': 'User cant`t be NULL for INDIVIDUAL type of coupon!',
-            })
-        if data['type'] == 'INDIVIDUAL' and data['user']:
-            try:
-                user = User.objects.get(id=data['user'].pk)
-            except User.DoesNotExist:
-                raise ValidationError({
-                    'user': 'Must be a real user!',
-                })
-        return data
+        return validate_data(data)
 
 
 class CouponRetrieveSerializer(serializers.ModelSerializer):
@@ -63,23 +44,27 @@ class CouponUpdateSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
-        if data['end_date'] < data['start_date']:
+        return validate_data(data)
+
+
+def validate_data(data):
+    if data['end_date'] < data['start_date']:
+        raise ValidationError({
+            'end_date': 'End date can`t be less than start_date!',
+        })
+    if data['type'] == 'GENERAL' and data['user']:
+        raise ValidationError({
+            'user': 'Must be NULL for GENERAL type of coupon!',
+        })
+    if data['type'] == 'INDIVIDUAL' and data['user'] is None:
+        raise ValidationError({
+            'user': 'User cant`t be NULL for INDIVIDUAL type of coupon!',
+        })
+    if data['type'] == 'INDIVIDUAL' and data['user']:
+        try:
+            User.objects.get(id=data['user'].pk)
+        except User.DoesNotExist:
             raise ValidationError({
-                'end_date': 'End date can`t be less than start_date!',
+                'user': 'Must be a real user!',
             })
-        if data['type'] == 'GENERAL' and data['user']:
-            raise ValidationError({
-                'user': 'Must be NULL for GENERAL type of coupon!',
-            })
-        if data['type'] == 'INDIVIDUAL' and data['user'] is None:
-            raise ValidationError({
-                'user': 'User cant`t be NULL for INDIVIDUAL type of coupon!',
-            })
-        if data['type'] == 'INDIVIDUAL' and data['user']:
-            try:
-                user = User.objects.get(id=data['user'].pk)
-            except User.DoesNotExist:
-                raise ValidationError({
-                    'user': 'Must be a real user!',
-                })
-        return data
+    return data

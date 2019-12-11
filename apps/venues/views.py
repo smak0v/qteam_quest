@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from apps.games.models import Game
+from apps.quests.models import Game
 from apps.venues.forms import VenueForm, VenueMetroStationForm
 from apps.venues.models import Venue, MetroStation
 
@@ -30,7 +30,7 @@ def venue_details_view(request, pk):
         'title': 'Информация по площадке',
         'venue': venue,
         'metro_stations': venue.metro_stations.all(),
-        'games': games,
+        'quests': games,
         'canceled_games': canceled_games,
     }
     return render(request=request, template_name='venues/details.html', context=context)
@@ -42,7 +42,7 @@ def create_venue_view(request):
     if request.method == 'POST':
         form = VenueForm(request.POST, request.FILES)
         if form.is_valid():
-            venue = form.save()
+            form.save()
             return redirect(to='venues:list')
         else:
             context = {

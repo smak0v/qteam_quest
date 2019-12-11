@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('games', '0001_initial'),
+        ('quests', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255, verbose_name='Название')),
                 ('players_count_per_team', models.CharField(choices=[('5', '5 со стороны'), ('6', '6 со стороны'), ('7', '7 со стороны'), ('8', '8 со стороны'), ('9', '9 со стороны'), ('10', '10 со стороны'), ('11', '11 со стороны')], max_length=255, verbose_name='Количество игроков в команде')),
-                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='games.Game', verbose_name='Игра')),
+                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='quests.Game', verbose_name='Игра')),
             ],
             options={
                 'verbose_name': 'Команда',
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('user_position', models.CharField(choices=[('NOT_SET', 'Не установлена'), ('GOALIE', 'Вратарь'), ('DEFENDER', 'Защитник'), ('MIDFIELDER', 'Полузащитник'), ('FORWARD', 'Нападающий')], max_length=255, verbose_name='Позиция')),
-                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='games.Game', verbose_name='Игра')),
+                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='quests.Game', verbose_name='Игра')),
                 ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='teams.Team', verbose_name='Команда')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Игрок')),
             ],
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=255, verbose_name='Название')),
                 ('reserved_position', models.CharField(choices=[('NOT_SET', 'Не установлена'), ('GOALIE', 'Вратарь'), ('DEFENDER', 'Защитник'), ('MIDFIELDER', 'Полузащитник'), ('FORWARD', 'Нападающий')], max_length=255, verbose_name='Позиция')),
-                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='games.Game', verbose_name='Игра')),
+                ('game', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='quests.Game', verbose_name='Игра')),
                 ('team', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='teams.Team', verbose_name='Команда')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Кто забронировал место')),
             ],

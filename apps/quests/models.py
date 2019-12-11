@@ -181,7 +181,7 @@ class GameComment(models.Model):
     )
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='games.Game',
+        to='quests.Game',
         on_delete=models.CASCADE,
     )
     timestamp = models.DateTimeField(
@@ -206,7 +206,7 @@ class GamePlayerEvaluation(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='games.Game',
+        to='quests.Game',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

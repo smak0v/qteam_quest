@@ -24,13 +24,13 @@ else:
 ENDPOINT = f'http://localhost:{port}/'
 HEADERS = reset_headers()
 
-games = requests.get(ENDPOINT + 'api/games/').json()
+games = requests.get(ENDPOINT + 'api/quests/').json()
 venues = requests.get(ENDPOINT + 'api/venues/').json()
 users = requests.get(ENDPOINT + 'api/users/').json()
 
-print("Deleting games and all related objects")
+print("Deleting quests and all related objects")
 for game in games:
-    requests.delete(ENDPOINT + 'api/games/{}/'.format(int(game['id'])))
+    requests.delete(ENDPOINT + 'api/quests/{}/'.format(int(game['id'])))
     print('.', end='', flush=True)
 print()
 

@@ -14,8 +14,8 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.games.models import Game
-from apps.games.serializers import GameSerializer
+from apps.quests.models import Game
+from apps.quests.serializers import GameSerializer
 from apps.teams.models import UserInTeam
 from apps.venues.models import VenueSubscription
 from apps.venues.serializers import VenueSubscriptionSerializer
@@ -369,7 +369,7 @@ class UserUnsubscribeView(DestroyAPIView):
 
 
 class UserGamesListView(ListAPIView):
-    """Class that implements user games list view API endpoint"""
+    """Class that implements user quests list view API endpoint"""
 
     serializer_class = GameSerializer
     permission_classes = [
@@ -387,7 +387,7 @@ class UserGamesListView(ListAPIView):
 
 
 class UserPastGamesListView(ListAPIView):
-    """Class that implements user past games list view API endpoint"""
+    """Class that implements user past quests list view API endpoint"""
 
     serializer_class = GameSerializer
     permission_classes = [
@@ -406,7 +406,7 @@ class UserPastGamesListView(ListAPIView):
 
 
 class UserFutureGamesListView(ListAPIView):
-    """Class that implements user future games list view API endpoint"""
+    """Class that implements user future quests list view API endpoint"""
 
     serializer_class = GameSerializer
     permission_classes = [
