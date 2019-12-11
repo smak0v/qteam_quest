@@ -1,6 +1,6 @@
 from django.urls import path
 
-from users.api_views import UserRegisterView, UserListView, UserVenueSubscriptionsListView, UserSubscribersListView, \
+from users.api_views import UserListView, UserVenueSubscriptionsListView, UserSubscribersListView, \
     UserSubscriptionsListView, UserSubscribeView, UserUnsubscribeView, UserGamesListView, UserPastGamesListView, \
     UserFutureGamesListView, UserRetrieveUpdateDeleteView, UserChangePasswordView, ChangePhoneView, \
     ChangePhoneConfirmView, UserProfileView, UserLoginView, UserLoginConfirmView, UserLogoutView
@@ -16,7 +16,6 @@ users_urls = (
 users_api_urls = (
     [
         path('', UserListView.as_view(), name='list'),
-        path('register/', UserRegisterView.as_view(), name='register'),
         path('login/', UserLoginView.as_view(), name='login'),
         path('login/confirm/', UserLoginConfirmView.as_view(), name='login_confirm'),
         path('logout/', UserLogoutView.as_view(), name='logout'),

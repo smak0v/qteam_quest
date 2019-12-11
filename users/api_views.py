@@ -23,8 +23,8 @@ from qteam_quest.utils import get_env_value
 from users.models import User, UserSubscription
 from users.serializers import UserSerializer, UserSubscriptionSerializer, UserSubscriptionCreateSerializer, \
     UserChangePasswordSerializer, UpdateUserProfileSerializer, UserAuthTokenSerializer, \
-    UserChangePhoneNumberSerializer, UserChangePhoneNumberConfirmSerializer, UserRegisterSerializer, \
-    UserLoginSerializer, UserLoginConfirmSerializer
+    UserChangePhoneNumberSerializer, UserChangePhoneNumberConfirmSerializer, UserLoginSerializer, \
+    UserLoginConfirmSerializer
 from users.utils import send_sms_code
 
 
@@ -33,40 +33,6 @@ class UserListView(ListAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-class UserRegisterView(APIView):
-    """Class that implements user register view API endpoint"""
-
-    @staticmethod
-    def post(request, **kwargs):
-        serializer = UserRegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            phone = serializer.validated_data.get('phone')
-            if re.match('^((\+38|\+7|\+8)+([0-9]){10})$', phone):
-                try:
-                    user = User.objects.get(phone=phone)
-                except User.DoesNotExist:
-                    one_time_password = random.randint(10000, 99999)
-                    user = User.objects.create(phone=phone)
-                    user.set_password(one_time_password)
-                    user.save()
-                    Token.objects.create(user=user)
-                    sms_text = f'Вы были успешно зарегестрированы!\nВойдите, используя код: {one_time_password}'
-                    send_sms_code(phone, sms_text)
-                    return Response({
-                        'success': f'User was registered successfully.\nCode was sent by number {phone}.',
-                    }, status=status.HTTP_201_CREATED)
-                if user:
-                    return Response({
-                        'error': 'User with this phone number already exist!',
-                    }, status=status.HTTP_400_BAD_REQUEST)
-            return Response({
-                'error': 'Number is not in russian number format!',
-            }, status=status.HTTP_400_BAD_REQUEST)
-        return Response({
-            'error': 'Phone is required!',
-        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLoginView(APIView):
@@ -78,16 +44,16 @@ class UserLoginView(APIView):
         if serializer.is_valid():
             phone = serializer.validated_data.get('phone')
             if re.match('^((\+38|\+7|\+8)+([0-9]){10})$', phone):
+                one_time_password = random.randint(10000, 99999)
                 try:
                     user = User.objects.get(phone=phone)
+                    sms_text = f'Войдите, используя код: {one_time_password}'
                 except User.DoesNotExist:
-                    return Response({
-                        'error': 'User with this phone number does not exist!',
-                    })
-                one_time_password = random.randint(10000, 99999)
+                    user = User.objects.create(phone=phone)
+                    Token.objects.create(user=user)
+                    sms_text = f'Вы были успешно зарегестрированы!\nВойдите, используя код: {one_time_password}'
                 user.set_password(one_time_password)
                 user.save()
-                sms_text = f'Войдите, используя код: {one_time_password}'
                 send_sms_code(phone, sms_text)
                 return Response({
                     'success': f'Code was sent by number {phone}.',

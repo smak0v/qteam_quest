@@ -40,14 +40,6 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserRegisterSerializer(serializers.Serializer):
-    """Class that implements user register serializer"""
-
-    phone = serializers.CharField(
-        required=True,
-    )
-
-
 class UserLoginSerializer(serializers.Serializer):
     """Class that implements user login serializer"""
 
