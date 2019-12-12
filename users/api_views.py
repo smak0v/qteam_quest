@@ -80,10 +80,10 @@ class UserLoginConfirmView(APIView):
                 if not user:
                     return Response({
                         'error': 'User with this credentials does not exist!',
-                    })
+                    }, status=status.HTTP_400_BAD_REQUEST)
                 return Response({
                     'token': Token.objects.get(user=user).key,
-                })
+                }, status=status.HTTP_200_OK)
             return Response({
                 'error': 'Number is not in russian number format!',
             }, status=status.HTTP_400_BAD_REQUEST)
