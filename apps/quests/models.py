@@ -173,6 +173,9 @@ class GameComment(models.Model):
     class Meta:
         verbose_name = 'Комментарий к игре'
         verbose_name_plural = 'Комментарии к игре'
+        ordering = [
+            '-timestamp',
+        ]
 
     user = models.ForeignKey(
         verbose_name='Пользователь',

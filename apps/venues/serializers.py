@@ -36,8 +36,8 @@ class VenueSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class VenueCommentCreateUpdateSerializer(serializers.ModelSerializer):
-    """Class that represents venue comment create, update serializer"""
+class VenueCommentCreateSerializer(serializers.ModelSerializer):
+    """Class that represents venue comment create serializer"""
 
     class Meta:
         model = VenueComment

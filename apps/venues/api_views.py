@@ -7,7 +7,7 @@ from apps.quests.models import Game
 from apps.quests.serializers import GameSerializer
 from apps.venues.models import Venue, VenueSubscription, VenueComment
 from apps.venues.serializers import VenueSerializer, VenueSubscriptionSerializer, VenueCommentSerializer, \
-    VenueCommentCreateUpdateSerializer, VenueSubscriptionCreateSerializer
+    VenueCommentCreateSerializer, VenueSubscriptionCreateSerializer
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -38,7 +38,7 @@ class VenueRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         }
         if user.is_authenticated:
             try:
-                user_venue_subscription = VenueSubscription.objects.get(user=user, venue=venue)
+                VenueSubscription.objects.get(user=user, venue=venue)
                 response['subscription'] = 'subscribed'
             except VenueSubscription.DoesNotExist:
                 response['subscription'] = 'not_subscribed'
@@ -122,13 +122,13 @@ class VenueCommentListCreateView(ListCreateAPIView):
     ]
 
     def get_serializer_class(self):
-        if self.request.method == 'POST' or self.request.method == 'UPDATE':
-            return VenueCommentCreateUpdateSerializer
+        if self.request.method == 'POST':
+            return VenueCommentCreateSerializer
         return VenueCommentSerializer
 
     @staticmethod
-    def get(request, pk):
-        venue_comments = VenueComment.objects.filter(venue=pk)
+    def get(request, *args, **kwargs):
+        venue_comments = VenueComment.objects.filter(venue=kwargs.get('pk'))
         data = VenueCommentSerializer(venue_comments, many=True).data
         return Response({
             'comments': data,

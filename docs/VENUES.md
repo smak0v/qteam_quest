@@ -84,10 +84,18 @@
     user (required)
     text (required)
     timestamp
-    scores (required 1, 2, 3, 4, 5)
+    scores (required (1 or 2 or 3 or 4 or 5))
     ```
   
     Add comment for a venue. 
     
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
+    
+    ### Validators
+    
+    - ```scores``` - must be from 1 to 5;
+    
+    - ```venue``` - must be existing venue;
+    
+    - ```user``` - must be existing and authorized user.

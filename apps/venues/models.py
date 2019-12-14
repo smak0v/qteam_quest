@@ -67,6 +67,9 @@ class VenueComment(models.Model):
     class Meta:
         verbose_name = 'Комментарий площадки'
         verbose_name_plural = 'Комментарии площадки'
+        ordering = [
+            '-timestamp',
+        ]
 
     venue = models.ForeignKey(
         verbose_name='Площадка',
