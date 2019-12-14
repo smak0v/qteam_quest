@@ -25,7 +25,7 @@ venues_api_urls = (
     [
         path('', VenueListCreateView.as_view(), name='venues_list'),
         path('<int:pk>/', VenueRetrieveUpdateDestroyView.as_view(), name='venue_detail'),
-        path('<int:pk>/quests/', VenueGamesListView.as_view(), name='venue_games'),
+        path('<int:pk>/games/', VenueGamesListView.as_view(), name='venue_games'),
         path('<int:pk>/subscribers/', VenueSubscribersListView.as_view(), name='venue_subscribers'),
         path('<int:pk>/subscribe/', VenueSubscribeCreateView.as_view(), name='venue_subscribe'),
         path('<int:pk>/unsubscribe/', VenueSubscribeDestroyView.as_view(), name='venue_unsubscribe'),

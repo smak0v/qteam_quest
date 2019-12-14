@@ -189,10 +189,15 @@ class Command(BaseCommand):
         venues = Venue.objects.all()
         for user in users:
             for i in range(self.subscriptions_count):
-                VenueSubscription.objects.create(
-                    user=user,
-                    venue=random.choices(venues)[0],
-                )
+                venue = random.choices(venues)[0]
+                try:
+                    VenueSubscription.objects.get(user=user, venue=venue)
+                    continue
+                except VenueSubscription.DoesNotExist:
+                    VenueSubscription.objects.create(
+                        user=user,
+                        venue=venue,
+                    )
                 print('.', end='', flush=True)
         print('\nVenue subscriptions creation: DONE')
 
@@ -201,11 +206,17 @@ class Command(BaseCommand):
         users = User.objects.filter(admin=False)
         for user in users:
             for i in range(self.subscriptions_count):
-                UserSubscription.objects.create(
-                    user=user,
-                    subscriber=random.choices(users)[0],
-                )
-                print('.', end='', flush=True)
+                subscriber = random.choices(users)[0]
+                if subscriber != user:
+                    try:
+                        UserSubscription.objects.get(user=user, subscriber=subscriber)
+                        continue
+                    except UserSubscription.DoesNotExist:
+                        UserSubscription.objects.create(
+                            user=user,
+                            subscriber=subscriber,
+                        )
+                    print('.', end='', flush=True)
         print('\nUser subscriptions creation: DONE')
 
     def register_users_for_game(self):

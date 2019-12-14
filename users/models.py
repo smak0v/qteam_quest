@@ -17,6 +17,9 @@ class User(AbstractBaseUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+        ordering = [
+            'id'
+        ]
 
     def get_profile_image(self):
         if not self.profile_image:
@@ -71,6 +74,7 @@ class User(AbstractBaseUser):
     location = models.CharField(
         verbose_name='Локация',
         max_length=255,
+        blank=True,
         default='',
     )
     reliability = models.DecimalField(
@@ -85,6 +89,7 @@ class User(AbstractBaseUser):
         upload_to='images/profile_images',
         null=True,
         blank=True,
+        default=None,
     )
     about = models.TextField(
         verbose_name='Про себя',
@@ -140,6 +145,29 @@ class User(AbstractBaseUser):
         return self.admin
 
 
+class UserSubscription(models.Model):
+    """Class that represent user subscription model"""
+
+    class Meta:
+        verbose_name = 'Подписка на пользователя'
+        verbose_name_plural = 'Подписки на пользователей'
+
+    user = models.ForeignKey(
+        verbose_name='Пользователь',
+        to='users.User',
+        on_delete=models.CASCADE,
+    )
+    subscriber = models.ForeignKey(
+        verbose_name='Подписчик',
+        to='users.User',
+        on_delete=models.CASCADE,
+        related_name='user_subscriptions',
+    )
+
+    def __str__(self):
+        return f'{self.user.phone} - {self.subscriber.phone}'
+
+
 class UserChangePhone(models.Model):
     """Class that represents user change phone model"""
 
@@ -170,26 +198,3 @@ class UserChangePhoneConfirm(models.Model):
 
     def __str__(self):
         return self.sms_code
-
-
-class UserSubscription(models.Model):
-    """Class that represent user subscription model"""
-
-    class Meta:
-        verbose_name = 'Подписка на пользователя'
-        verbose_name_plural = 'Подписки на пользователей'
-
-    user = models.ForeignKey(
-        verbose_name='Пользователь',
-        to='users.User',
-        on_delete=models.CASCADE,
-    )
-    subscriber = models.ForeignKey(
-        verbose_name='Подписчик',
-        to='users.User',
-        on_delete=models.CASCADE,
-        related_name='user_subscriptions',
-    )
-
-    def __str__(self):
-        return '{} - {}'.format(self.user.username, self.subscriber.username)

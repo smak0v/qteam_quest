@@ -75,13 +75,14 @@
 - ```/api/users/user_pk/``` (PUT, PATCH)
 
     ```
+    phone
     username
     first_name
     last_name
-    email
+    birthday_date
     location
     gender (NOT_SET, MALE, FEMALE)
-    nationality
+    about
     profile_image (base64)
     ```
 
@@ -92,9 +93,7 @@
 
     ### Validators
 
-    - ```username``` - unique;
-
-    - ```email``` - unique, must be in email format;
+    - ```phone``` - unique, must be in russian format number;
 
     - ```profile_image``` - filename must be less than 256 symbols, file should not be empty.
 

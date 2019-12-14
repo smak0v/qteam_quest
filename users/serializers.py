@@ -37,6 +37,8 @@ class UserSerializer(serializers.ModelSerializer):
             'admin',
             'reliability',
             'profile_image',
+            'about',
+            'birthday_date',
         ]
 
 
@@ -101,6 +103,9 @@ class UserChangePhoneNumberConfirmSerializer(serializers.ModelSerializer):
 class UpdateUserProfileSerializer(serializers.Serializer):
     """Class that represents update user profile serializer"""
 
+    phone = serializers.CharField(
+        required=False,
+    )
     username = serializers.CharField(
         required=False,
     )
@@ -113,12 +118,12 @@ class UpdateUserProfileSerializer(serializers.Serializer):
     birthday_date = serializers.DateField(
         required=False,
     )
-    location = serializers.CharField(
-        required=False,
-    )
     gender = serializers.ChoiceField(
         required=False,
         choices=GENDERS,
+    )
+    location = serializers.CharField(
+        required=False,
     )
     profile_image = Base64ImageField(
         required=False,
@@ -126,12 +131,6 @@ class UpdateUserProfileSerializer(serializers.Serializer):
     about = serializers.CharField(
         required=False,
     )
-
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        pass
 
 
 class UserChangePasswordSerializer(serializers.Serializer):
@@ -146,12 +145,6 @@ class UserChangePasswordSerializer(serializers.Serializer):
     new_password_2 = serializers.CharField(
         required=True,
     )
-
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        pass
 
 
 class UserSubscriptionCreateSerializer(serializers.ModelSerializer):

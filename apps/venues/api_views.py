@@ -72,11 +72,11 @@ class VenueGamesListView(ListAPIView):
     queryset = VenueSubscription.objects.all()
 
     @staticmethod
-    def get(request, pk):
-        games = Game.objects.filter(venue=pk)
+    def get(request, *args, **kwargs):
+        games = Game.objects.filter(venue=kwargs.get('pk'))
         data = GameSerializer(games, many=True).data
         return Response({
-            'quests': data,
+            'games': data,
             'count': int(games.count()),
         })
 
@@ -114,7 +114,7 @@ class VenueSubscribeDestroyView(DestroyAPIView):
             raise ValidationError({
                 'venue': 'Required field!',
             })
-        venue_subscription = VenueSubscription.objects.filter(user=user, venue=venue).first()
+        venue_subscription = VenueSubscription.objects.get(user=user, venue=venue)
         if not venue_subscription:
             return Response({
                 'message': 'Venue subscription does not exists!',
