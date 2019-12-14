@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 from apps.quests.models import Game, GameComment
 from apps.quests.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
-    GameCommentCreateUpdateSerializer, GamePlayerEvaluationCreateSerializer
+    GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer
 from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
 from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, ReservedPlaceInTeamSerializer, \
     UserInTeamCreateUpdateSerializer, ReservedPlaceInTeamCreateUpdateSerializer
@@ -86,7 +86,7 @@ class GameCommentListCreateView(ListCreateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return GameCommentCreateUpdateSerializer
+            return GameCommentCreateSerializer
         return GameCommentSerializer
 
     @staticmethod

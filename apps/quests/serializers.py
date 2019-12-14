@@ -59,8 +59,8 @@ class GameSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class GameCommentCreateUpdateSerializer(serializers.ModelSerializer):
-    """Class that represents game comment create, update serializer"""
+class GameCommentCreateSerializer(serializers.ModelSerializer):
+    """Class that represents game comment create serializer"""
 
     class Meta:
         model = GameComment

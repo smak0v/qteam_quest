@@ -92,6 +92,12 @@
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
     
+    ### Validators
+    
+    - ```user``` - must be existing and authorized user;
+    
+    - ```game``` - must be existing game.
+    
 - ```/api/games/game_pk/teams/``` (GET)
     
     Returns all info about teams for a game.
