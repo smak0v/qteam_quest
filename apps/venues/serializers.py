@@ -10,7 +10,10 @@ class MetroStationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MetroStation
-        fields = ['name', 'color']
+        fields = [
+            'name',
+            'color',
+        ]
 
 
 class VenueSerializer(serializers.ModelSerializer):
@@ -76,8 +79,10 @@ class VenueSubscriptionCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         try:
-            venue_subscription = VenueSubscription.objects.get(user=data['user'], venue=data['venue'])
-            raise serializers.ValidationError('Venue subscription already exists!')
+            VenueSubscription.objects.get(user=data['user'], venue=data['venue'])
+            raise serializers.ValidationError({
+                'message': 'Venue subscription already exists!',
+            })
         except VenueSubscription.DoesNotExist:
             return data
 

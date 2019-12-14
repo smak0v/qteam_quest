@@ -35,11 +35,17 @@
     venue (required)
     ```
 
-    Subscribe ```user``` to ```venue```.
-    
+    Subscribe ```user``` to ```venue``` if subscription does not exist.
+
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
-    
+
+    ### Validators
+
+    ```user``` - must be existing and authorized user;
+
+    ```venue``` - must be existing venue.
+
 - ```/api/venues/venue_pk/unsubscribe/``` (DELETE)
 
     ```

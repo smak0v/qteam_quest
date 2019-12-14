@@ -1,3 +1,5 @@
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView, \
     DestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
@@ -99,18 +101,28 @@ class VenueSubscribeDestroyView(DestroyAPIView):
     ]
 
     @staticmethod
-    def destroy(request, pk):
+    def destroy(request, *args, **kwargs):
         try:
-            venue_subscription = VenueSubscription.objects.get(user=request.POST['user'],
-                                                               venue=request.POST['venue'])
-            venue_subscription.delete()
-            return Response({
-                'message': 'Venue subscription successfully deleted!',
+            user = request.data['user']
+        except KeyError:
+            raise ValidationError({
+                'user': 'Required field!',
             })
-        except VenueSubscription.DoesNotExist:
+        try:
+            venue = request.data['venue']
+        except KeyError:
+            raise ValidationError({
+                'venue': 'Required field!',
+            })
+        venue_subscription = VenueSubscription.objects.filter(user=user, venue=venue).first()
+        if not venue_subscription:
             return Response({
                 'message': 'Venue subscription does not exists!',
-            })
+            }, status=status.HTTP_404_NOT_FOUND)
+        venue_subscription.delete()
+        return Response({
+            'message': 'Venue subscription successfully deleted!',
+        }, status=status.HTTP_200_OK)
 
 
 class VenueCommentListCreateView(ListCreateAPIView):
@@ -133,4 +145,4 @@ class VenueCommentListCreateView(ListCreateAPIView):
         return Response({
             'comments': data,
             'count': int(venue_comments.count()),
-        })
+        }, status=status.HTTP_200_OK)

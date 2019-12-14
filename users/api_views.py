@@ -152,25 +152,28 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         elif self.request.method == 'PUT' or self.request.method == 'PATCH':
             return UpdateUserProfileSerializer
 
-    def retrieve(self, request, pk):
+    def retrieve(self, request, *args, **kwargs):
         try:
-            user_for_response = User.objects.get(pk=pk)
+            user_for_response = User.objects.get(pk=kwargs.get('pk'))
         except User.DoesNotExist:
             return Response({
                 'error': 'User does not exist!',
             }, status=status.HTTP_404_NOT_FOUND)
         user = {
             'id': user_for_response.id,
+            'phone': user_for_response.phone,
+            'is_active_phone': user_for_response.is_active_phone,
             'username': user_for_response.username,
             'first_name': user_for_response.first_name,
             'last_name': user_for_response.last_name,
-            'location': user_for_response.location,
+            'birthday_date': user_for_response.birthday_date,
             'gender': user_for_response.gender,
-            'nationality': user_for_response.nationality,
+            'location': user_for_response.location,
+            'about': user_for_response.about,
+            'reliability': user_for_response.reliability,
             'active': user_for_response.active,
             'staff': user_for_response.staff,
             'admin': user_for_response.admin,
-            'reliability': user_for_response.reliability,
         }
         try:
             user['profile_image'] = user_for_response.profile_image.url
@@ -181,10 +184,9 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
                 'user': user,
             }, status=status.HTTP_200_OK)
         if self.request.user.is_authenticated:
-            if pk != self.request.user.pk:
+            if kwargs.get('pk') != self.request.user.pk:
                 try:
-                    user_user_subscription = UserSubscription.objects.get(user=user_for_response,
-                                                                          subscriber=self.request.user)
+                    UserSubscription.objects.filter(user=user_for_response, subscriber=self.request.user).first()
                     return Response({
                         'user': user,
                         'subscription': 'subscribed',
@@ -195,9 +197,6 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
                         'subscription': 'not_subscribed',
                     }, status=status.HTTP_200_OK)
             else:
-                user['email'] = user_for_response.email
-                user['phone'] = user_for_response.phone
-                user['is_active_phone'] = user_for_response.is_active_phone
                 return Response({
                     'user': user,
                 }, status=status.HTTP_200_OK)
