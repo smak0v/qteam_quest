@@ -402,7 +402,9 @@ class UserPastGamesListView(ListAPIView):
         user_games = list()
         now = timezone.now()
         for _ in user_in_teams:
-            user_games.append(Game.objects.get(timespan__lt=now).order_by('-timespan'))
+            games = Game.objects.filter(timespan__lt=now).order_by('-timespan')
+            for game in games:
+                user_games.append(game)
         data = GameSerializer(user_games, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
@@ -416,12 +418,14 @@ class UserFutureGamesListView(ListAPIView):
     ]
 
     @staticmethod
-    def get(request, pk):
-        user_in_teams = UserInTeam.objects.filter(user=pk)
+    def get(request, *args, **kwargs):
+        user_in_teams = UserInTeam.objects.filter(user=kwargs.get('pk'))
         user_games = list()
         now = timezone.now()
-        for user_in_team in user_in_teams:
-            user_games.append(Game.objects.get(timespan__gte=now).order_by('timespan'))
+        for _ in user_in_teams:
+            games = Game.objects.get(timespan__gte=now).order_by('timespan')
+            for game in games:
+                user_games.append(game)
         data = GameSerializer(user_games, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
