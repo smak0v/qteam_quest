@@ -26,7 +26,7 @@ urlpatterns = [
     path('coupons/', include(coupons_urls)),
 
     # API urls
-    path('api/quests/', include(games_api_urls)),
+    path('api/games/', include(games_api_urls)),
     path('api/venues/', include(venues_api_urls)),
     path('api/teams/', include(teams_api_urls)),
     path('api/users/', include(users_api_urls)),

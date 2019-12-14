@@ -85,13 +85,13 @@ class GameCommentListCreateView(ListCreateAPIView):
     ]
 
     def get_serializer_class(self):
-        if self.request.method == 'POST' or self.request.method == 'UPDATE':
+        if self.request.method == 'POST':
             return GameCommentCreateUpdateSerializer
         return GameCommentSerializer
 
     @staticmethod
-    def get(request, pk):
-        game_comments = GameComment.objects.filter(game=pk)
+    def get(request, *args, **kwargs):
+        game_comments = GameComment.objects.filter(game=kwargs.get('pk'))
         data = GameCommentSerializer(game_comments, many=True).data
         return Response({
             'comments': data,

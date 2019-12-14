@@ -3,8 +3,8 @@ from rest_framework import serializers
 from apps.quests.models import Game, GameComment, GamePlayerEvaluation
 from apps.teams.models import Team, UserInTeam
 from apps.venues.serializers import VenueSerializer
-from users.serializers import UserSerializer
 from qteam_quest.settings import ROOT_URL
+from users.serializers import UserSerializer
 
 
 class GameCreateUpdateSerializer(serializers.ModelSerializer):
@@ -16,12 +16,12 @@ class GameCreateUpdateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         game = Game.objects.create(**validated_data)
-        team_1 = Team.objects.create(
+        Team.objects.create(
             game=game,
             name='Черные майки',
             players_count_per_team=game.a_side_players_count,
         )
-        team_2 = Team.objects.create(
+        Team.objects.create(
             game=game,
             name='Белые майки',
             players_count_per_team=game.a_side_players_count,
