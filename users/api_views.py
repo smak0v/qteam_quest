@@ -174,11 +174,8 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
             'active': user_for_response.active,
             'staff': user_for_response.staff,
             'admin': user_for_response.admin,
+            'profile_image': user_for_response.get_profile_image(),
         }
-        try:
-            user['profile_image'] = user_for_response.profile_image.url
-        except ValueError:
-            user['profile_image'] = user_for_response.get_profile_image()
         if isinstance(self.request.user, AnonymousUser):
             return Response({
                 'user': user,
@@ -284,6 +281,10 @@ class UserProfileView(APIView):
 class UserVenueSubscriptionsListView(APIView):
     """Class that implements user venue subscriptions list view API endpoint"""
 
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     @staticmethod
     def get(request, pk):
         venue_subscriptions = VenueSubscription.objects.filter(user=pk)
@@ -380,9 +381,11 @@ class UserGamesListView(ListAPIView):
         user_in_teams = UserInTeam.objects.filter(user=pk)
         user_games = list()
         for user_in_team in user_in_teams:
-            user_games.append(Game.objects.get(pk=user_in_team.team.game))
+            user_games.append(Game.objects.get(pk=user_in_team.team.game.pk))
         data = GameSerializer(user_games, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        return Response({
+            'games': data,
+        }, status=status.HTTP_200_OK)
 
 
 class UserPastGamesListView(ListAPIView):
@@ -394,11 +397,11 @@ class UserPastGamesListView(ListAPIView):
     ]
 
     @staticmethod
-    def get(request, pk):
-        user_in_teams = UserInTeam.objects.filter(user=pk)
+    def get(request, *args, **kwargs):
+        user_in_teams = UserInTeam.objects.filter(user=kwargs.get('pk'))
         user_games = list()
         now = timezone.now()
-        for user_in_team in user_in_teams:
+        for _ in user_in_teams:
             user_games.append(Game.objects.get(timespan__lt=now).order_by('-timespan'))
         data = GameSerializer(user_games, many=True).data
         return Response(data, status=status.HTTP_200_OK)

@@ -97,7 +97,7 @@ class VenueComment(models.Model):
     )
 
     def __str__(self):
-        return '{} : {}'.format(self.user.phone, self.scores)
+        return f'{self.user.phone} : {self.scores}'
 
 
 class VenueSubscription(models.Model):
@@ -120,7 +120,7 @@ class VenueSubscription(models.Model):
     )
 
     def __str__(self):
-        return '{} - {}'.format(self.user.username, self.venue.name)
+        return f'{self.user.phone} - {self.venue.name}'
 
 
 class MetroStation(models.Model):
@@ -144,3 +144,6 @@ class MetroStation(models.Model):
         related_name='metro_stations',
         on_delete=models.CASCADE,
     )
+
+    def __str__(self):
+        return f'{self.name}-{self.color}'

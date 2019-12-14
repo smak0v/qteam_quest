@@ -180,6 +180,9 @@
 
     Get all user`s venue subscriptions.
 
+    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
+    access the endpoint.
+
 - ```/api/users/user_pk/user_subscriptions/``` (GET)
 
     Get all user`s user subscriptions.
