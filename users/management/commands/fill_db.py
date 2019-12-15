@@ -26,8 +26,8 @@ class Command(BaseCommand):
     games_count_per_day = random.randint(5, 10)
     comments_count = random.randint(5, 50)
     subscriptions_count = random.randint(5, 20)
-    game_registration_count = random.randint(5, 10)
-    game_reservation_places_count = random.randint(5, 10)
+    game_registration_count = random.randint(20, 50)
+    game_reservation_places_count = random.randint(30, 80)
     user_password = '12345'
     coordinates = [[55.670926, 37.555657], [55.678194, 37.563501], [55.720396, 37.560844], [55.735342, 37.594658],
                    [55.728865, 37.624671], [55.709586, 37.622812], [55.706947, 37.588010], [55.689369, 37.605286]]
@@ -198,7 +198,7 @@ class Command(BaseCommand):
                         user=user,
                         venue=venue,
                     )
-                print('.', end='', flush=True)
+                    print('.', end='', flush=True)
         print('\nVenue subscriptions creation: DONE')
 
     def subscribe_for_users(self):
@@ -216,7 +216,7 @@ class Command(BaseCommand):
                             user=user,
                             subscriber=subscriber,
                         )
-                    print('.', end='', flush=True)
+                        print('.', end='', flush=True)
         print('\nUser subscriptions creation: DONE')
 
     def register_users_for_game(self):
@@ -224,15 +224,19 @@ class Command(BaseCommand):
         users = User.objects.filter(admin=False)
         games = Game.objects.all()
         for user in users:
-            for i in range(self.game_reservation_places_count):
+            for i in range(self.game_registration_count):
                 game = random.choices(games)
                 teams = Team.objects.filter(game=game[0])
-                UserInTeam.objects.create(
-                    game=game[0],
-                    user=user,
-                    team=random.choices(teams)[0],
-                )
-                print('.', end='', flush=True)
+                try:
+                    UserInTeam.objects.get(game=game[0], user=user)
+                    continue
+                except UserInTeam.DoesNotExist:
+                    UserInTeam.objects.create(
+                        game=game[0],
+                        user=user,
+                        team=random.choices(teams)[0],
+                    )
+                    print('.', end='', flush=True)
         print('\nRegister user for a games: DONE')
 
     def reserve_places_for_game(self):
@@ -243,10 +247,18 @@ class Command(BaseCommand):
             for i in range(self.game_reservation_places_count):
                 game = random.choices(games)
                 teams = Team.objects.filter(game=game[0])
+                team = random.choices(teams)[0]
+                if ReservedPlaceInTeam.objects.filter(game=game[0], team=team,
+                                                      user=user).count() >= int(game[0].a_side_players_count):
+                    continue
+                try:
+                    UserInTeam.objects.get(game=game[0], user=user)
+                except UserInTeam.DoesNotExist:
+                    continue
                 ReservedPlaceInTeam.objects.create(
                     game=game[0],
                     user=user,
-                    team=random.choices(teams)[0],
+                    team=team,
                     title='{}`s friend'.format(user.phone),
                 )
                 print('.', end='', flush=True)
