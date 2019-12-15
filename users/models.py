@@ -166,35 +166,3 @@ class UserSubscription(models.Model):
 
     def __str__(self):
         return f'{self.user.phone} - {self.subscriber.phone}'
-
-
-class UserChangePhone(models.Model):
-    """Class that represents user change phone model"""
-
-    class Meta:
-        verbose_name = 'Изменение номера телефона'
-        verbose_name_plural = 'Изминение номеров телефонов'
-
-    phone = models.CharField(
-        verbose_name='Телефон',
-        max_length=15,
-    )
-
-    def __str__(self):
-        return self.phone
-
-
-class UserChangePhoneConfirm(models.Model):
-    """Class that represents user change phone confirm model"""
-
-    class Meta:
-        verbose_name = 'Подтверждение изменения номера телефона'
-        verbose_name_plural = 'Подтверждения изминений номеров телефонов'
-
-    sms_code = models.CharField(
-        verbose_name='Код подтверждения',
-        max_length=5,
-    )
-
-    def __str__(self):
-        return self.sms_code

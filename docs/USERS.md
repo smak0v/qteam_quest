@@ -36,7 +36,7 @@
 - ```/api/users/logout/``` (GET)
 
     Logout user from system.
-    
+
 - ```/api/users/my_profile/``` (POST)
 
     ```
@@ -75,7 +75,6 @@
 - ```/api/users/user_pk/``` (PUT, PATCH)
 
     ```
-    phone
     username
     first_name
     last_name
@@ -92,8 +91,6 @@
     access the endpoint.
 
     ### Validators
-
-    - ```phone``` - unique, must be in russian format number;
 
     - ```profile_image``` - filename must be less than 256 symbols, file should not be empty.
 
@@ -117,7 +114,7 @@
     - ```new_password_1``` and ```new_password_2``` - equal to each other, must include numbers and should not be in 
     ordinary words.
 
-- ```/api/users/user_pk/change_password/``` (POST)
+- ```/api/users/user_pk/change_phone/``` (POST)
 
     ```
     phone (required)
@@ -132,7 +129,7 @@
 
     - ```phone``` - must be in russian number format and starts from '+' symbol.
 
-- ```/api/users/user_pk/change_password_confirm/``` (POST)
+- ```/api/users/user_pk/change_phone_confirm/``` (POST)
 
     ```
     sms_code (required)
@@ -147,34 +144,6 @@
 
     - ```sms_code``` - must be a code from SMS.
 
-- ```/api/users/user_pk/change_phone/``` (POST)
-
-    ```
-    phone (required)
-    ```
-
-    Change user phone.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
-
-     ### Validators
-     - ```phone``` - must be in russian number format.
-
-- ```/api/users/user_pk/change_phone_confirm/``` (POST)
-
-    ```
-    sms_code (required)
-    ```
-
-    Activate user phone.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
-
-     ### Validators
-     - ```sms_code``` - must be like in SMS sent to user.
-
 - ```/api/users/user_pk/venue_subscriptions/``` (GET)
 
     Get all user`s venue subscriptions.
@@ -182,12 +151,24 @@
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
 
+     ### Validators
+
+    - ```user_pk``` - must be real user primary key;
+
+    - token from headers must be equal to request user`s token.
+
 - ```/api/users/user_pk/user_subscriptions/``` (GET)
 
     Get all user`s user subscriptions.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
+    
+    ### Validators
+
+    - ```user_pk``` - must be real user primary key;
+
+    - token from headers must be equal to request user`s token.
 
 - ```/api/users/user_pk/user_subscribers/``` (GET)
 
@@ -195,6 +176,12 @@
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
+
+     ### Validators
+
+    - ```user_pk``` - must be real user primary key;
+
+    - token from headers must be equal to request user`s token.
 
 - ```/api/users/user_pk/subscribe/``` (POST)
 
@@ -212,7 +199,11 @@
 
     - subscription must`t exist;
 
-    - ```user``` must`t be equal to ```subscriber```;
+    - ```user``` must`t be equal to ```subscriber```, must be equal to ```user_pk``` from request;
+
+    - ```user_pk``` - must be real user primary key;
+
+    - token from headers must be equal to request user`s token.
 
 - ```/api/users/user_pk/unsubscribe/``` (DELETE)
 
@@ -229,6 +220,12 @@
     ### Validators
 
     - subscription must exist;
+    
+    - ```user``` - must be equal to ```user_pk``` from request;
+
+    - ```user_pk``` - must be real user primary key;
+
+    - token from headers must be equal to request user`s token.
 
 - ```/api/users/user_pk/games/``` (GET)
 

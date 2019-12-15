@@ -2,7 +2,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from qteam_quest.settings import ROOT_URL
-from users.models import User, GENDERS, UserSubscription, UserChangePhone, UserChangePhoneConfirm
+from users.models import User, GENDERS, UserSubscription
 
 IMAGE_EXTENSIONS = [
     ('.jpg', 'JPG, JPEG'),
@@ -70,7 +70,7 @@ class UserAuthTokenSerializer(serializers.Serializer):
     )
 
 
-class UserChangePhoneNumberSerializer(serializers.ModelSerializer):
+class UserChangePhoneNumberSerializer(serializers.Serializer):
     """Class that implements user change phone number serializer"""
 
     phone = serializers.CharField(
@@ -78,26 +78,14 @@ class UserChangePhoneNumberSerializer(serializers.ModelSerializer):
         required=True
     )
 
-    class Meta:
-        model = UserChangePhone
-        fields = [
-            'phone',
-        ]
 
-
-class UserChangePhoneNumberConfirmSerializer(serializers.ModelSerializer):
+class UserChangePhoneNumberConfirmSerializer(serializers.Serializer):
     """Class that implements user change phone number confirm serializer"""
 
     sms_code = serializers.CharField(
         max_length=5,
         required=True
     )
-
-    class Meta:
-        model = UserChangePhoneConfirm
-        fields = [
-            'sms_code',
-        ]
 
 
 class UpdateUserProfileSerializer(serializers.Serializer):
@@ -133,20 +121,6 @@ class UpdateUserProfileSerializer(serializers.Serializer):
     )
 
 
-class UserChangePasswordSerializer(serializers.Serializer):
-    """Class that represents user password change serializer"""
-
-    old_password = serializers.CharField(
-        required=True,
-    )
-    new_password_1 = serializers.CharField(
-        required=True,
-    )
-    new_password_2 = serializers.CharField(
-        required=True,
-    )
-
-
 class UserSubscriptionCreateSerializer(serializers.ModelSerializer):
     """Class that represents user subscription create serializer"""
 
@@ -157,10 +131,14 @@ class UserSubscriptionCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         try:
             UserSubscription.objects.get(user=data['user'], subscriber=data['subscriber'])
-            raise serializers.ValidationError('Subscription already exists!')
+            raise serializers.ValidationError({
+                'error': 'Subscription already exists!',
+            })
         except UserSubscription.DoesNotExist:
             if data['user'] == data['subscriber']:
-                raise serializers.ValidationError('Unable to subscribe to myself!')
+                raise serializers.ValidationError({
+                    'error': 'Unable to subscribe by yourself!',
+                })
             return data
 
 
@@ -173,3 +151,17 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSubscription
         fields = '__all__'
+
+
+class UserChangePasswordSerializer(serializers.Serializer):
+    """Class that represents user password change serializer"""
+
+    old_password = serializers.CharField(
+        required=True,
+    )
+    new_password_1 = serializers.CharField(
+        required=True,
+    )
+    new_password_2 = serializers.CharField(
+        required=True,
+    )

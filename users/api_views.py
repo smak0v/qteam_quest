@@ -103,37 +103,6 @@ class UserLogoutView(APIView):
         })
 
 
-class UserChangePasswordView(UpdateAPIView):
-    """Class that implements user change password view API endpoint"""
-
-    permission_classes = [
-        IsAuthenticated,
-    ]
-    serializer_class = UserChangePasswordSerializer
-
-    def get_object(self):
-        return self.request.user
-
-    def update(self, request, *args, **kwargs):
-        user = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            if not user.check_password(serializer.data.get('old_password')):
-                return Response({
-                    'old_password': 'Wrong password!',
-                }, status=status.HTTP_400_BAD_REQUEST)
-            if serializer.data.get('new_password_1') != serializer.data.get('new_password_2'):
-                return Response({
-                    'error': 'Passwords must be equals!',
-                }, status=status.HTTP_400_BAD_REQUEST)
-            user.set_password(serializer.data.get('new_password_2'))
-            user.save()
-            return Response({
-                'success': 'Password was changed successfully!',
-            }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     """Class that implements user retrieve, update, destroy view API endpoint"""
 
@@ -213,19 +182,6 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(data=request.data, partial=True)
         if serializer.is_valid():
             usr = None
-            # if not re.match('^((\+38|\+7|\+8)+([0-9]){10})$', serializer.validated_data.get('phone')):
-            #     return Response({
-            #         'phone': 'Must be in russian format number!',
-            #     })
-            # try:
-            #     usr = User.objects.get(phone=serializer.validated_data.get('phone'))
-            # except User.DoesNotExist:
-            #     request_user.phone = serializer.validated_data.get('phone', request_user.phone)
-            # if usr is not None:
-            #     if usr != user:
-            #         return Response({
-            #             'error': 'User with this phone already exists!',
-            #         }, status=status.HTTP_400_BAD_REQUEST)
             request_user.username = serializer.validated_data.get('username', request_user.username)
             request_user.first_name = serializer.validated_data.get('first_name', request_user.first_name)
             request_user.last_name = serializer.validated_data.get('last_name', request_user.last_name)
@@ -296,8 +252,18 @@ class UserVenueSubscriptionsListView(APIView):
     ]
 
     @staticmethod
-    def get(request, pk):
-        venue_subscriptions = VenueSubscription.objects.filter(user=pk)
+    def get(request, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=kwargs.get('pk'))
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User does not exist!',
+            }, status=status.HTTP_404_NOT_FOUND)
+        if user != request.user:
+            return Response({
+                'error': 'Authentication failed!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        venue_subscriptions = VenueSubscription.objects.filter(user=kwargs.get('pk'))
         data = VenueSubscriptionSerializer(venue_subscriptions, many=True).data
         return Response(data, status=status.HTTP_200_OK)
 
@@ -312,9 +278,19 @@ class UserSubscribersListView(ListAPIView):
     ]
 
     @staticmethod
-    def get(request, pk):
+    def get(request, *args, **kwargs):
         try:
-            user_subscribers = UserSubscription.objects.filter(user=pk)
+            user = User.objects.get(pk=kwargs.get('pk'))
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User does not exist!',
+            }, status=status.HTTP_404_NOT_FOUND)
+        if user != request.user:
+            return Response({
+                'error': 'Authentication failed!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user_subscribers = UserSubscription.objects.filter(user=kwargs.get('pk'))
             data = UserSubscriptionSerializer(user_subscribers, many=True).data
             return Response(data, status=status.HTTP_200_OK)
         except UserSubscription.DoesNotExist:
@@ -333,9 +309,19 @@ class UserSubscriptionsListView(ListAPIView):
     ]
 
     @staticmethod
-    def get(request, pk):
+    def get(request, *args, **kwargs):
         try:
-            user_subscriptions = UserSubscription.objects.filter(subscriber=pk)
+            user = User.objects.get(pk=kwargs.get('pk'))
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User does not exist!',
+            }, status=status.HTTP_404_NOT_FOUND)
+        if user != request.user:
+            return Response({
+                'error': 'Authentication failed!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user_subscriptions = UserSubscription.objects.filter(subscriber=kwargs.get('pk'))
             data = UserSubscriptionSerializer(user_subscriptions, many=True).data
             return Response(data, status=status.HTTP_200_OK)
         except UserSubscription.DoesNotExist:
@@ -353,6 +339,30 @@ class UserSubscribeView(CreateAPIView):
         IsAuthenticated,
     ]
 
+    def post(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=kwargs.get('pk'))
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User does not exist!',
+            }, status=status.HTTP_404_NOT_FOUND)
+        if user != request.user:
+            return Response({
+                'error': 'Authentication failed!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserSubscriptionCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            if kwargs.get('pk') != serializer.data['user']:
+                return Response({
+                    'user': 'Must be equal to user_pk from request url!',
+                }, status=status.HTTP_400_BAD_REQUEST)
+            user_subscription = UserSubscription.objects.create(
+                user=User.objects.get(pk=serializer.data['user']),
+                subscriber=User.objects.get(pk=serializer.data['subscriber']),
+            )
+            return Response(UserSubscriptionSerializer(user_subscription).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserUnsubscribeView(DestroyAPIView):
     """Class that implements user subscription delete view API endpoint"""
@@ -364,10 +374,26 @@ class UserUnsubscribeView(DestroyAPIView):
     ]
 
     @staticmethod
-    def destroy(request, pk):
+    def destroy(request, *args, **kwargs):
         try:
-            user_subscription = UserSubscription.objects.get(user=request.POST['user'],
-                                                             subscriber=request.POST['subscriber'])
+            user = User.objects.get(pk=kwargs.get('pk'))
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User does not exist!',
+            }, status=status.HTTP_404_NOT_FOUND)
+        if user != request.user:
+            return Response({
+                'error': 'Authentication failed!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        if kwargs.get('pk') != request.data['user']:
+            return Response({
+                'user': 'Must be equal to user_pk from request url!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user_subscription = UserSubscription.objects.get(
+                user=request.data['subscriber'],
+                subscriber=request.data['user']
+            )
             user_subscription.delete()
             return Response({
                 'message': 'Successfully deleted!',
@@ -527,3 +553,34 @@ class ChangePhoneConfirmView(APIView):
         return Response({
             'sms_code': 'SMS code is required!',
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserChangePasswordView(UpdateAPIView):
+    """Class that implements user change password view API endpoint"""
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+    serializer_class = UserChangePasswordSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            if not user.check_password(serializer.data.get('old_password')):
+                return Response({
+                    'old_password': 'Wrong password!',
+                }, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.data.get('new_password_1') != serializer.data.get('new_password_2'):
+                return Response({
+                    'error': 'Passwords must be equals!',
+                }, status=status.HTTP_400_BAD_REQUEST)
+            user.set_password(serializer.data.get('new_password_2'))
+            user.save()
+            return Response({
+                'success': 'Password was changed successfully!',
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
