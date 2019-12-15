@@ -213,19 +213,19 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(data=request.data, partial=True)
         if serializer.is_valid():
             usr = None
-            if not re.match('^((\+38|\+7|\+8)+([0-9]){10})$', serializer.validated_data.get('phone')):
-                return Response({
-                    'phone': 'Must be in russian format number!',
-                })
-            try:
-                usr = User.objects.get(phone=serializer.validated_data.get('phone'))
-            except User.DoesNotExist:
-                request_user.phone = serializer.validated_data.get('phone', request_user.phone)
-            if usr is not None:
-                if usr != user:
-                    return Response({
-                        'error': 'User with this phone already exists!',
-                    }, status=status.HTTP_400_BAD_REQUEST)
+            # if not re.match('^((\+38|\+7|\+8)+([0-9]){10})$', serializer.validated_data.get('phone')):
+            #     return Response({
+            #         'phone': 'Must be in russian format number!',
+            #     })
+            # try:
+            #     usr = User.objects.get(phone=serializer.validated_data.get('phone'))
+            # except User.DoesNotExist:
+            #     request_user.phone = serializer.validated_data.get('phone', request_user.phone)
+            # if usr is not None:
+            #     if usr != user:
+            #         return Response({
+            #             'error': 'User with this phone already exists!',
+            #         }, status=status.HTTP_400_BAD_REQUEST)
             request_user.username = serializer.validated_data.get('username', request_user.username)
             request_user.first_name = serializer.validated_data.get('first_name', request_user.first_name)
             request_user.last_name = serializer.validated_data.get('last_name', request_user.last_name)
