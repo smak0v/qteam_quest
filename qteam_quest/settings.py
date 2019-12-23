@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'users',
     'apps.dashboard',
     'apps.quests',
-    'apps.venues',
+    'apps.games',
     'apps.teams',
     'apps.coupons',
 ]

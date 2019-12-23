@@ -10,16 +10,12 @@ class Team(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='quests.Game',
+        to='games.Game',
         on_delete=models.CASCADE,
-    )
-    name = models.CharField(
-        verbose_name='Название',
-        max_length=255,
     )
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{}'.format(self.game.title)
 
 
 class UserInTeam(models.Model):
@@ -31,7 +27,7 @@ class UserInTeam(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='quests.Game',
+        to='games.Game',
         on_delete=models.CASCADE,
     )
     team = models.ForeignKey(
@@ -46,7 +42,7 @@ class UserInTeam(models.Model):
     )
 
     def __str__(self):
-        return '{} - {} {}'.format(self.user.username, self.game.title, self.team.name)
+        return '{} - {}'.format(self.user.username, self.game.title)
 
 
 class ReservedPlaceInTeam(models.Model):
@@ -58,7 +54,7 @@ class ReservedPlaceInTeam(models.Model):
 
     game = models.ForeignKey(
         verbose_name='Игра',
-        to='quests.Game',
+        to='games.Game',
         on_delete=models.CASCADE,
     )
     team = models.ForeignKey(
@@ -77,4 +73,4 @@ class ReservedPlaceInTeam(models.Model):
     )
 
     def __str__(self):
-        return '{} - {} {}'.format(self.title, self.game.title, self.team.name)
+        return '{} - {}'.format(self.title, self.game.title)

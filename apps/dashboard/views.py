@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
 
-from apps.quests.models import Game
+from apps.games.models import Game
 
 
 class DashboardView(View):
@@ -42,7 +42,7 @@ class DashboardView(View):
 
         context = {
             'title': 'Дашборд',
-            'quests': games,
+            'games': games,
             'opened_for_registration_games': opened_for_registration_games,
             'canceled_games': canceled_games,
             'today_held_games': today_held_games,

@@ -29,16 +29,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for avtive_coupon in active_coupons %}
+                            {% for active_coupon in active_coupons %}
                                 <tr>
-                                    <td>{{ avtive_coupon.id }}</td>
-                                    <td>{{ avtive_coupon.code }}</td>
-                                    <td>{{ avtive_coupon.start_date }}</td>
-                                    <td>{{ avtive_coupon.end_date }}</td>
-                                    <td>{{ avtive_coupon.discount }}</td>
-                                    <td>{{ avtive_coupon.units }}</td>
-                                    <td>{{ avtive_coupon.type }}</td>
-                                    <td>{{ avtive_coupon.user }}</td>
+                                    <td>{{ active_coupon.id }}</td>
+                                    <td>{{ active_coupon.code }}</td>
+                                    <td>{{ active_coupon.start_date }}</td>
+                                    <td>{{ active_coupon.end_date }}</td>
+                                    <td>{{ active_coupon.discount }}</td>
+                                    <td>{{ active_coupon.units }}</td>
+                                    <td>{{ active_coupon.type }}</td>
+                                    <td>{{ active_coupon.user }}</td>
                                     <td class="d_flex justify-content-center">
                                         <a href="{% url 'coupons:edit' active_coupon.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>

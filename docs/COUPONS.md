@@ -20,7 +20,7 @@
     type (required, INDIVIDUAL or GENERAL)
     user (required, can be null)
     ```
-  
+
     Create new coupon.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
@@ -29,7 +29,7 @@
     Only for staff users.
 
     ### Validators:
-    
+
     - ```code``` - max_length = 10;
 
     - ```start_date```  and ```end_date``` - must be in format YYYY-MM-DD;
@@ -37,11 +37,11 @@
     - ```end_date``` - can`t be less that ```start_date```;
 
     - ```user``` - must be NULL for GENERAL type of coupon;
-    
+
     - ```user``` - can`t be NULL for INDIVIDUAL type of coupon;
-    
+
     - ```user``` - must be real user for INDIVIDUAL type of coupon.
-    
+
 - ```/api/coupons/coupon_pk/``` (GET)
 
     Returns info about a coupon by it primary key.
@@ -73,7 +73,7 @@
     ```
 
     Update a coupon by it primary key.
-    
+
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
 

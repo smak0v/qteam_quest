@@ -5,186 +5,236 @@
     <div class="container-fluid">
         <div class="col-12">
             <div class="content">
-                <div class="d-flex">
+                <div class="d_flex">
                     <h2 class="empty_h_1">Обзор квеста</h2>
-                    <a href="{% url 'quests:edit' game.pk %}" class="non_href ml-auto">
-                        <button class="btn btn-warning game_info_btn">Редактировать</button>
+                    <a href="{% url 'quests:edit' quest.pk %}" class="non_href ml-auto">
+                        <button class="btn btn-warning venue_info_btn">Редактировать</button>
                     </a>
-                    <a href="{% url 'quests:delete' game.pk %}" class="non_href">
-                        <button class="btn btn-danger game_info_btn">Удалить</button>
+                    <a href="{% url 'quests:delete' quest.pk %}" class="non_href">
+                        <button class="btn btn-danger venue_info_btn">Удалить</button>
                     </a>
-                    {% if game.cancel == True %}
-                        <span class="big_details_text red ml-auto canceled">Отменена!</span>
-                        <a href="{% url 'quests:renew' game.pk %}" class="non_href">
-                            <button class="btn btn-block game_info_btn">Возобновить</button>
-                        </a>
-                    {% else %}
-                        <a href="{% url 'quests:cancel' game.pk %}" class="non_href">
-                            <button class="btn btn-block game_info_btn">Отменить</button>
-                        </a>
-                    {% endif %}
                 </div>
                 <hr>
-                {% if game.registration_available == True %}
+                <p class="details_block">
+                    <span class="big_details_text">Название:</span>
+                    <span class="small_details_text"> {{ quest.name }}</span>
+                </p>
+                {% if quest.description %}
                     <p class="details_block">
-                        <span class="big_details_text green">Открыта для регистрации!</span>
-                    </p>
-                {% else %}
-                    <p class="details_block">
-                        <span class="big_details_text red">Закрыта для регистрации!</span>
+                        <span class="big_details_text">Описание:</span>
+                        <span class="small_details_text"> {{ quest.description }}</span>
                     </p>
                 {% endif %}
                 <p class="details_block">
-                    <span class="big_details_text">Название:</span>
-                    <span class="small_details_text"> {{ game.title }}</span>
+                    <span class="big_details_text">Локация:</span>
+                    <span class="small_details_text"> {{ quest.location }}</span>
                 </p>
-                {% if game.description %}
+                <p class="details_block">
+                    <span class="big_details_text">X координата:</span>
+                    <span class="small_details_text"> {{ quest.x_coordinate }}</span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">У координата:</span>
+                    <span class="small_details_text"> {{ quest.y_coordinate }}</span>
+                </p>
+                <p class="details_block">
+                    <span class="big_details_text">Рейтинг:</span>
+                    <span class="small_details_text"> {{ quest.rating }}</span>
+                </p>
+                {% if quest.photo %}
                     <p class="details_block">
-                        <span class="big_details_text">Описание:</span>
-                        <span class="small_details_text"> {{ game.description }}</span>
+                        <span class="big_details_text">Фото:</span>
+                        <br>
+                        <img src="{{ quest.photo.url }}" alt="Quest photo" title="Quest photo" class="cover">
                     </p>
                 {% endif %}
-                {% if game.cover_image %}
+                {% if quest.cover_image %}
                     <p class="details_block">
                         <span class="big_details_text">Обложка:</span>
                         <br>
-                        <img src="{{ game.cover_image.url }}" alt="Game cover image" title="Game cover image"
+                        <img src="{{ quest.cover_image.url }}" alt="Quest cover image" title="Quest cover image"
                              class="cover">
                     </p>
                 {% endif %}
-                {% if game.photo %}
-                    <p class="details_block">
-                        <span class="big_details_text">Фото игры:</span>
-                        <br>
-                        <img src="{{ game.photo.url }}" alt="Game photo" title="Game photo"
-                             class="cover">
-                    </p>
-                {% endif %}
-                <p class="details_block">
-                    <span class="big_details_text">Время и дата:</span>
-                    <span class="small_details_text"> {{ game.timespan }}</span>
-                </p>
-                <p class="details_block">
-                    <span class="big_details_text">Длительность (в минутах):</span>
-                    <span class="small_details_text"> {{ game.duration }} минут</span>
-                </p>
-                <p class="details_block">
-                    <span class="big_details_text">Площадка:</span>
-                    <span class="small_details_text">
-                        <a href="{% url 'venues:details' game.venue.pk %}" class="object_link">
-                            {{ game.venue }}
-                        </a>
-                    </span>
-                </p>
-                <p class="details_block">
-                    <span class="big_details_text">Способ оплаты:</span>
-                    <span class="small_details_text"> {{ game.get_payment_method_display }}</span>
-                </p>
-                <p class="details_block">
-                    <span class="big_details_text">Уровень:</span>
-                    <span class="small_details_text"> {{ game.get_level_display }}</span>
-                </p>
-                <p class="details_block">
-                    <span class="big_details_text">Цена:</span>
-                    <span class="small_details_text"> {{ game.price }} {{ game.currency }}</span>
-                </p>
-                {% if game.refund_money_if_game_is_cancelled == True %}
-                    <p class="details_block">
-                        <span class="big_details_text">Возврат денег в случае отмены и предоставления уведомления за
-                            <span class="red">{{ game.refundable_days }}</span> дней!
-                        </span>
-                    </p>
-                {% endif %}
-                <p class="details_block">
-                    <span class="big_details_text">Статус:</span>
-                    <span class="small_details_text"> {{ game.get_game_status_display }}</span>
-                </p>
-                <p class="details_block">
-                    <span class="big_details_text">Количество игроков:</span>
-                    <span class="small_details_text"> {{ game.get_a_side_players_count_display }}</span>
-                </p>
             </div>
             <div class="content">
-                <h2 class="empty_h_1">Команды</h2>
-                <hr>
-                <div class="d_flex">
-                    <div class="content_small">
-                        <h4 class="empty_h_1">{{ team_1.name }}</h4>
-                        <hr>
-                        {% if team_1_players|length != 0 %}
-                            <h5 class="empty_h_1">Игроки</h5>
-                            <div class="d_flex">
-                                {% for team_1_player in team_1_players %}
-                                    <div class="user_div">
-                                        {% if team_1_player.user.cover_image %}
-                                            <img src="{{ team_1_player.user.cover_image }}" alt="Player icon"
-                                                 title="Player icon" class="player_icon">
-                                        {% else %}
-                                            <img src="{% static 'img/no_user.png' %}" alt="Player icon"
-                                                 title="Player icon" class="player_icon">
-                                        {% endif %}
-                                        <p>{{ team_1_player.user.first_name }} {{ team_1_player.user.last_name }}</p>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <h6 class="empty_h_1">Не зарегестрировано ни одного игрока!</h6>
-                        {% endif %}
-                        <hr>
-                        {% if team_1_reserved_places|length != 0 %}
-                            <h5 class="empty_h_1">Зарезервированные места</h5>
-                            <div class="d_flex">
-                                {% for team_1_reserved_place in team_1_reserved_places %}
-                                    <div class="user_div">
-                                        <img src="{% static 'img/no_user.png' %}" alt="Player icon"
-                                             title="Player icon" class="player_icon">
-                                        <p>{{ team_1_reserved_place.title }}</p>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <h6 class="empty_h_1">Не зарезервировано ни одного места!</h6>
-                        {% endif %}
+                {% if metro_stations %}
+                    <div class="d-flex">
+                        <h2 class="empty_h_1">Станции метро для квеста</h2>
+                        <a href="{% url 'quests:create_metro_station' quest.pk %}" class="non_href ml-auto">
+                            <button class="btn btn-success add_btn">Добавить станцию метро</button>
+                        </a>
                     </div>
-                    <div class="content_small">
-                        <h4 class="empty_h_1">{{ team_2.name }}</h4>
-                        <hr>
-                        {% if team_2_players|length != 0 %}
-                            <h5 class="empty_h_1">Игроки</h5>
-                            <div class="d_flex">
-                                {% for team_2_player in team_2_players %}
-                                    <div class="user_div">
-                                        {% if team_2_player.user.cover_image %}
-                                            <img src="{{ team_2_player.user.cover_image }}" alt="Player icon"
-                                                 title="Player icon" class="player_icon">
-                                        {% else %}
-                                            <img src="{% static 'img/no_user.png' %}" alt="Player icon"
-                                                 title="Player icon" class="player_icon">
-                                        {% endif %}
-                                        <p>{{ team_2_player.user.first_name }} {{ team_2_player.user.last_name }}</p>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <h6 class="empty_h_1">Не зарегестрировано ни одного игрока!</h6>
-                        {% endif %}
-                        <hr>
-                        {% if team_2_reserved_places|length != 0 %}
-                            <h5 class="empty_h_1">Зарезервированные места</h5>
-                            <div class="d_flex">
-                                {% for team_2_reserved_place in team_2_reserved_places %}
-                                    <div class="user_div">
-                                        <img src="{% static 'img/no_user.png' %}" alt="Player icon"
-                                             title="Player icon" class="player_icon">
-                                        <p>{{ team_2_reserved_place.title }}</p>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <h6 class="empty_h_1">Не зарезервировано ни одного места!</h6>
-                        {% endif %}
+                    <hr>
+                    <div class="table_content">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Цвет</th>
+                                <th class="actions">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for station in metro_stations %}
+                                <tr>
+                                    <td>{{ station.name }}</td>
+                                    <td><span
+                                            style="border-bottom: 4px solid {{ station.color }}">{{ station.color }}</span>
+                                    </td>
+                                    <td class="d_flex justify-content-center">
+                                        <a href="{% url 'quests:edit_metro_station' quest.pk station.pk %}"
+                                           class="non_href">
+                                            <button class="btn btn-warning edit_btn">Редактировать</button>
+                                        </a>
+                                        <a href="{% url 'quests:delete_metro_station' quest.pk station.pk %}"
+                                           class="non_href">
+                                            <button class="btn btn-danger delete_btn">Удалить</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                </div>
+                {% else %}
+                    <div class="d-flex">
+                        <h2 class="empty_h_1">Для этого квеста нет станций метро!</h2>
+                        <a href="{% url 'quests:create_metro_station' quest.pk %}" class="non_href ml-auto">
+                            <button class="btn btn-success add_btn">Добавить станцию метро</button>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="content">
+                {% if games %}
+                    <div class="d-flex">
+                        <h2 class="empty_h_1">Игры по квесту</h2>
+                        <a href="{% url 'quests:create' %}" class="non_href ml-auto">
+                            <button class="btn btn-success add_btn">Добавить игру</button>
+                        </a>
+                    </div>
+                    <hr>
+                    <div class="table_content">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="id">ID</th>
+                                <th>Название</th>
+                                <th class="date_time">Дата и время</th>
+                                <th>Площадка</th>
+                                <th>Уровень игры</th>
+                                <th>Цена</th>
+                                <th>Статус</th>
+                                <th>Количесво игроков со стороны</th>
+                                <th class="actions">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for game in games %}
+                                <tr>
+                                    <td class="id">
+                                        <a href="{% url 'games:details' game.pk %}" class="object_link">
+                                            {{ game.pk }}
+                                        </a>
+                                    </td>
+                                    <td>{{ game.title }}</td>
+                                    <td>{{ game.timespan }}</td>
+                                    <td>
+                                        <a href="{% url 'quests:details' game.quest.pk %}" class="object_link">
+                                            {{ game.quest }}
+                                        </a>
+                                    </td>
+                                    <td>{{ game.get_level_display }}</td>
+                                    <td>{{ game.price }} {{ game.currency }}</td>
+                                    <td>{{ game.get_game_status_display }}</td>
+                                    <td>{{ game.get_a_side_players_count_display }}</td>
+                                    <td class="d_flex justify-content-center">
+                                        <a href="{% url 'games:edit' game.pk %}" class="non_href">
+                                            <button class="btn btn-warning edit_btn">Редактировать</button>
+                                        </a>
+                                        <a href="{% url 'games:delete' game.pk %}" class="non_href">
+                                            <button class="btn btn-danger delete_btn">Удалить</button>
+                                        </a>
+                                        <a href="{% url 'games:cancel' game.pk %}" class="non_href">
+                                            <button class="btn btn-block cancel_btn">Отменить</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="d-flex">
+                        <h2 class="empty_h_1">Для этого квеста нет игр!</h2>
+                        <a href="{% url 'games:create' %}" class="non_href ml-auto">
+                            <button class="btn btn-success add_btn">Добавить игру</button>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="content">
+                {% if canceled_games %}
+                    <div class="d-flex">
+                        <h2 class="empty_h_1">Отмененные игры по квесту</h2>
+                    </div>
+                    <hr>
+                    <div class="table_content">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="id">ID</th>
+                                <th>Название</th>
+                                <th class="date_time">Дата и время</th>
+                                <th>Площадка</th>
+                                <th>Уровень игры</th>
+                                <th>Цена</th>
+                                <th>Статус</th>
+                                <th>Количесво игроков со стороны</th>
+                                <th class="canceled_actions">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for canceled_game in canceled_games %}
+                                <tr>
+                                    <td class="id">
+                                        <a href="{% url 'games:details' canceled_game.pk %}" class="object_link">
+                                            {{ canceled_game.pk }}
+                                        </a>
+                                    </td>
+                                    <td>{{ canceled_game.title }}</td>
+                                    <td>{{ canceled_game.timespan }}</td>
+                                    <td>
+                                        <a href="{% url 'games:details' canceled_game.quest.pk %}" class="object_link">
+                                            {{ canceled_game.quest }}
+                                        </a>
+                                    </td>
+                                    <td>{{ canceled_game.get_level_display }}</td>
+                                    <td>{{ canceled_game.price }} {{ canceled_game.currency }}</td>
+                                    <td>{{ canceled_game.get_game_status_display }}</td>
+                                    <td>{{ canceled_game.get_a_side_players_count_display }}</td>
+                                    <td class="d_flex justify-content-center">
+                                        <a href="{% url 'games:edit' canceled_game.pk %}" class="non_href">
+                                            <button class="btn btn-warning edit_btn">Редактировать</button>
+                                        </a>
+                                        <a href="{% url 'games:delete' canceled_game.pk %}" class="non_href">
+                                            <button class="btn btn-danger delete_btn">Удалить</button>
+                                        </a>
+                                        <a href="{% url 'games:renew' canceled_game.pk %}" class="non_href">
+                                            <button class="btn btn-block renew_btn">Возобновить</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="d-flex">
+                        <h2 class="empty_h_1">Для этого квеста нет отмененных игр!</h2>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

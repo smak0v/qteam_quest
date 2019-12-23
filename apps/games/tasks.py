@@ -2,7 +2,7 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 from django.utils import timezone
 
-from apps.quests.models import Game
+from apps.games.models import Game
 
 
 @periodic_task(run_every=(crontab(minute='*/1')),

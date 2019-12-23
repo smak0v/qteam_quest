@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from apps.coupons.models import Coupon
-from apps.venues.models import Venue
+from apps.quests.models import Quest
 from users.models import User
 
 
@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Clear database'
 
     def handle(self, *args, **options):
-        self.delete_venues_and_related_objects()
+        self.delete_quests_and_related_objects()
         self.delete_users_and_related_objects()
         self.delete_coupons()
 
@@ -26,16 +26,16 @@ class Command(BaseCommand):
             print('No users in DB.')
 
     @staticmethod
-    def delete_venues_and_related_objects():
-        venues = Venue.objects.all()
-        if len(venues) > 0:
-            print('Removing venues and all related objects:')
-            for venue in venues:
-                venue.delete()
+    def delete_quests_and_related_objects():
+        quests = Quest.objects.all()
+        if len(quests) > 0:
+            print('Removing quests and all related objects:')
+            for quest in quests:
+                quest.delete()
                 print('.', end='', flush=True)
-            print('\nRemoving venues and all related objects: DONE.')
+            print('\nRemoving quests and all related objects: DONE.')
         else:
-            print('No venues in DB.')
+            print('No quests in DB.')
 
     @staticmethod
     def delete_coupons():

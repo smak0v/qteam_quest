@@ -12,8 +12,8 @@ class CouponsListView(View):
     template_name = 'coupons/list.html'
 
     def get(self, request):
-        active_coupons = Coupon.objects.filter(start_date__gte=datetime.now())
-        not_active_coupons = Coupon.objects.filter(start_date__lt=datetime.now())
+        active_coupons = Coupon.objects.filter(end_date__gte=datetime.now())
+        not_active_coupons = Coupon.objects.filter(end_date__lt=datetime.now())
         context = {
             'title': 'Купоны',
             'active_coupons': active_coupons,

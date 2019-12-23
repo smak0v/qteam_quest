@@ -8,11 +8,9 @@ class TeamAdmin(admin.ModelAdmin):
 
     list_display = [
         'game',
-        'name',
     ]
     ordering = [
         'game',
-        'name',
     ]
     list_per_page = 50
 

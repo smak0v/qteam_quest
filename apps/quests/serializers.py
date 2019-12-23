@@ -1,110 +1,122 @@
 from rest_framework import serializers
 
-from apps.quests.models import Game, GameComment, GamePlayerEvaluation
-from apps.teams.models import Team, UserInTeam
-from apps.venues.serializers import VenueSerializer
+from apps.quests.models import Quest, QuestComment, QuestSubscription, MetroStation
 from qteam_quest.settings import ROOT_URL
 from users.serializers import UserSerializer
 
 
-class GameCreateUpdateSerializer(serializers.ModelSerializer):
-    """Class that represents game create, update serializer"""
+class MetroStationSerializer(serializers.ModelSerializer):
+    """Class that represents metro station serializer"""
 
     class Meta:
-        model = Game
-        fields = '__all__'
-
-    def create(self, validated_data):
-        game = Game.objects.create(**validated_data)
-        Team.objects.create(
-            game=game,
-            name='Черные майки',
-            players_count_per_team=game.a_side_players_count,
-        )
-        Team.objects.create(
-            game=game,
-            name='Белые майки',
-            players_count_per_team=game.a_side_players_count,
-        )
-        return game
-
-    @staticmethod
-    def validate_price(price):
-        if price < 0:
-            raise serializers.ValidationError('Prise can`t be less than 0!')
-        return price
+        model = MetroStation
+        fields = [
+            'name',
+            'color',
+        ]
 
 
-class GameSerializer(serializers.ModelSerializer):
-    """Class that represents game serializer"""
+class QuestSerializer(serializers.ModelSerializer):
+    """Class that represents quest serializer"""
 
-    venue = VenueSerializer()
+    metro_stations = MetroStationSerializer(
+        many=True,
+        read_only=True
+    )
     cover_image = serializers.SerializerMethodField()
     photo = serializers.SerializerMethodField()
 
     @staticmethod
-    def get_cover_image(game):
-        if not game.cover_image:
+    def get_cover_image(quest):
+        if not quest.cover_image:
             return None
-        return ROOT_URL + game.cover_image.url
+        return ROOT_URL + quest.cover_image.url
 
     @staticmethod
-    def get_photo(game):
-        if not game.photo:
+    def get_photo(quest):
+        if not quest.photo:
             return None
-        return ROOT_URL + game.photo.url
+        return ROOT_URL + quest.photo.url
 
     class Meta:
-        model = Game
+        model = Quest
         fields = '__all__'
 
 
-class GameCommentCreateSerializer(serializers.ModelSerializer):
-    """Class that represents game comment create serializer"""
+class QuestUpdateSerializer(serializers.ModelSerializer):
+    """Class that represents quest update serializer"""
+
+    name = serializers.CharField(
+        max_length=255,
+        required=False,
+    )
+    location = serializers.CharField(
+        max_length=255,
+        required=False,
+    )
+    x_coordinate = serializers.DecimalField(
+        decimal_places=5,
+        max_digits=7,
+        required=False,
+    )
+    y_coordinate = serializers.DecimalField(
+        decimal_places=5,
+        max_digits=7,
+        required=False,
+    )
 
     class Meta:
-        model = GameComment
-        fields = '__all__'
+        model = Quest
+        exclude = [
+            'rating',
+        ]
 
 
-class GameCommentSerializer(serializers.ModelSerializer):
-    """Class that represents game comment serializer"""
-
-    user = UserSerializer()
-    game = GameSerializer()
-
-    class Meta:
-        model = GameComment
-        fields = '__all__'
-
-
-class GamePlayerEvaluationCreateSerializer(serializers.ModelSerializer):
-    """Class that represents game player evaluation create serializer"""
+class QuestCommentCreateSerializer(serializers.ModelSerializer):
+    """Class that represents quest comment create serializer"""
 
     class Meta:
-        model = GamePlayerEvaluation
+        model = QuestComment
         fields = '__all__'
-
-    def validate(self, data):
-        try:
-            appraiser = UserInTeam.objects.get(user=data['appraiser'], game=data['game'])
-        except UserInTeam.DoesNotExist:
-            raise serializers.ValidationError('Appraiser must participate in the game!')
-        try:
-            ranked_user = UserInTeam.objects.get(user=data['ranked_user'], game=data['game'])
-        except UserInTeam.DoesNotExist:
-            raise serializers.ValidationError('Ranked user must participate in the game!')
-        if data['appraiser'] == data['ranked_user']:
-            raise serializers.ValidationError('Appraiser should not be ranked user!')
-        return data
 
     def create(self, validated_data):
-        player_valuation = GamePlayerEvaluation.objects.create(**validated_data)
-        ranked_user = UserInTeam.objects.get(user=validated_data['ranked_user'], game=validated_data['game'])
-        ranked_user.reliability = self.update_ranked_user_reliability(ranked_user)
-        ranked_user.save()
-        return player_valuation
+        quest_comment = QuestComment.objects.create(**validated_data)
+        quest = validated_data.get('quest')
+        quest_obj = Quest.objects.get(pk=quest.pk)
+        quest_comments = QuestComment.objects.filter(quest=quest)
+        scores_sum = 0
+        for quest_comment in quest_comments:
+            scores_sum += int(quest_comment.scores)
+        quest_obj.rating = float(scores_sum / len(quest_comments))
+        quest_obj.save()
+        return quest_comment
 
-    @staticmethod
-    def update_ranked_user_reliability(ranked_user):
-        return 100
+
+class QuestCommentSerializer(serializers.ModelSerializer):
+    """Class that represents quest comment serializer"""
+
+    user = UserSerializer()
+    quest = QuestSerializer()
+
+    class Meta:
+        model = QuestComment
+        fields = '__all__'
+
+
+class QuestSubscriptionCreateSerializer(serializers.ModelSerializer):
+    """Class that represents quest subscription create serializer"""
+
+    class Meta:
+        model = QuestSubscription
+        fields = '__all__'
+
+
+class QuestSubscriptionSerializer(serializers.ModelSerializer):
+    """Class that represents quest subscription serializer"""
+
+    user = UserSerializer()
+    quest = QuestSerializer()
+
+    class Meta:
+        model = QuestSubscription
+        fields = '__all__'

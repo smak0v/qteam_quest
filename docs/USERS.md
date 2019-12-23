@@ -144,9 +144,9 @@
 
     - ```sms_code``` - must be a code from SMS.
 
-- ```/api/users/user_pk/venue_subscriptions/``` (GET)
+- ```/api/users/user_pk/quest_subscriptions/``` (GET)
 
-    Get all user`s venue subscriptions.
+    Get all user`s quest subscriptions.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.

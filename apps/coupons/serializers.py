@@ -28,7 +28,7 @@ class CouponRetrieveSerializer(serializers.ModelSerializer):
 
 
 class CouponUpdateSerializer(serializers.ModelSerializer):
-    """Class that implements coupone update serializer"""
+    """Class that implements coupon update serializer"""
 
     class Meta:
         model = Coupon

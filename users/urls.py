@@ -1,6 +1,6 @@
 from django.urls import path
 
-from users.api_views import UserListView, UserVenueSubscriptionsListView, UserSubscribersListView, \
+from users.api_views import UserListView, UserQuestSubscriptionsListView, UserSubscribersListView, \
     UserSubscriptionsListView, UserSubscribeView, UserUnsubscribeView, UserGamesListView, UserPastGamesListView, \
     UserFutureGamesListView, UserRetrieveUpdateDeleteView, UserChangePasswordView, ChangePhoneView, \
     ChangePhoneConfirmView, UserProfileView, UserLoginView, UserLoginConfirmView, UserLogoutView
@@ -21,7 +21,7 @@ users_api_urls = (
         path('logout/', UserLogoutView.as_view(), name='logout'),
         path('my_profile/', UserProfileView.as_view(), name='user_profile'),
         path('<int:pk>/', UserRetrieveUpdateDeleteView.as_view(), name='user_detail'),
-        path('<int:pk>/venue_subscriptions/', UserVenueSubscriptionsListView.as_view(), name='venue_subscriptions'),
+        path('<int:pk>/quest_subscriptions/', UserQuestSubscriptionsListView.as_view(), name='quest_subscriptions'),
         path('<int:pk>/games/', UserGamesListView.as_view(), name='user_games'),
         path('<int:pk>/past_games/', UserPastGamesListView.as_view(), name='user_past_games'),
         path('<int:pk>/future_games/', UserFutureGamesListView.as_view(), name='user_future_games'),

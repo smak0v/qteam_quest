@@ -12,52 +12,38 @@
                     </a>
                 </div>
                 <hr class="content_hr">
-                {% if games %}
+                {% if quests %}
                     <div class="table_content">
                         <table>
                             <thead>
                             <tr>
                                 <th class="id">ID</th>
                                 <th>Название</th>
-                                <th class="date_time">Дата и время</th>
-                                <th>Длительность</th>
-                                <th>Площадка</th>
-                                <th>Уровень квеста</th>
-                                <th>Цена</th>
-                                <th>Статус</th>
-                                <th>MAX количесво участников</th>
+                                <th>Локация</th>
+                                <th>X</th>
+                                <th>Y</th>
+                                <th class="rating">Рейтинг</th>
                                 <th class="actions">Действия</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for game in games %}
+                            {% for quest in quests %}
                                 <tr>
                                     <td class="id">
-                                        <a href="{% url 'quests:details' game.pk %}" class="object_link">
-                                            {{ game.pk }}
-                                        </a>
+                                        <a href="{% url 'quests:details' quest.pk %}"
+                                           class="object_link">{{ quest.pk }}</a>
                                     </td>
-                                    <td>{{ game.title }}</td>
-                                    <td>{{ game.timespan }}</td>
-                                    <td>{{ game.duration }} минут</td>
+                                    <td>{{ quest.name }}</td>
+                                    <td>{{ quest.location }}</td>
+                                    <td>{{ quest.x_coordinate }}</td>
+                                    <td>{{ quest.y_coordinate }}</td>
+                                    <td>{{ quest.rating }}</td>
                                     <td>
-                                        <a href="{% url 'venues:details' game.venue.pk %}" class="object_link">
-                                            {{ game.venue }}
-                                        </a>
-                                    </td>
-                                    <td>{{ game.get_level_display }}</td>
-                                    <td>{{ game.price }} {{ game.currency }}</td>
-                                    <td>{{ game.get_game_status_display }}</td>
-                                    <td>{{ game.get_a_side_players_count_display }}</td>
-                                    <td class="d_flex justify-content-center">
-                                        <a href="{% url 'quests:edit' game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:edit' quest.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>
                                         </a>
-                                        <a href="{% url 'quests:delete' game.pk %}" class="non_href">
+                                        <a href="{% url 'quests:delete' quest.pk %}" class="non_href">
                                             <button class="btn btn-danger delete_btn">Удалить</button>
-                                        </a>
-                                        <a href="{% url 'quests:cancel' game.pk %}" class="non_href">
-                                            <button class="btn btn-block cancel_btn">Отменить</button>
                                         </a>
                                     </td>
                                 </tr>
@@ -67,68 +53,6 @@
                     </div>
                 {% else %}
                     <h4 class="empty_h_1">Список квестов пуст!</h4>
-                {% endif %}
-            </div>
-            <div class="content">
-                <div class="d-flex">
-                    <h2 class="content_header">Отмененные квесты</h2>
-                </div>
-                <hr class="content_hr">
-                {% if canceled_games %}
-                    <div class="table_content">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th class="id">ID</th>
-                                <th>Название</th>
-                                <th class="date_time">Дата и время</th>
-                                <th>Длительность</th>
-                                <th>Площадка</th>
-                                <th>Уровень квеста</th>
-                                <th>Цена</th>
-                                <th>Статус</th>
-                                <th>MAX количесво участников</th>
-                                <th class="canceled_actions">Действия</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for canceled_game in canceled_games %}
-                                <tr>
-                                    <td class="id">
-                                        <a href="{% url 'quests:details' canceled_game.pk %}" class="object_link">
-                                            {{ canceled_game.pk }}
-                                        </a>
-                                    </td>
-                                    <td>{{ canceled_game.title }}</td>
-                                    <td>{{ canceled_game.timespan }}</td>
-                                    <td>{{ canceled_game.duration }} минут</td>
-                                    <td>
-                                        <a href="{% url 'venues:details' canceled_game.venue.pk %}" class="object_link">
-                                            {{ canceled_game.venue }}
-                                        </a>
-                                    </td>
-                                    <td>{{ canceled_game.get_level_display }}</td>
-                                    <td>{{ canceled_game.price }} {{ canceled_game.currency }}</td>
-                                    <td>{{ canceled_game.get_game_status_display }}</td>
-                                    <td>{{ canceled_game.get_a_side_players_count_display }}</td>
-                                    <td class="d_flex justify-content-center">
-                                        <a href="{% url 'quests:edit' canceled_game.pk %}" class="non_href">
-                                            <button class="btn btn-warning edit_btn">Редактировать</button>
-                                        </a>
-                                        <a href="{% url 'quests:delete' canceled_game.pk %}" class="non_href">
-                                            <button class="btn btn-danger delete_btn">Удалить</button>
-                                        </a>
-                                        <a href="{% url 'quests:renew' canceled_game.pk %}" class="non_href">
-                                            <button class="btn btn-block renew_btn">Возобновить</button>
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <h4 class="empty_h_1">Список отмененных квестов пуст!</h4>
                 {% endif %}
             </div>
         </div>

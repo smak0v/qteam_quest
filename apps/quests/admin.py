@@ -1,65 +1,49 @@
 from django.contrib import admin
 
-from apps.quests.models import Game, GameComment, GamePlayerEvaluation
+from apps.quests.models import Quest, QuestComment, QuestSubscription, MetroStation
 
 
-class GameAdmin(admin.ModelAdmin):
-    """Class that represents admin part of game"""
+class QuestAdmin(admin.ModelAdmin):
+    """Class that represents admin part of the quests"""
 
     ordering = [
-        'title',
-        'timespan',
-        'duration',
-        'venue',
-        'game_status',
-        'price',
-        'cancel',
-        'registration_available',
+        'name',
+        'location',
+        'rating',
     ]
     list_display = [
-        'title',
-        'timespan',
-        'duration',
-        'venue',
-        'game_status',
-        'price',
-        'cancel',
-        'registration_available',
-    ]
-    list_filter = [
-        'timespan',
-        'currency',
-        'game_status',
-        'a_side_players_count',
-        'cancel',
-        'registration_available',
+        'name',
+        'location',
+        'rating',
+        'x_coordinate',
+        'y_coordinate',
     ]
     search_fields = [
-        'title',
-        'timespan',
-        'duration',
-        'venue',
-        'currency',
-        'game_status',
+        'name',
+        'description',
+        'location',
     ]
     list_per_page = 50
 
 
-class GameCommentAdmin(admin.ModelAdmin):
-    """Class that represents admin part of the game comment"""
+class QuestCommentAdmin(admin.ModelAdmin):
+    """Class that represents admin part of the quests comment"""
 
-    list_display = [
-        'user',
-        'game',
-    ]
     ordering = [
+        'quest',
         'user',
-        'game',
+        'scores',
+    ]
+    list_display = [
+        'quest',
+        'user',
+        'scores',
     ]
     search_fields = [
+        'quest',
         'user',
-        'game',
         'text',
+        'scores',
     ]
     list_filter = [
         'timestamp',
@@ -67,37 +51,46 @@ class GameCommentAdmin(admin.ModelAdmin):
     list_per_page = 50
 
 
-class GamePlayerEvaluationAdmin(admin.ModelAdmin):
-    """Class that represents admin part of the game player evaluation"""
+class QuestSubscriptionAdmin(admin.ModelAdmin):
+    """Class that represents admin part of the quests subscriptions"""
 
     list_display = [
-        'game',
-        'appraiser',
-        'ranked_user',
-        'game_level',
-        'enjoyed_playing',
+        'user',
+        'quest',
     ]
     ordering = [
-        'game',
-        'appraiser',
-        'ranked_user',
-        'game_level',
-        'enjoyed_playing'
+        'user',
+        'quest',
     ]
     search_fields = [
-        'game',
-        'appraiser',
-        'ranked_user',
-        'game_level',
-        'enjoyed_playing'
-    ]
-    list_filter = [
-        'game_level',
-        'enjoyed_playing'
+        'user',
+        'quest',
     ]
     list_per_page = 50
 
 
-admin.site.register(Game, GameAdmin)
-admin.site.register(GameComment, GameCommentAdmin)
-admin.site.register(GamePlayerEvaluation, GamePlayerEvaluationAdmin)
+class MetroStationAdmin(admin.ModelAdmin):
+    """Class that represents admin part of the metro station"""
+
+    list_display = [
+        'name',
+        'color',
+        'quest',
+    ]
+    ordering = [
+        'name',
+        'color',
+        'quest',
+    ]
+    search_fields = [
+        'name',
+        'color',
+        'quest',
+    ]
+    list_per_page = 50
+
+
+admin.site.register(Quest, QuestAdmin)
+admin.site.register(QuestComment, QuestCommentAdmin)
+admin.site.register(QuestSubscription, QuestSubscriptionAdmin)
+admin.site.register(MetroStation, MetroStationAdmin)

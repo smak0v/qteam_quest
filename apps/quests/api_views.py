@@ -1,306 +1,191 @@
-import datetime
-
-from django.utils import timezone
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, \
-    RetrieveDestroyAPIView, CreateAPIView
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView, \
+    DestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from apps.quests.models import Game, GameComment
-from apps.quests.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
-    GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer
-from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
-from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, ReservedPlaceInTeamSerializer, \
-    UserInTeamCreateUpdateSerializer, ReservedPlaceInTeamCreateUpdateSerializer
-
-
-class GameListCreateView(ListCreateAPIView):
-    """Class that implements game list, create views API endpoint"""
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST' or self.request.method == 'UPDATE':
-            return GameCreateUpdateSerializer
-        return GameSerializer
-
-    def get_queryset(self):
-        date = self.request.query_params.get('date')
-        if date is None:
-            return Game.objects.filter(cancel=False).order_by('timespan')
-        try:
-            correct_date = datetime.datetime.strptime(date, '%Y-%m-%d')
-            return Game.objects.filter(timespan__year=correct_date.year, timespan__month=correct_date.month,
-                                       timespan__day=correct_date.day, cancel=False).order_by('timespan')
-        except ValueError:
-            return Game.objects.filter(cancel=False).order_by('timespan')
+from apps.games.models import Game
+from apps.games.serializers import GameSerializer
+from apps.permissions import IsStaffUserOrReadOnly
+from apps.quests.models import Quest, QuestSubscription, QuestComment
+from apps.quests.serializers import QuestSerializer, QuestSubscriptionSerializer, QuestCommentSerializer, \
+    QuestCommentCreateSerializer, QuestSubscriptionCreateSerializer, QuestUpdateSerializer
+from users.models import User
+from users.serializers import UserSerializer
 
 
-class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """Class that implements game retrieve, update, destroy views API endpoint"""
+class QuestListCreateView(ListCreateAPIView):
+    """Class that implements quests create, list view API endpoint"""
 
-    queryset = Game.objects.all()
+    queryset = Quest.objects.all()
+    serializer_class = QuestSerializer
+    permission_classes = [
+        IsStaffUserOrReadOnly,
+    ]
+
+
+class QuestRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    """Class that implements quests retrieve, update, destroy view API endpoint"""
+
+    queryset = Quest.objects.all()
+    permission_classes = [
+        IsStaffUserOrReadOnly,
+    ]
 
     def get_serializer_class(self):
         if self.request.method == 'PUT' or self.request.method == 'PATCH':
-            return GameCreateUpdateSerializer
-        return GameSerializer
+            return QuestUpdateSerializer
+        return QuestSerializer
 
-    def retrieve(self, request, pk):
+    def retrieve(self, request, *args, **kwargs):
         user = self.request.user
         try:
-            game = Game.objects.get(pk=pk, cancel=False)
-        except Game.DoesNotExist:
+            quest = Quest.objects.get(pk=kwargs.get('pk'))
+        except Quest.DoesNotExist:
             return Response({
-                'error': 'Game does not exists!',
-            })
+                'error': 'Quest does not exists!',
+            }, status=status.HTTP_404_NOT_FOUND)
         response = {
-            'game': GameSerializer(game).data,
+            'quest': QuestSerializer(quest).data,
         }
         if user.is_authenticated:
             try:
-                user_in_team = UserInTeam.objects.get(user=user, game=game)
-                reserved_places_count_by_user = ReservedPlaceInTeam.objects.filter(user=user, game=game).count()
-                response['seats_purchased_count'] = 1 + reserved_places_count_by_user
-            except UserInTeam.DoesNotExist:
-                response['seats_purchased_count'] = 0
-            if game.timespan + timezone.timedelta(minutes=game.duration) < timezone.now():
-                response['passed'] = True
-            else:
-                response['passed'] = False
-            reserved_places_count = ReservedPlaceInTeam.objects.filter(game=game).count()
-            if reserved_places_count + 1 < int(game.a_side_players_count) * 2:
-                if response['passed']:
-                    response['active'] = False
-                else:
-                    response['active'] = True
-        return Response(response)
+                QuestSubscription.objects.get(user=user, quest=quest)
+                response['subscription'] = 'subscribed'
+            except QuestSubscription.DoesNotExist:
+                response['subscription'] = 'not_subscribed'
+        return Response(response, status=status.HTTP_200_OK)
 
 
-class GameCommentListCreateView(ListCreateAPIView):
-    """Class that implements game comment list, create views API endpoint"""
+class QuestSubscribersListView(ListCreateAPIView):
+    """Class that implements quests subscribers list view API endpoint"""
 
-    queryset = GameComment.objects.all()
+    queryset = QuestSubscription.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+    ]
+
+    @staticmethod
+    def get(request, *args, **kwargs):
+        quest_subscriptions = QuestSubscription.objects.filter(quest=kwargs.get('pk'))
+        users = list()
+        for quest_subscription in quest_subscriptions:
+            users.append(User.objects.get(pk=quest_subscription.user.pk))
+        data = UserSerializer(users, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class QuestGamesListView(ListAPIView):
+    """Class that implements quests`s games list view API endpoint"""
+
+    queryset = QuestSubscription.objects.all()
+
+    @staticmethod
+    def get(request, *args, **kwargs):
+        games = Game.objects.filter(quest=kwargs.get('pk'))
+        data = GameSerializer(games, many=True).data
+        return Response({
+            'games': data,
+            'count': int(games.count()),
+        }, status=status.HTTP_200_OK)
+
+
+class QuestSubscribeCreateView(CreateAPIView):
+    """Class that implements quests subscription create view API endpoint"""
+
+    queryset = QuestSubscription.objects.all()
+    serializer_class = QuestSubscriptionCreateSerializer
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            user = request.data['user']
+        except KeyError:
+            raise ValidationError({
+                'user': 'Required field!',
+            })
+        try:
+            quest = request.data['quest']
+        except KeyError:
+            raise ValidationError({
+                'quest': 'Required field!',
+            })
+        if quest != kwargs.get('pk'):
+            return Response({
+                'message': 'Quest parameter is wrong!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            QuestSubscription.objects.get(user=user, quest=quest)
+            raise ValidationError({
+                'error': 'Quest subscription already exist!',
+            })
+        except QuestSubscription.DoesNotExist:
+            QuestSubscription.objects.create(
+                user=User.objects.get(pk=user),
+                quest=Quest.objects.get(pk=quest),
+            )
+            return Response({
+                'message': 'Quest subscription created successfully!',
+            }, status=status.HTTP_200_OK)
+
+
+class QuestSubscribeDestroyView(DestroyAPIView):
+    """Class that implements quests subscription destroy view API endpoint"""
+
+    queryset = QuestSubscription.objects.all()
+    serializer_class = QuestSubscriptionSerializer
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    @staticmethod
+    def destroy(request, *args, **kwargs):
+        try:
+            user = request.data['user']
+        except KeyError:
+            raise ValidationError({
+                'user': 'Required field!',
+            })
+        try:
+            quest = request.data['quest']
+        except KeyError:
+            raise ValidationError({
+                'quest': 'Required field!',
+            })
+        try:
+            quest_subscription = QuestSubscription.objects.get(user=user, quest=quest)
+        except QuestSubscription.DoesNotExist:
+            return Response({
+                'message': 'Quest subscription does not exists!',
+            }, status=status.HTTP_404_NOT_FOUND)
+        quest_subscription.delete()
+        return Response({
+            'message': 'Quest subscription successfully deleted!',
+        }, status=status.HTTP_200_OK)
+
+
+class QuestCommentListCreateView(ListCreateAPIView):
+    """Class that implements quests comment list, create view API endpoint"""
+
+    queryset = QuestComment.objects.all()
     permission_classes = [
         IsAuthenticatedOrReadOnly,
     ]
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return GameCommentCreateSerializer
-        return GameCommentSerializer
+            return QuestCommentCreateSerializer
+        return QuestCommentSerializer
 
     @staticmethod
     def get(request, *args, **kwargs):
-        game_comments = GameComment.objects.filter(game=kwargs.get('pk'))
-        data = GameCommentSerializer(game_comments, many=True).data
+        quest_comments = QuestComment.objects.filter(quest=kwargs.get('pk'))
+        data = QuestCommentSerializer(quest_comments, many=True).data
         return Response({
             'comments': data,
-            'count': int(game_comments.count()),
-        })
-
-
-class GameTeamsListView(ListAPIView):
-    """Class that implements game teams list view API endpoint"""
-
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
-
-    @staticmethod
-    def get(request, pk):
-        teams = Team.objects.filter(game=pk)
-        data = TeamSerializer(teams, many=True).data
-        return Response(data)
-
-
-class GamePlayersListCreateView(ListCreateAPIView):
-    """Class that implements game players list view API endpoint"""
-
-    queryset = UserInTeam.objects.all()
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST' or self.request.method == 'UPDATE':
-            return UserInTeamCreateUpdateSerializer
-        return UserInTeamSerializer
-
-    @staticmethod
-    def get(request, pk):
-        team = request.query_params.get('team')
-        if team is None:
-            users_in_team = UserInTeam.objects.filter(game=pk)
-            data = UserInTeamSerializer(users_in_team, many=True).data
-            return Response(data)
-        users_in_team = None
-        if team == 'black':
-            users_in_team = UserInTeam.objects.filter(team=Team.objects.get(name='Черные майки', game=pk))
-            data = UserInTeamSerializer(users_in_team, many=True).data
-            return Response(data)
-        elif team == 'white':
-            users_in_team = UserInTeam.objects.filter(team=Team.objects.get(name='Белые майки', game=pk))
-            data = UserInTeamSerializer(users_in_team, many=True).data
-            return Response(data)
-        else:
-            return Response({
-                'message': 'Wrong team parameter!',
-            })
-
-
-class GamePlayersRetrieveDestroyView(RetrieveDestroyAPIView):
-    """Class that implements game players retrieve, destroy view API endpoint"""
-
-    queryset = UserInTeam.objects.all()
-    serializer_class = UserInTeamSerializer
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    @staticmethod
-    def delete(request, pk, player_pk):
-        try:
-            user_in_team = UserInTeam.objects.get(game=pk, user=player_pk)
-        except UserInTeam.DoesNotExist:
-            return Response({
-                'message': 'This player not registered for the game!',
-            })
-        reserved_places_by_user = ReservedPlaceInTeam.objects.filter(user=player_pk, game=pk)
-        for reserved_place_by_user in reserved_places_by_user:
-            reserved_place_by_user.delete()
-        user_in_team.delete()
-        return Response({
-            'message': 'Player and all reserved places for this player was deleted successfully!',
-        })
-
-    @staticmethod
-    def retrieve(request, pk, player_pk):
-        try:
-            user_in_team = UserInTeam.objects.get(game=pk, user=player_pk)
-            data = UserInTeamSerializer(user_in_team).data
-            return Response(data)
-        except UserInTeam.DoesNotExist:
-            return Response({
-                'message': 'This player not registered for the game!',
-            })
-
-
-class GameReservedPlacesListCreateView(ListCreateAPIView):
-    """Class that implements game reserved places list view API endpoint"""
-
-    queryset = ReservedPlaceInTeam.objects.all()
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST' or self.request.method == 'UPDATE':
-            return ReservedPlaceInTeamCreateUpdateSerializer
-        return ReservedPlaceInTeamSerializer
-
-    @staticmethod
-    def get(request, pk):
-        team = request.query_params.get('team')
-        if team is None:
-            reserved_places = ReservedPlaceInTeam.objects.filter(game=pk)
-            data = ReservedPlaceInTeamSerializer(reserved_places, many=True).data
-            return Response(data)
-        reserved_places_in_team = None
-        if team == 'black':
-            reserved_places_in_team = ReservedPlaceInTeam.objects.filter(
-                team=Team.objects.get(name='Черные майки', game=pk))
-            data = ReservedPlaceInTeamSerializer(reserved_places_in_team, many=True).data
-            return Response(data)
-        elif team == 'white':
-            reserved_places_in_team = ReservedPlaceInTeam.objects.filter(
-                team=Team.objects.get(name='Белые майки', game=pk))
-            data = ReservedPlaceInTeamSerializer(reserved_places_in_team, many=True).data
-            return Response(data)
-        else:
-            return Response({
-                'message': 'Wrong team parameter!',
-            })
-
-
-class GameReservedPlacesRetrieveDestroyView(RetrieveDestroyAPIView):
-    """Class that implements game reserved places retrieve, delete API view endpoint"""
-
-    queryset = ReservedPlaceInTeam.objects.all()
-    serializer_class = ReservedPlaceInTeamSerializer
-
-    @staticmethod
-    def delete(request, pk, reserve_user_pk):
-        count = request.query_params.get('count')
-        reserved_places = ReservedPlaceInTeam.objects.filter(game=pk, user=reserve_user_pk)
-        if count is None:
-            return Response({
-                'message': 'Pass the count parameter to the request!',
-            })
-        if count == 'all':
-            for reserved_place in reserved_places:
-                reserved_place.delete()
-            return Response({
-                'message': 'All reserved places was deleted successfully!',
-            })
-        else:
-            reserved_places_count = len(reserved_places)
-            try:
-                if int(count) > reserved_places_count:
-                    return Response({
-                        'message': 'You are trying to delete too many reserved places!',
-                    })
-                else:
-                    for i in range(int(count)):
-                        reserved_places[i].delete()
-                    return Response({
-                        'message': '{} reserved places was deleted successfully!'.format(count)
-                    })
-            except ValueError:
-                return Response({
-                    'message': 'Pass the count parameter to the request!',
-                })
-
-    @staticmethod
-    def retrieve(request, pk, reserve_user_pk):
-        reserved_places = ReservedPlaceInTeam.objects.filter(game=pk, user=reserve_user_pk)
-        if len(reserved_places) == 0:
-            return Response({
-                'message': 'No reserved places for this player!',
-            })
-        data = ReservedPlaceInTeamSerializer(reserved_places, many=True).data
-        return Response(data)
-
-
-class GamePlacesStatusView(APIView):
-    """Class that implements game places status view API endpoint"""
-
-    @staticmethod
-    def get(request, pk):
-        try:
-            places_in_teams_count = int(Game.objects.get(pk=pk).a_side_players_count) * 2
-            users_in_teams_for_game_count = 0
-            reserved_places_in_teams_for_game_count = 0
-            try:
-                users_in_teams_for_game_count = int(UserInTeam.objects.filter(game=pk).count())
-            except UserInTeam.DoesNotExist:
-                users_in_teams_for_game_count = 0
-            try:
-                reserved_places_in_teams_for_game_count = int(ReservedPlaceInTeam.objects.filter(game=pk).count())
-            except ReservedPlaceInTeam.DoesNotExist:
-                reserved_places_in_teams_for_game_count = 0
-            return Response({
-                'places_in_teams_for_game_count': places_in_teams_count,
-                'occupied_places_count': users_in_teams_for_game_count + reserved_places_in_teams_for_game_count,
-            })
-        except Game.DoesNotExist:
-            return Response({
-                'message': 'Game with id {} does not exists!'.format(pk),
-            })
-
-
-class EvaluatePlayerView(CreateAPIView):
-    """Class that represents players evaluation after game"""
-
-    serializer_class = GamePlayerEvaluationCreateSerializer
-    permission_classes = [
-        IsAuthenticated,
-    ]
+            'count': int(quest_comments.count()),
+        }, status=status.HTTP_200_OK)

@@ -1,18 +1,23 @@
 from django import forms
-from django.utils import timezone
 
-from apps.quests.models import Game
+from apps.quests.models import Quest, MetroStation
 
 
-class GameForm(forms.ModelForm):
-    """Class that implements game model form"""
-
-    timespan = forms.DateTimeField(
-        initial=timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
-    )
+class QuestForm(forms.ModelForm):
+    """Class that implements quests model form"""
 
     class Meta:
-        model = Game
+        model = Quest
         exclude = [
-            'registration_available',
+            'rating',
+        ]
+
+
+class QuestMetroStationForm(forms.ModelForm):
+    """Class that implements quests metro station model form"""
+
+    class Meta:
+        model = MetroStation
+        exclude = [
+            'quest',
         ]

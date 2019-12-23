@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from apps.quests.models import Game
-from apps.quests.serializers import GameSerializer
+from apps.games.models import Game
+from apps.games.serializers import GameSerializer
 from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
 from users.models import User
 from users.serializers import UserSerializer
@@ -30,19 +30,20 @@ class UserInTeamCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInTeam
-        fields = '__all__'
+        fields = [
+            'user',
+            'game',
+        ]
 
     def validate(self, data):
         user_from_request = data.get('user')
         game_from_request = data.get('game')
-        user_position = data.get('user_position')
-        if user_position == 'NOT_SET':
-            raise serializers.ValidationError('You need to choose the position in game!')
         try:
             user_in_game = UserInTeam.objects.get(user=user_from_request, game=game_from_request)
             if user_in_game is not None:
                 raise serializers.ValidationError('User already registered for this game!')
         except UserInTeam.DoesNotExist:
+            data['team'] = Team.objects.get(game=game_from_request)
             return data
 
 
@@ -58,21 +59,24 @@ class UserInTeamSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ReservedPlaceInTeamCreateUpdateSerializer(serializers.ModelSerializer):
+class ReservedPlaceInTeamCreateSerializer(serializers.ModelSerializer):
     """Class that represents reserved place in a team for user by another user create, update serializer"""
 
     class Meta:
         model = ReservedPlaceInTeam
-        fields = '__all__'
+        fields = [
+            'title',
+            'game',
+            'user',
+        ]
 
     def validate(self, data):
         try:
             UserInTeam.objects.get(user=User.objects.get(pk=data.get('user').pk),
-                                            game=Game.objects.get(pk=data.get('game').pk))
+                                   game=Game.objects.get(pk=data.get('game').pk))
         except UserInTeam.DoesNotExist:
             raise serializers.ValidationError('User must be the participant of the game!')
-        if data.get('reserved_position') == 'NOT_SET':
-            raise serializers.ValidationError('You need to choose the position in game!')
+        data['team'] = Team.objects.get(game=data.get('game').pk)
         return data
 
 

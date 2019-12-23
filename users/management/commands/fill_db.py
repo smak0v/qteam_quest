@@ -11,9 +11,9 @@ from django.utils import timezone
 from rest_framework.authtoken.models import Token
 
 from apps.coupons.models import Coupon
-from apps.quests.models import Game, GameComment
+from apps.games.models import Game, GameComment
 from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
-from apps.venues.models import Venue, MetroStation, VenueComment, VenueSubscription
+from apps.quests.models import Quest, MetroStation, QuestComment, QuestSubscription
 from users.models import User, UserSubscription
 
 
@@ -21,7 +21,7 @@ class Command(BaseCommand):
     help = 'Fill database'
 
     users_count = random.randint(5, 20)
-    venues_count = random.randint(5, 20)
+    quests_count = random.randint(5, 20)
     coupons_count = random.randint(5, 20)
     games_count_per_day = random.randint(5, 10)
     comments_count = random.randint(5, 50)
@@ -32,6 +32,7 @@ class Command(BaseCommand):
     coordinates = [[55.670926, 37.555657], [55.678194, 37.563501], [55.720396, 37.560844], [55.735342, 37.594658],
                    [55.728865, 37.624671], [55.709586, 37.622812], [55.706947, 37.588010], [55.689369, 37.605286]]
     locations = ['Ukraine, Kiev', 'Russia, Moscow', 'Russia, Irkutsk', 'Russia, Ufa', ]
+    genres = ['Comedy', 'Horror', 'Romance', 'Action', 'Adventure', 'Western', 'War', 'Thriller', 'Documentary', ]
     start_date = timezone.datetime(timezone.datetime.now().year, timezone.datetime.now().month, 1)
     end_date = timezone.datetime(timezone.datetime.now().year, timezone.datetime.now().month,
                                  calendar.monthrange(timezone.datetime.now().year, timezone.datetime.now().month)[1])
@@ -39,12 +40,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.create_users()
-        self.create_venues()
+        self.create_quests()
         self.create_games()
         self.create_coupons()
         self.comment_games()
-        self.comment_venues()
-        self.subscribe_for_venues()
+        self.comment_quests()
+        self.subscribe_for_quests()
         self.subscribe_for_users()
         self.register_users_for_game()
         self.reserve_places_for_game()
@@ -71,38 +72,38 @@ class Command(BaseCommand):
         self.set_images(users, 'avatars', '{}.jpg', 'profile_image')
         print('\nUsers creation: DONE')
 
-    def create_venues(self):
-        print('Venues creation:')
-        for i in range(self.venues_count):
+    def create_quests(self):
+        print('Quests creation:')
+        for i in range(self.quests_count):
             coordinates = random.choices(self.coordinates)[0]
-            Venue.objects.create(
-                name='Venue' + str(i + 1),
+            Quest.objects.create(
+                name='Quest_' + str(i + 1),
                 location=random.choices(self.locations)[0],
                 x_coordinate=coordinates[0],
                 y_coordinate=coordinates[1],
                 rating=random.randint(0, 5),
             )
             print('.', end='', flush=True)
-        venues = Venue.objects.all()
-        self.set_images(venues, 'venue_photos', 'flag_{}.png', 'photo')
-        self.set_images(venues, 'venue_covers', 'venue_{}.jpg', 'cover_image')
+        quests = Quest.objects.all()
+        self.set_images(quests, 'quest_photos', 'flag_{}.png', 'photo')
+        self.set_images(quests, 'quest_covers', 'quest_{}.jpg', 'cover_image')
         stations = self.get_metro_station_names()
         print('\nMetro stations creation:')
-        for venue in venues:
+        for quest in quests:
             for i in range(random.randint(1, 3)):
                 MetroStation.objects.create(
                     name=random.choice(stations),
                     color=("#%06x" % random.randint(0, 0xFFFFFF)),
-                    venue=venue,
+                    quest=quest,
                 )
             print('.', end='', flush=True)
         print('\nMetro stations creation: DONE')
-        print('Venues creation: DONE')
+        print('Quests creation: DONE')
 
     def create_games(self):
         print('Games creation:')
         current_date = self.start_date
-        venues = Venue.objects.all()
+        quests = Quest.objects.all()
         while current_date < self.end_date:
             for i in range(self.games_count_per_day):
                 timespan = datetime.astimezone(current_date +
@@ -110,26 +111,20 @@ class Command(BaseCommand):
                                                                   minutes=random.randrange(1, 60),
                                                                   seconds=random.randrange(1, 60)), tz=pytz.utc)
                 game = Game.objects.create(
-                    title='Game ' + str(i + 1),
+                    title='Game_' + str(i + 1),
                     description=self.make_game_description(current_date, i + 1),
+                    genre=random.choices(self.genres)[0],
                     timespan=timespan,
                     duration=random.choices(self.game_durations)[0],
-                    venue=random.choices(venues)[0],
+                    quest=random.choices(quests)[0],
                     level=random.choices(['1', '2', '3', '4', '5'])[0],
                     price=random.randrange(100, 999),
-                    game_status=random.choices(['PUBLIC', 'PRIVATE', ])[0],
-                    a_side_players_count=random.randrange(5, 11),
+                    min_players_count=random.randrange(2, 4),
+                    max_players_count=random.randrange(15, 64),
                     cancel=(i + 1) % 3 == 0,
                 )
                 Team.objects.create(
                     game=game,
-                    name='Черные майки',
-
-                )
-                Team.objects.create(
-                    game=game,
-                    name='Белые майки',
-
                 )
                 print('.', end='', flush=True)
             current_date += timezone.timedelta(days=1)
@@ -167,39 +162,39 @@ class Command(BaseCommand):
                 print('.', end='', flush=True)
         print('\nGame comments creation: DONE')
 
-    def comment_venues(self):
-        print('Venue comments creation:')
+    def comment_quests(self):
+        print('Quest comments creation:')
         users = User.objects.filter(admin=False)
-        venues = Venue.objects.all()
+        quests = Quest.objects.all()
         for user in users:
             for i in range(self.comments_count):
-                venue = random.choices(venues)
-                VenueComment.objects.create(
+                quest = random.choices(quests)
+                QuestComment.objects.create(
                     user=user,
-                    venue=venue[0],
-                    text='Comment for {} from {}. Cool game!'.format(venue[0].name, user.phone),
+                    quest=quest[0],
+                    text='Comment for {} from {}. Cool game!'.format(quest[0].name, user.phone),
                     scores=random.randrange(1, 5),
                 )
                 print('.', end='', flush=True)
-        print('\nVenue comments creation: DONE')
+        print('\nQuest comments creation: DONE')
 
-    def subscribe_for_venues(self):
-        print('Venue subscriptions creation:')
+    def subscribe_for_quests(self):
+        print('Quest subscriptions creation:')
         users = User.objects.filter(admin=False)
-        venues = Venue.objects.all()
+        quests = Quest.objects.all()
         for user in users:
             for i in range(self.subscriptions_count):
-                venue = random.choices(venues)[0]
+                quest = random.choices(quests)[0]
                 try:
-                    VenueSubscription.objects.get(user=user, venue=venue)
+                    QuestSubscription.objects.get(user=user, quest=quest)
                     continue
-                except VenueSubscription.DoesNotExist:
-                    VenueSubscription.objects.create(
+                except QuestSubscription.DoesNotExist:
+                    QuestSubscription.objects.create(
                         user=user,
-                        venue=venue,
+                        quest=quest,
                     )
                     print('.', end='', flush=True)
-        print('\nVenue subscriptions creation: DONE')
+        print('\nQuest subscriptions creation: DONE')
 
     def subscribe_for_users(self):
         print('User subscriptions creation:')
@@ -249,7 +244,7 @@ class Command(BaseCommand):
                 teams = Team.objects.filter(game=game[0])
                 team = random.choices(teams)[0]
                 if ReservedPlaceInTeam.objects.filter(game=game[0], team=team,
-                                                      user=user).count() >= int(game[0].a_side_players_count):
+                                                      user=user).count() >= int(game[0].max_players_count):
                     continue
                 try:
                     UserInTeam.objects.get(game=game[0], user=user)
