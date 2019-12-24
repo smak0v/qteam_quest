@@ -70,6 +70,31 @@ class Quest(models.Model):
         return '{}'.format(self.name)
 
 
+class QuestImage(models.Model):
+    """Class that represents a quest image"""
+
+    class Meta:
+        verbose_name = 'Фото квеста'
+        verbose_name_plural = 'Фото квестов'
+        ordering = [
+            '-uploading_timespan',
+        ]
+
+    quest = models.ForeignKey(
+        verbose_name='Квест',
+        to='Quest',
+        on_delete=models.CASCADE,
+    )
+    image = models.ImageField(
+        verbose_name='Фото',
+        upload_to='images/quest_gallery',
+    )
+    uploading_timespan = models.DateTimeField(
+        verbose_name='Время загрузки',
+        auto_now_add=True,
+    )
+
+
 class QuestComment(models.Model):
     """Class that represents comment for quests"""
 

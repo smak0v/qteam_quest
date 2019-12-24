@@ -108,6 +108,10 @@ class Game(models.Model):
     max_players_count = models.PositiveIntegerField(
         verbose_name='Максимальное количество игроков в команде',
     )
+    players_count = models.PositiveIntegerField(
+        verbose_name='Количество игроков',
+        default=0,
+    )
     registration_available = models.BooleanField(
         verbose_name='Открыта для регистрации',
         default=True,

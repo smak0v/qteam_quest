@@ -15,4 +15,5 @@ class GameForm(forms.ModelForm):
         model = Game
         exclude = [
             'registration_available',
+            'players_count',
         ]

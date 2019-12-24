@@ -100,6 +100,10 @@
                     <span class="big_details_text">MAX количество игроков:</span>
                     <span class="small_details_text"> {{ game.max_players_count }}</span>
                 </p>
+                <p class="details_block">
+                    <span class="big_details_text">Количество игроков:</span>
+                    <span class="small_details_text"> {{ game.players_count }}</span>
+                </p>
                 {% if game.refund_money_if_game_is_cancelled == True %}
                     <p class="details_block">
                         <span class="big_details_text">Возврат денег в случае отмены и предоставления уведомления за

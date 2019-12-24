@@ -1,6 +1,6 @@
 from django import forms
 
-from apps.quests.models import Quest, MetroStation
+from apps.quests.models import Quest, MetroStation, QuestImage
 
 
 class QuestForm(forms.ModelForm):
@@ -19,5 +19,16 @@ class QuestMetroStationForm(forms.ModelForm):
     class Meta:
         model = MetroStation
         exclude = [
+            'quest',
+        ]
+
+
+class QuestGalleryImageUploadForm(forms.ModelForm):
+    """Class that implements quest`s gallery image upload form"""
+
+    class Meta:
+        model = QuestImage
+        exclude = [
+            'uploading_timespan',
             'quest',
         ]

@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     # Installed apps
     'rest_framework',
     'rest_framework.authtoken',
+    'widget_tweaks',
 
     # Created apps
     'users',

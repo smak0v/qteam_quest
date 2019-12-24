@@ -44,6 +44,9 @@ class UserInTeamCreateUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('User already registered for this game!')
         except UserInTeam.DoesNotExist:
             data['team'] = Team.objects.get(game=game_from_request)
+            game = Game.objects.get(pk=game_from_request.pk)
+            game.players_count += 1
+            game.save()
             return data
 
 
@@ -77,6 +80,9 @@ class ReservedPlaceInTeamCreateSerializer(serializers.ModelSerializer):
         except UserInTeam.DoesNotExist:
             raise serializers.ValidationError('User must be the participant of the game!')
         data['team'] = Team.objects.get(game=data.get('game').pk)
+        game = Game.objects.get(pk=data.get('game').pk)
+        game.players_count += 1
+        game.save()
         return data
 
 

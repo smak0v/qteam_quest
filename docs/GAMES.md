@@ -51,7 +51,9 @@
 
     - a flag of whether the game passed or not;
 
-    - number of seats purchased for this game.
+    - number of seats purchased for this game;
+    
+    - reserved places count for user from request.
 
 - ```/api/games/game_pk/``` (DELETE)
 

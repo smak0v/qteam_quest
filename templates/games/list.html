@@ -27,6 +27,7 @@
                                 <th>Цена</th>
                                 <th>MIN количесво участников</th>
                                 <th>MAX количесво участников</th>
+                                <th>Количесво участников</th>
                                 <th class="actions">Действия</th>
                             </tr>
                             </thead>
@@ -51,6 +52,7 @@
                                     <td>{{ game.price }} {{ game.currency }}</td>
                                     <td>{{ game.min_players_count }}</td>
                                     <td>{{ game.max_players_count }}</td>
+                                    <td>{{ game.players_count }}</td>
                                     <td class="d_flex justify-content-center">
                                         <a href="{% url 'games:edit' game.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>
@@ -91,6 +93,7 @@
                                 <th>Цена</th>
                                 <th>MIN количесво участников</th>
                                 <th>MAX количесво участников</th>
+                                <th>Количесво участников</th>
                                 <th class="canceled_actions">Действия</th>
                             </tr>
                             </thead>
@@ -115,6 +118,7 @@
                                     <td>{{ canceled_game.price }} {{ canceled_game.currency }}</td>
                                     <td>{{ canceled_game.min_players_count }}</td>
                                     <td>{{ canceled_game.max_players_count }}</td>
+                                    <td>{{ canceled_game.players_count }}</td>
                                     <td class="d_flex justify-content-center">
                                         <a href="{% url 'games:edit' canceled_game.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>

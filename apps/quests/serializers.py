@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.quests.models import Quest, QuestComment, QuestSubscription, MetroStation
+from apps.quests.models import Quest, QuestComment, QuestSubscription, MetroStation, QuestImage
 from qteam_quest.settings import ROOT_URL
 from users.serializers import UserSerializer
 
@@ -13,6 +13,23 @@ class MetroStationSerializer(serializers.ModelSerializer):
         fields = [
             'name',
             'color',
+        ]
+
+
+class QuestImageSerializer(serializers.ModelSerializer):
+    """Class that implements quest image serializer"""
+
+    image = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_image(quest_image):
+        return ROOT_URL + quest_image.image.url
+
+    class Meta:
+        model = QuestImage
+        fields = [
+            'image',
+            'uploading_timespan',
         ]
 
 

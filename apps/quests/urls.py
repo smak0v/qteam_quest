@@ -4,12 +4,17 @@ from django.urls import path
 from apps.quests.api_views import QuestListCreateView, QuestRetrieveUpdateDestroyView, QuestSubscribersListView, \
     QuestGamesListView, QuestSubscribeCreateView, QuestSubscribeDestroyView, QuestCommentListCreateView
 from apps.quests.views import QuestListView, delete_quest_view, edit_quest_view, create_quest_view, \
-    quest_details_view, create_quest_metro_station_view, edit_quest_metro_station_view, delete_quest_metro_station_view
+    quest_gallery_view, quest_details_view, create_quest_metro_station_view, edit_quest_metro_station_view, \
+    delete_quest_metro_station_view, quest_delete_photo_view, quest_gallery_upload_photo_view
 
 quests_urls = (
     [
         path('', login_required(QuestListView.as_view()), name='list'),
         path('details/<int:pk>/', login_required(quest_details_view), name='details'),
+        path('details/<int:pk>/gallery/', login_required(quest_gallery_view), name='gallery'),
+        path('details/<int:pk>/gallery/upload/', login_required(quest_gallery_upload_photo_view), name='upload_photo'),
+        path('details/<int:pk>/gallery/delete/<int:photo_pk>', login_required(quest_delete_photo_view),
+             name='delete_photo'),
         path('create/', login_required(create_quest_view), name='create'),
         path('edit/<int:pk>/', login_required(edit_quest_view), name='edit'),
         path('delete/<int:pk>/', login_required(delete_quest_view), name='delete'),

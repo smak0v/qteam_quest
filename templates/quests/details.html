@@ -7,7 +7,10 @@
             <div class="content">
                 <div class="d_flex">
                     <h2 class="empty_h_1">Обзор квеста</h2>
-                    <a href="{% url 'quests:edit' quest.pk %}" class="non_href ml-auto">
+                    <a href="{% url 'quests:gallery' quest.pk %}" class="non_href ml-auto">
+                        <button class="btn btn-info venue_info_btn">Галерея</button>
+                    </a>
+                    <a href="{% url 'quests:edit' quest.pk %}" class="non_href">
                         <button class="btn btn-warning venue_info_btn">Редактировать</button>
                     </a>
                     <a href="{% url 'quests:delete' quest.pk %}" class="non_href">
@@ -99,7 +102,7 @@
                     </div>
                 {% else %}
                     <div class="d-flex">
-                        <h2 class="empty_h_1">Для этого квеста нет станций метро!</h2>
+                        <h4 class="empty_h_1">Для этого квеста нет станций метро!</h4>
                         <a href="{% url 'quests:create_metro_station' quest.pk %}" class="non_href ml-auto">
                             <button class="btn btn-success add_btn">Добавить станцию метро</button>
                         </a>
@@ -232,7 +235,7 @@
                     </div>
                 {% else %}
                     <div class="d-flex">
-                        <h2 class="empty_h_1">Для этого квеста нет отмененных игр!</h2>
+                        <h4 class="empty_h_1">Для этого квеста нет отмененных игр!</h4>
                     </div>
                 {% endif %}
             </div>

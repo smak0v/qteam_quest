@@ -13,7 +13,7 @@ from rest_framework.authtoken.models import Token
 from apps.coupons.models import Coupon
 from apps.games.models import Game, GameComment
 from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
-from apps.quests.models import Quest, MetroStation, QuestComment, QuestSubscription
+from apps.quests.models import Quest, MetroStation, QuestComment, QuestSubscription, QuestImage
 from users.models import User, UserSubscription
 
 
@@ -90,6 +90,7 @@ class Command(BaseCommand):
         stations = self.get_metro_station_names()
         print('\nMetro stations creation:')
         for quest in quests:
+            self.add_gallery_photos(quest)
             for i in range(random.randint(1, 3)):
                 MetroStation.objects.create(
                     name=random.choice(stations),
@@ -231,6 +232,8 @@ class Command(BaseCommand):
                         user=user,
                         team=random.choices(teams)[0],
                     )
+                    game[0].players_count += 1
+                    game[0].save()
                     print('.', end='', flush=True)
         print('\nRegister user for a games: DONE')
 
@@ -256,8 +259,19 @@ class Command(BaseCommand):
                     team=team,
                     title='{}`s friend'.format(user.phone),
                 )
+                game[0].players_count += 1
+                game[0].save()
                 print('.', end='', flush=True)
         print('\nReserve places for a games: DONE')
+
+    @staticmethod
+    def add_gallery_photos(quest):
+        for i in range(5):
+            image = QuestImage.objects.create(quest=quest)
+            file_name = f'gallery_{i}.png'
+            with open(os.path.join('test_data', 'images', 'gallery_photos', file_name), 'rb') as f:
+                field = getattr(image, 'image')
+                field.save(file_name, File(f))
 
     @staticmethod
     def generate_random_birthday_date():
@@ -271,11 +285,11 @@ class Command(BaseCommand):
 
     @staticmethod
     def set_images(objects, folder, file_template, field_name):
-        images_count = len(os.listdir(os.path.join("test_data", "images", folder)))
+        images_count = len(os.listdir(os.path.join('test_data', 'images', folder)))
         i = 1
         for obj in objects:
             file_name = file_template.format(i)
-            with open(os.path.join("test_data", "images", folder, file_name), 'rb') as f:
+            with open(os.path.join('test_data', 'images', folder, file_name), 'rb') as f:
                 field = getattr(obj, field_name)
                 field.save(file_name, File(f))
             i += 1
@@ -284,7 +298,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def get_metro_station_names():
-        filename = os.path.join("test_data", "text", "Moscow_metro_stations.txt")
+        filename = os.path.join('test_data', 'text', 'Moscow_metro_stations.txt')
         stations = []
         with open(filename, 'r') as f:
             for line in f:

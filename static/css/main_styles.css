@@ -207,6 +207,41 @@ html, body {
     margin-top: 10px !important;
 }
 
+.quest_gallery {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    width: 300px;
+    height: 150px;
+    cursor: pointer;
+}
+
+.modal-content {
+    margin-top: 200px !important;
+    margin-left: 37vw !important;
+}
+
+.modal-title {
+    padding-left: 10px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.modal-body {
+    margin: 10px !important;
+}
+
+.close {
+    padding-top: 8px !important;
+    padding-right: 5px !important;
+}
+
+.my_btn {
+    margin-bottom: 5px !important;
+    margin-top: 5px !important;
+    margin-right: 20px !important;
+    padding: 7px 10px !important;
+}
+
 .non_href {
     cursor: pointer;
     margin-right: 10px !important;
@@ -333,6 +368,10 @@ html, body {
     font-weight: 400;
 }
 
+.photo {
+    width: 50%;
+}
+
 .actions {
     width: 26%;
 }
@@ -381,10 +420,14 @@ td, th {
 }
 
 
-
 @media screen and (max-height: 900px) {
     .login_signup_center_block {
         margin: 150px 0 50px 0 !important;
+    }
+
+    .modal-content {
+        margin-top: 200px !important;
+        margin-left: 15vw !important;
     }
 }
 
@@ -428,11 +471,32 @@ td, th {
     .cancel_btn {
         margin-top: 10px !important;
     }
+
+    .modal-content {
+        margin-top: 200px !important;
+        margin-left: 30vw !important;
+    }
+}
+
+@media screen and (min-width: 1420px) {
+    .cancel_btn {
+        margin-top: 10px !important;
+    }
+
+    .modal-content {
+        margin-top: 200px !important;
+        margin-left: 37vw !important;
+    }
 }
 
 @media screen and (max-width: 1000px) {
     .content {
         width: 96%;
+    }
+
+    .modal-content {
+        margin-top: 200px !important;
+        margin-left: 25vw !important;
     }
 }
 

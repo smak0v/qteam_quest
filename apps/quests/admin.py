@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.quests.models import Quest, QuestComment, QuestSubscription, MetroStation
+from apps.quests.models import Quest, QuestComment, QuestSubscription, MetroStation, QuestImage
 
 
 class QuestAdmin(admin.ModelAdmin):
@@ -22,6 +22,24 @@ class QuestAdmin(admin.ModelAdmin):
         'name',
         'description',
         'location',
+    ]
+    list_per_page = 50
+
+
+class QuestImageAdmin(admin.ModelAdmin):
+    """Class that represents admin part of the quest image"""
+
+    ordering = [
+        'quest',
+        'uploading_timespan',
+    ]
+    list_display = [
+        'quest',
+        'uploading_timespan',
+    ]
+    search_fields = [
+        'quest',
+        'uploading_timespan',
     ]
     list_per_page = 50
 
@@ -91,6 +109,7 @@ class MetroStationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Quest, QuestAdmin)
+admin.site.register(QuestImage, QuestImageAdmin)
 admin.site.register(QuestComment, QuestCommentAdmin)
 admin.site.register(QuestSubscription, QuestSubscriptionAdmin)
 admin.site.register(MetroStation, MetroStationAdmin)

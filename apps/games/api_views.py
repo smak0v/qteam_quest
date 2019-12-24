@@ -63,11 +63,8 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             return Response({
                 'error': 'Game does not exists!',
             })
-        players_count = UserInTeam.objects.filter(game=game).count() + ReservedPlaceInTeam.objects.filter(
-            game=game).count()
         response = {
             'game': GameSerializer(game).data,
-            'players_count': players_count,
         }
         if user.is_authenticated:
             try:
@@ -86,6 +83,10 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
                     response['active'] = False
                 else:
                     response['active'] = True
+            reserved_count = UserInTeam.objects.filter(user=user,
+                                                       game=game).count() + ReservedPlaceInTeam.objects.filter(
+                user=user, game=game).count()
+            response['reserved_count'] = reserved_count
         return Response(response)
 
 

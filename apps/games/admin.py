@@ -18,6 +18,7 @@ class GameAdmin(admin.ModelAdmin):
         'level',
         'min_players_count',
         'max_players_count',
+        'players_count',
         'registration_available',
         'cancel',
     ]
@@ -33,6 +34,7 @@ class GameAdmin(admin.ModelAdmin):
         'level',
         'min_players_count',
         'max_players_count',
+        'players_count',
         'registration_available',
         'cancel',
     ]
@@ -62,6 +64,7 @@ class GameAdmin(admin.ModelAdmin):
         'refundable_days',
         'min_players_count',
         'max_players_count',
+        'players_count',
         'registration_available',
         'cancel',
     ]

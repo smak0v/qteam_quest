@@ -14,6 +14,9 @@ class GameCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = '__all__'
+        exclude = [
+            'players_count',
+        ]
 
     def create(self, validated_data):
         game = Game.objects.create(**validated_data)

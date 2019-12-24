@@ -8,9 +8,9 @@ from rest_framework.response import Response
 from apps.games.models import Game
 from apps.games.serializers import GameSerializer
 from apps.permissions import IsStaffUserOrReadOnly
-from apps.quests.models import Quest, QuestSubscription, QuestComment
+from apps.quests.models import Quest, QuestSubscription, QuestComment, QuestImage
 from apps.quests.serializers import QuestSerializer, QuestSubscriptionSerializer, QuestCommentSerializer, \
-    QuestCommentCreateSerializer, QuestSubscriptionCreateSerializer, QuestUpdateSerializer
+    QuestCommentCreateSerializer, QuestSubscriptionCreateSerializer, QuestUpdateSerializer, QuestImageSerializer
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -48,6 +48,7 @@ class QuestRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             }, status=status.HTTP_404_NOT_FOUND)
         response = {
             'quest': QuestSerializer(quest).data,
+            'quest_gallery': QuestImageSerializer(QuestImage.objects.filter(quest=quest), many=True).data,
         }
         if user.is_authenticated:
             try:
