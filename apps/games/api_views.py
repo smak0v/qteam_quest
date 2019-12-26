@@ -13,7 +13,7 @@ from apps.games.serializers import GameSerializer, GameCommentSerializer, GameCr
 from apps.permissions import IsStaffUserOrReadOnly
 from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
 from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, ReservedPlaceInTeamSerializer, \
-    UserInTeamCreateUpdateSerializer, ReservedPlaceInTeamCreateSerializer
+    UserInTeamCreateSerializer, ReservedPlaceInTeamCreateSerializer
 
 
 class GameListCreateView(ListCreateAPIView):
@@ -136,7 +136,7 @@ class GamePlayersListCreateView(ListCreateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
-            return UserInTeamCreateUpdateSerializer
+            return UserInTeamCreateSerializer
         return UserInTeamSerializer
 
     @staticmethod

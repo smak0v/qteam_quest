@@ -140,7 +140,9 @@
 
     - ```user``` must not be registered for the game and must be real user;
 
-    - ```game``` - must be real game.
+    - ```game``` - must be real game;
+    
+    - ```game``` - must have empty places for registration.
 
 - ```/api/games/game_pk/players/player_pk/``` (GET)
 
@@ -174,7 +176,9 @@
 
     - ```user``` - must exist and be the participant of the game;
 
-    - ```game``` - must be existing game.
+    - ```game``` - must be existing game;
+    
+    - ```game``` - must have empty places for registration.
 
 - ```api/games/game_pk/reservd_places/reserve_user_pk/``` (GET)
 

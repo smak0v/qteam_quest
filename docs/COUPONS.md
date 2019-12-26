@@ -92,3 +92,22 @@
     - ```user``` - can`t be NULL for INDIVIDUAL type of coupon;
 
     - ```user``` - must be real user for INDIVIDUAL type of coupon.
+    
+- ```/api/coupons/check/``` (POST)
+
+    ```
+    code (required)
+    user
+    ```
+
+    ### Validators
+
+    - ```code``` - must be code from existing coupon;
+
+    - the current date must be within the range of the coupon;
+
+    - ```user``` - required only if coupon type is INDIVIDUAL;
+
+    - ```user``` - must be real user;
+
+    - INDIVIDUAL coupon can be allayed for ```user``` if this coupon was created for this ```user```.

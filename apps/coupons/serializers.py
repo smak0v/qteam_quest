@@ -1,3 +1,5 @@
+from django.core.validators import MinValueValidator
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -45,6 +47,51 @@ class CouponUpdateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         return validate_data(data)
+
+
+class CouponCheckSerializer(serializers.Serializer):
+    """Class that implements coupon check serializer"""
+
+    code = serializers.CharField(
+        max_length=10,
+    )
+    user = serializers.IntegerField(
+        required=False,
+        validators=[
+            MinValueValidator(1),
+        ]
+    )
+
+    def validate(self, data):
+        try:
+            coupon = Coupon.objects.get(code=data['code'])
+        except Coupon.DoesNotExist:
+            raise serializers.ValidationError({
+                'code': 'Coupon with this code does not exist!',
+            })
+        now_date = timezone.datetime.now().date()
+        if now_date < coupon.start_date or now_date > coupon.end_date:
+            raise serializers.ValidationError({
+                'date': 'Coupon still / not valid!',
+            })
+        if coupon.type == 'INDIVIDUAL':
+            try:
+                user_from_request = data['user']
+            except KeyError:
+                raise serializers.ValidationError({
+                    'user': 'Is required for INDIVIDUAL coupon type!',
+                })
+            try:
+                user = User.objects.get(pk=user_from_request)
+            except User.DoesNotExist:
+                raise serializers.ValidationError({
+                    'user': 'Does not exist!',
+                })
+            if coupon.user != user:
+                raise serializers.ValidationError({
+                    'user': 'Invalid user for this INDIVIDUAL coupon!',
+                })
+        return data
 
 
 def validate_data(data):
