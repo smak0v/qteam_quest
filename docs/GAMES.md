@@ -165,9 +165,10 @@
     title (required)
     game (required)
     user (required)
+    count (required)
     ```
 
-    Reserve a place for a player`s friend.
+    Reserve a ```count``` places for a player`s friend.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
@@ -178,7 +179,11 @@
 
     - ```game``` - must be existing game;
     
-    - ```game``` - must have empty places for registration.
+    - ```game``` - must have empty places for registration;
+
+    - ```count``` - must be more than 0;
+
+    - ```count``` - can`t be more than empty places in game.
 
 - ```api/games/game_pk/reservd_places/reserve_user_pk/``` (GET)
 

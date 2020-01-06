@@ -428,9 +428,6 @@ class UserPastGamesListView(ListAPIView):
     """Class that implements user past games list view API endpoint"""
 
     serializer_class = GameSerializer
-    permission_classes = [
-        IsAuthenticated,
-    ]
 
     @staticmethod
     def get(request, *args, **kwargs):

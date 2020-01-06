@@ -1,6 +1,7 @@
 import datetime
 
 from django.utils import timezone
+from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, \
     RetrieveDestroyAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.games.models import Game, GameComment
+from users.models import User
 from apps.games.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
     GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer
 from apps.permissions import IsStaffUserOrReadOnly
@@ -202,6 +204,26 @@ class GameReservedPlacesListCreateView(ListCreateAPIView):
         reserved_places = ReservedPlaceInTeam.objects.filter(game=kwargs.get('pk'))
         data = ReservedPlaceInTeamSerializer(reserved_places, many=True).data
         return Response(data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ReservedPlaceInTeamCreateSerializer(data=self.request.data)
+        if serializer.is_valid():
+            game = Game.objects.get(pk=serializer.validated_data.get('game'))
+            user = User.objects.get(pk=serializer.validated_data.get('user'))
+            team = Team.objects.get(game=serializer.validated_data.get('game'))
+            place = None
+            for _ in range(serializer.validated_data.get('count')):
+                place = ReservedPlaceInTeam.objects.create(
+                    title=serializer.validated_data.get('title'),
+                    game=game,
+                    user=user,
+                    team_id=team.pk)
+            game.players_count += serializer.validated_data.get('count')
+            game.save()
+            return Response({
+                'message': 'Successfully created!'
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GameReservedPlacesRetrieveDestroyView(RetrieveDestroyAPIView):

@@ -68,33 +68,44 @@ class UserInTeamSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ReservedPlaceInTeamCreateSerializer(serializers.ModelSerializer):
+class ReservedPlaceInTeamCreateSerializer(serializers.Serializer):
     """Class that represents reserved place in a team for user by another user create, update serializer"""
 
-    class Meta:
-        model = ReservedPlaceInTeam
-        fields = [
-            'title',
-            'game',
-            'user',
-        ]
+    title = serializers.CharField(
+        required=True,
+    )
+    game = serializers.IntegerField(
+        required=True,
+    )
+    user = serializers.IntegerField(
+        required=True,
+    )
+    count = serializers.IntegerField(
+        required=True,
+    )
 
     def validate(self, data):
         try:
-            UserInTeam.objects.get(user=User.objects.get(pk=data.get('user').pk),
-                                   game=Game.objects.get(pk=data.get('game').pk))
+            UserInTeam.objects.get(user=User.objects.get(pk=data.get('user')),
+                                   game=Game.objects.get(pk=data.get('game')))
         except UserInTeam.DoesNotExist:
             raise serializers.ValidationError({
                 'user': 'User must be the participant of the game!',
             })
-        data['team'] = Team.objects.get(game=data.get('game').pk)
-        game = Game.objects.get(pk=data.get('game').pk)
+        data['team'] = Team.objects.get(game=data.get('game'))
+        game = Game.objects.get(pk=data.get('game'))
         if game.players_count == game.max_players_count:
             raise serializers.ValidationError({
                 'error': 'No empty places for this game!',
             })
-        game.players_count += 1
-        game.save()
+        if data.get('count') <= 0:
+            raise serializers.ValidationError({
+                'error': 'Count field can not be less than 1!',
+            })
+        if data.get('count') > game.max_players_count - game.players_count:
+            raise serializers.ValidationError({
+                'error': f'You can reserve no more than {game.max_players_count - game.players_count} places!',
+            })
         return data
 
 

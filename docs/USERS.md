@@ -221,7 +221,7 @@
 
     - subscription must exist;
     
-    - ```user``` - must be equal to ```user_pk``` from request;
+    - ```user``` - must be equal to ```user_pk``` from request (the one who unsubscribes from the ```subscriber```);
 
     - ```user_pk``` - must be real user primary key;
 
@@ -237,9 +237,6 @@
 - ```/api/users/user_pk/past_games/``` (GET)
 
     Return info about all user`s past games.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
 
 - ```/api/users/user_pk/future_games/``` (GET)
 
