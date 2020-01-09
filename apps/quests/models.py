@@ -25,6 +25,10 @@ class Quest(models.Model):
         verbose_name='Название',
         max_length=255,
     )
+    phone = models.CharField(
+        verbose_name='Номер телефона',
+        max_length=15,
+    )
     description = models.CharField(
         verbose_name='Описание',
         max_length=100,
@@ -67,7 +71,7 @@ class Quest(models.Model):
     )
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return f'{self.name} - {self.phone}'
 
 
 class QuestImage(models.Model):

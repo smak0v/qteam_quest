@@ -22,6 +22,10 @@
                     <span class="big_details_text">Название:</span>
                     <span class="small_details_text"> {{ quest.name }}</span>
                 </p>
+                <p class="details_block">
+                    <span class="big_details_text">Номер телефона:</span>
+                    <span class="small_details_text"> {{ quest.phone }}</span>
+                </p>
                 {% if quest.description %}
                     <p class="details_block">
                         <span class="big_details_text">Описание:</span>
@@ -145,7 +149,7 @@
                                     <td>{{ game.timespan }}</td>
                                     <td>
                                         <a href="{% url 'quests:details' game.quest.pk %}" class="object_link">
-                                            {{ game.quest }}
+                                            {{ game.quest.name }}
                                         </a>
                                     </td>
                                     <td>{{ game.get_level_display }}</td>
@@ -210,7 +214,7 @@
                                     <td>{{ canceled_game.timespan }}</td>
                                     <td>
                                         <a href="{% url 'games:details' canceled_game.quest.pk %}" class="object_link">
-                                            {{ canceled_game.quest }}
+                                            {{ canceled_game.quest.name }}
                                         </a>
                                     </td>
                                     <td>{{ canceled_game.get_level_display }}</td>

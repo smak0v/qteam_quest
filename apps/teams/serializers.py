@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from apps.games.models import Game
@@ -38,6 +39,10 @@ class UserInTeamCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         user_from_request = data.get('user')
         game_from_request = data.get('game')
+        if game_from_request.timespan + timezone.timedelta(minutes=game_from_request.duration) < timezone.now():
+            raise serializers.ValidationError({
+                'error': 'Unable to register for the past game!',
+            })
         try:
             user_in_game = UserInTeam.objects.get(user=user_from_request, game=game_from_request)
             if user_in_game is not None:

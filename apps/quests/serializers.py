@@ -67,6 +67,10 @@ class QuestUpdateSerializer(serializers.ModelSerializer):
         max_length=255,
         required=False,
     )
+    phone = serializers.CharField(
+        max_length=15,
+        required=False,
+    )
     location = serializers.CharField(
         max_length=255,
         required=False,

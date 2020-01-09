@@ -45,7 +45,7 @@
                 {% if game.description %}
                     <p class="details_block">
                         <span class="big_details_text">Описание:</span>
-                        <span class="small_details_text"> {{ game.description }}</span>
+                        <span class="small_details_text">{{ game.description }}</span>
                     </p>
                 {% endif %}
                 {% if game.cover_image %}
@@ -76,7 +76,7 @@
                     <span class="big_details_text">Площадка:</span>
                     <span class="small_details_text">
                         <a href="{% url 'quests:details' game.quest.pk %}" class="object_link">
-                            {{ game.quest }}
+                            {{ game.quest.name }}
                         </a>
                     </span>
                 </p>

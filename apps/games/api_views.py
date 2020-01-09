@@ -33,13 +33,13 @@ class GameListCreateView(ListCreateAPIView):
     def get_queryset(self):
         date = self.request.query_params.get('date')
         if date is None:
-            return Game.objects.filter(cancel=False).order_by('timespan')
+            return Game.objects.all().order_by('timespan')
         try:
             correct_date = datetime.datetime.strptime(date, '%Y-%m-%d')
             return Game.objects.filter(timespan__year=correct_date.year, timespan__month=correct_date.month,
-                                       timespan__day=correct_date.day, cancel=False).order_by('timespan')
+                                       timespan__day=correct_date.day).order_by('timespan')
         except ValueError:
-            return Game.objects.filter(cancel=False).order_by('timespan')
+            return Game.objects.all().order_by('timespan')
 
 
 class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
@@ -80,11 +80,10 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             else:
                 response['passed'] = False
             reserved_places_count = ReservedPlaceInTeam.objects.filter(game=game).count()
-            if reserved_places_count + 1 < players_count:
-                if response['passed']:
-                    response['active'] = False
-                else:
-                    response['active'] = True
+            if response['passed'] or game.cancel:
+                response['active'] = False
+            else:
+                response['active'] = True
             reserved_count = UserInTeam.objects.filter(user=user,
                                                        game=game).count() + ReservedPlaceInTeam.objects.filter(
                 user=user, game=game).count()

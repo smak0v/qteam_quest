@@ -10,6 +10,7 @@ class QuestAdmin(admin.ModelAdmin):
         'name',
         'location',
         'rating',
+        'phone',
     ]
     list_display = [
         'name',
@@ -17,11 +18,13 @@ class QuestAdmin(admin.ModelAdmin):
         'rating',
         'x_coordinate',
         'y_coordinate',
+        'phone',
     ]
     search_fields = [
         'name',
         'description',
         'location',
+        'phone',
     ]
     list_per_page = 50
 

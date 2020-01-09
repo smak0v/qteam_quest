@@ -142,7 +142,9 @@
 
     - ```game``` - must be real game;
     
-    - ```game``` - must have empty places for registration.
+    - ```game``` - must have empty places for registration;
+
+    - ```game``` - must be held in the future.
 
 - ```/api/games/game_pk/players/player_pk/``` (GET)
 

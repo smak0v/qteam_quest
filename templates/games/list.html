@@ -45,7 +45,7 @@
                                     <td>{{ game.duration }} минут</td>
                                     <td>
                                         <a href="{% url 'quests:details' game.quest.pk %}" class="object_link">
-                                            {{ game.quest }}
+                                            {{ game.quest.name }}
                                         </a>
                                     </td>
                                     <td>{{ game.get_level_display }}</td>
@@ -111,7 +111,7 @@
                                     <td>{{ canceled_game.duration }} минут</td>
                                     <td>
                                         <a href="{% url 'games:details' canceled_game.quest.pk %}" class="object_link">
-                                            {{ canceled_game.quest }}
+                                            {{ canceled_game.quest.name }}
                                         </a>
                                     </td>
                                     <td>{{ canceled_game.get_level_display }}</td>

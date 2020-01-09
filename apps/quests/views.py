@@ -11,7 +11,7 @@ class QuestListView(View):
 
     @staticmethod
     def get(request):
-        quests = Quest.objects.all().order_by('name')
+        quests = Quest.objects.all().order_by('id')
         context = {
             'quests': quests,
             'title': 'Квесты',

@@ -12,8 +12,8 @@ from rest_framework.authtoken.models import Token
 
 from apps.coupons.models import Coupon
 from apps.games.models import Game, GameComment
-from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
 from apps.quests.models import Quest, MetroStation, QuestComment, QuestSubscription, QuestImage
+from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
 from users.models import User, UserSubscription
 
 
@@ -26,8 +26,8 @@ class Command(BaseCommand):
     games_count_per_day = random.randint(5, 10)
     comments_count = random.randint(5, 50)
     subscriptions_count = random.randint(5, 20)
-    game_registration_count = random.randint(20, 50)
-    game_reservation_places_count = random.randint(30, 80)
+    game_registration_count = random.randint(2, 3)
+    game_reservation_places_count = random.randint(2, 3)
     user_password = '12345'
     coordinates = [[55.670926, 37.555657], [55.678194, 37.563501], [55.720396, 37.560844], [55.735342, 37.594658],
                    [55.728865, 37.624671], [55.709586, 37.622812], [55.706947, 37.588010], [55.689369, 37.605286]]
@@ -54,7 +54,7 @@ class Command(BaseCommand):
         print('Users creation:')
         for i in range(self.users_count):
             user = User.objects.create(
-                phone='+38' + str(random.randrange(1000000000, 9999999999)),
+                phone='+7' + str(random.randrange(1000000000, 9999999999)),
                 is_active_phone=True,
                 username='username_' + str(i + 1),
                 first_name='Test ',
@@ -78,6 +78,7 @@ class Command(BaseCommand):
             coordinates = random.choices(self.coordinates)[0]
             Quest.objects.create(
                 name='Quest_' + str(i + 1),
+                phone='+7' + str(random.randrange(1000000000, 9999999999)),
                 location=random.choices(self.locations)[0],
                 x_coordinate=coordinates[0],
                 y_coordinate=coordinates[1],
@@ -121,7 +122,7 @@ class Command(BaseCommand):
                     level=random.choices(['1', '2', '3', '4', '5'])[0],
                     price=random.randrange(100, 999),
                     min_players_count=random.randrange(2, 4),
-                    max_players_count=random.randrange(15, 64),
+                    max_players_count=6,
                     cancel=(i + 1) % 3 == 0,
                 )
                 Team.objects.create(
@@ -309,20 +310,14 @@ class Command(BaseCommand):
 
     @staticmethod
     def make_game_description(dt, number):
-        return f"""
-    # Game #{number}
-    ## Date: {dt.strftime('%d %B')}
-    ### Заголовок 3
-    #### Заголовок 4
-    ##### Заголовок 5
-    ###### Заголовок 6
-    Стандартными положениями являются: 
-    * Начальный __удар__. Наносится в начале _каждого тайма_, а также — после каждого забитого мяча. Назначается с 
-    центральной точки поля (в центральном круге). 
-    * Вбрасывание мяча (аут). Бросается руками из-за боковой линии. Назначается после того, как мяч эту самую боковую 
-    линию пересёк. При этом аут бросает соперник игрока, которого мяч коснулся последним перед уходом за боковую линию 
-    * Удар от ворот. Наносится вратарём, после того, как мяч полностью пересёк линию ворот (вне территории ворот) от 
-    игрока нападавшей команды 
-    * Угловой удар. Наносится игроком нападающей команды из углового сектора. Назначается в случае, если мяч полностью 
-    пересекает линию ворот 
-    """.strip()
+        return f"""# Game #{number}
+## Date: {dt.strftime('%d %B')}
+### Заголовок 3
+#### Заголовок 4
+##### Заголовок 5
+###### Заголовок 6
+Стандартными положениями являются:
+* Начальный __удар__. Наносится в начале _каждого тайма_, а также — после каждого забитого мяча. Назначается с центральной точки поля (в центральном круге).
+* Вбрасывание мяча (аут). Бросается руками из-за боковой линии. Назначается после того, как мяч эту самую боковую линию пересёк. При этом аут бросает соперник игрока, которого мяч коснулся последним перед уходом за боковую линию
+* Удар от ворот. Наносится вратарём, после того, как мяч полностью пересёк линию ворот (вне территории ворот) от игрока нападавшей команды
+* Угловой удар. Наносится игроком нападающей команды из углового сектора. Назначается в случае, если мяч полностью пересекает линию ворот"""

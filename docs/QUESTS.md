@@ -8,6 +8,7 @@
 
     ```
     name (required)
+    phone (required)
     description (default '')
     location (required)
     x_coordinate (required)
@@ -37,6 +38,7 @@
 
     ```
     name
+    phone
     description
     location
     x_cordinate
