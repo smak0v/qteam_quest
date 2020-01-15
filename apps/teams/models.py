@@ -15,11 +15,11 @@ class Team(models.Model):
     )
 
     def __str__(self):
-        return '{}'.format(self.game.title)
+        return f'{self.game.title}'
 
 
 class UserInTeam(models.Model):
-    """Class that represents user in a team"""
+    """Class that represents user in a team after payment of all reserved places"""
 
     class Meta:
         verbose_name = 'Игрок в команде'
@@ -36,30 +36,31 @@ class UserInTeam(models.Model):
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
-        verbose_name='Игрок',
+        verbose_name='Пользователь',
         to='users.User',
         on_delete=models.CASCADE,
     )
+    title = models.CharField(
+        verbose_name='Название',
+        max_length=255,
+        default='',
+        blank=True,
+    )
 
     def __str__(self):
-        return '{} - {}'.format(self.user.username, self.game.title)
+        return f'{self.game.title} - {self.user.username} - {self.title}'
 
 
-class ReservedPlaceInTeam(models.Model):
-    """Class that represents reserved place in a team by user for another gamer"""
+class TemporaryReserve(models.Model):
+    """Class that represents temporary reserve (5 minutes) of one place in team for the game"""
 
     class Meta:
-        verbose_name = 'Забронированное место в команде'
-        verbose_name_plural = 'Забронированные места в команде'
+        verbose_name = 'Временный резерв'
+        verbose_name_plural = 'Временные резервы'
 
     game = models.ForeignKey(
         verbose_name='Игра',
         to='games.Game',
-        on_delete=models.CASCADE,
-    )
-    team = models.ForeignKey(
-        verbose_name='Команда',
-        to='Team',
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
@@ -67,10 +68,10 @@ class ReservedPlaceInTeam(models.Model):
         to='users.User',
         on_delete=models.CASCADE,
     )
-    title = models.CharField(
-        verbose_name='Название',
-        max_length=255,
+    timespan = models.DateTimeField(
+        verbose_name='Время создания резерва',
+        auto_now_add=True,
     )
 
     def __str__(self):
-        return '{} - {}'.format(self.title, self.game.title)
+        return f'{self.game.title} - {self.user.phone}'

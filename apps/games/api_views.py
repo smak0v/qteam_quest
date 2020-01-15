@@ -1,21 +1,22 @@
 import datetime
+import json
 
+from channels.layers import get_channel_layer
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, \
-    RetrieveDestroyAPIView, CreateAPIView
+    RetrieveDestroyAPIView, CreateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.games.models import Game, GameComment
-from users.models import User
 from apps.games.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
     GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer
 from apps.permissions import IsStaffUserOrReadOnly
-from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
-from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, ReservedPlaceInTeamSerializer, \
-    UserInTeamCreateSerializer, ReservedPlaceInTeamCreateSerializer
+from apps.teams.models import Team, UserInTeam, TemporaryReserve
+from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, UserInTeamCreateSerializer, \
+    TemporaryReserveSerializer
 
 
 class GameListCreateView(ListCreateAPIView):
@@ -69,25 +70,17 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             'game': GameSerializer(game).data,
         }
         if user.is_authenticated:
-            try:
-                user_in_team = UserInTeam.objects.get(user=user, game=game)
-                reserved_places_count_by_user = ReservedPlaceInTeam.objects.filter(user=user, game=game).count()
-                response['seats_purchased_count'] = 1 + reserved_places_count_by_user
-            except UserInTeam.DoesNotExist:
-                response['seats_purchased_count'] = 0
+            user_in_team_places_count = UserInTeam.objects.filter(user=user, game=game).count()
+            response['seats_purchased_count'] = user_in_team_places_count
             if game.timespan + timezone.timedelta(minutes=game.duration) < timezone.now():
                 response['passed'] = True
             else:
                 response['passed'] = False
-            reserved_places_count = ReservedPlaceInTeam.objects.filter(game=game).count()
             if response['passed'] or game.cancel:
                 response['active'] = False
             else:
                 response['active'] = True
-            reserved_count = UserInTeam.objects.filter(user=user,
-                                                       game=game).count() + ReservedPlaceInTeam.objects.filter(
-                user=user, game=game).count()
-            response['reserved_count'] = reserved_count
+            response['reserved_count'] = 0
         return Response(response)
 
 
@@ -115,20 +108,35 @@ class GameCommentListCreateView(ListCreateAPIView):
 
 
 class GameTeamListView(ListAPIView):
-    """Class that implements game team list view API endpoint"""
+    """Class that implements game team view API endpoint"""
 
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
     @staticmethod
     def get(request, *args, **kwargs):
-        team = Team.objects.get(game=kwargs.get('pk'))
-        data = TeamSerializer(team).data
-        return Response(data)
+        try:
+            team = Team.objects.get(game=kwargs.get('pk'))
+            data = TeamSerializer(team).data
+            return Response(data)
+        except Team.DoesNotExist:
+            return Response({
+                'error': 'Game does not exist!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GameBookPlacesView(APIView):
+    """Class that implements book places for the game view API endpoint"""
+
+    def post(self, request, *args, **kwargs):
+        # TODO
+        return Response({
+            'message': 'Booked successfully!',
+        }, status=status.HTTP_200_OK)
 
 
 class GamePlayersListCreateView(ListCreateAPIView):
-    """Class that implements game players list view API endpoint"""
+    """Class that implements game players list, create view API endpoint"""
 
     queryset = UserInTeam.objects.all()
     permission_classes = [
@@ -142,9 +150,24 @@ class GamePlayersListCreateView(ListCreateAPIView):
 
     @staticmethod
     def get(request, *args, **kwargs):
-        users_in_team = UserInTeam.objects.filter(game=kwargs.get('pk'))
-        data = UserInTeamSerializer(users_in_team, many=True).data
-        return Response(data)
+        try:
+            game = Game.objects.get(pk=kwargs.get('pk'))
+            users_in_team = UserInTeam.objects.filter(game=game.pk)
+            data = UserInTeamSerializer(users_in_team, many=True).data
+            return Response(data)
+        except Game.DoesNotExist:
+            return Response({
+                'error': 'Game does not exist!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserInTeamCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            # TODO
+            return Response({
+                'success': 'Successfully created!',
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_201_CREATED)
 
 
 class GamePlayersRetrieveDestroyView(RetrieveDestroyAPIView):
@@ -164,10 +187,6 @@ class GamePlayersRetrieveDestroyView(RetrieveDestroyAPIView):
             return Response({
                 'error': 'This player not registered for the game!',
             })
-        reserved_places_by_user = ReservedPlaceInTeam.objects.filter(user=kwargs.get('player_pk'),
-                                                                     game=kwargs.get('pk'))
-        for reserved_place_by_user in reserved_places_by_user:
-            reserved_place_by_user.delete()
         user_in_team.delete()
         return Response({
             'message': 'Player and all reserved places for this player was deleted successfully!',
@@ -185,122 +204,24 @@ class GamePlayersRetrieveDestroyView(RetrieveDestroyAPIView):
             })
 
 
-class GameReservedPlacesListCreateView(ListCreateAPIView):
-    """Class that implements game reserved places list view API endpoint"""
-
-    queryset = ReservedPlaceInTeam.objects.all()
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return ReservedPlaceInTeamCreateSerializer
-        return ReservedPlaceInTeamSerializer
-
-    @staticmethod
-    def get(request, *args, **kwargs):
-        reserved_places = ReservedPlaceInTeam.objects.filter(game=kwargs.get('pk'))
-        data = ReservedPlaceInTeamSerializer(reserved_places, many=True).data
-        return Response(data)
-
-    def post(self, request, *args, **kwargs):
-        serializer = ReservedPlaceInTeamCreateSerializer(data=self.request.data)
-        if serializer.is_valid():
-            game = Game.objects.get(pk=serializer.validated_data.get('game'))
-            user = User.objects.get(pk=serializer.validated_data.get('user'))
-            team = Team.objects.get(game=serializer.validated_data.get('game'))
-            place = None
-            for _ in range(serializer.validated_data.get('count')):
-                place = ReservedPlaceInTeam.objects.create(
-                    title=serializer.validated_data.get('title'),
-                    game=game,
-                    user=user,
-                    team_id=team.pk)
-            game.players_count += serializer.validated_data.get('count')
-            game.save()
-            return Response({
-                'message': 'Successfully created!'
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class GameReservedPlacesRetrieveDestroyView(RetrieveDestroyAPIView):
-    """Class that implements game reserved places retrieve, delete API view endpoint"""
-
-    queryset = ReservedPlaceInTeam.objects.all()
-    serializer_class = ReservedPlaceInTeamSerializer
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    @staticmethod
-    def delete(request, *args, **kwargs):
-        count = request.query_params.get('count')
-        reserved_places = ReservedPlaceInTeam.objects.filter(game=kwargs.get('pk'), user=kwargs.get('reserve_user_pk'))
-        if count is None:
-            return Response({
-                'message': 'Pass the count parameter to the request!',
-            })
-        if count == 'all':
-            for reserved_place in reserved_places:
-                reserved_place.delete()
-            return Response({
-                'message': 'All reserved places was deleted successfully!',
-            })
-        else:
-            reserved_places_count = len(reserved_places)
-            try:
-                if int(count) > reserved_places_count:
-                    return Response({
-                        'message': 'You are trying to delete too many reserved places!',
-                    })
-                else:
-                    for i in range(int(count)):
-                        reserved_places[i].delete()
-                    return Response({
-                        'message': '{} reserved places was deleted successfully!'.format(count)
-                    })
-            except ValueError:
-                return Response({
-                    'message': 'Pass correct count parameter to the request!',
-                })
-
-    @staticmethod
-    def retrieve(request, *args, **kwargs):
-        reserved_places = ReservedPlaceInTeam.objects.filter(game=kwargs.get('pk'), user=kwargs.get('reserve_user_pk'))
-        if len(reserved_places) == 0:
-            return Response({
-                'message': 'No reserved places for this player!',
-            })
-        data = ReservedPlaceInTeamSerializer(reserved_places, many=True).data
-        return Response(data)
-
-
 class GamePlacesStatusView(APIView):
     """Class that implements game places status view API endpoint"""
 
     @staticmethod
     def get(request, pk):
         try:
-            places_in_teams_count = int(Game.objects.get(pk=pk).max_players_count)
-            users_in_teams_for_game_count = 0
-            reserved_places_in_teams_for_game_count = 0
+            places_in_team_count = int(Game.objects.get(pk=pk).max_players_count)
             try:
-                users_in_teams_for_game_count = int(UserInTeam.objects.filter(game=pk).count())
+                users_in_team_for_game_count = UserInTeam.objects.filter(game=pk).count()
             except UserInTeam.DoesNotExist:
-                users_in_teams_for_game_count = 0
-            try:
-                reserved_places_in_teams_for_game_count = int(ReservedPlaceInTeam.objects.filter(game=pk).count())
-            except ReservedPlaceInTeam.DoesNotExist:
-                reserved_places_in_teams_for_game_count = 0
+                users_in_team_for_game_count = 0
             return Response({
-                'places_in_teams_for_game_count': places_in_teams_count,
-                'occupied_places_count': users_in_teams_for_game_count + reserved_places_in_teams_for_game_count,
+                'places_in_team_for_game_count': places_in_team_count,
+                'occupied_places_count': users_in_team_for_game_count,
             })
         except Game.DoesNotExist:
             return Response({
-                'message': 'Game with id {} does not exists!'.format(pk),
+                'message': f'Game with id {pk} does not exists!',
             })
 
 
@@ -311,3 +232,88 @@ class EvaluatePlayerView(CreateAPIView):
     permission_classes = [
         IsAuthenticated,
     ]
+
+
+class GameReserveTemporaryPlaceCreateView(CreateAPIView):
+    """Class that represents game reserve temporary place create API view endpoint"""
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, request, *args, **kwargs):
+        serializer = TemporaryReserveSerializer(data=self.request.data)
+        if serializer.is_valid():
+            game = serializer.validated_data.get('game')
+            user = serializer.validated_data.get('user')
+            if self.request.user != user:
+                return Response({
+                    'user': 'The user from the request must match the authorized user!',
+                }, status=status.HTTP_400_BAD_REQUEST)
+            if game.pk != kwargs.get('pk'):
+                return Response({
+                    'game': 'The game from the request must match the game pk from request url!',
+                })
+            if game.timespan + timezone.timedelta(minutes=game.duration) < timezone.now():
+                return Response({
+                    'error': 'Unable to register for the past game!',
+                }, status=status.HTTP_400_BAD_REQUEST)
+            if game.players_count < game.max_players_count:
+                place = TemporaryReserve.objects.create(game=game, user=user)
+            else:
+                return Response({
+                    'error': 'Not enough places in this game!',
+                }, status=status.HTTP_400_BAD_REQUEST)
+            game.players_count += 1
+            game.save()
+            send_game_status_message_to_socket(game)
+            return Response({
+                'reserved_place': TemporaryReserveSerializer(place).data,
+                'message': 'Successfully created!'
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GameReserveTemporaryPlaceDestroyView(DestroyAPIView):
+    """Class that represents game reserve temporary place destroy API view endpoint"""
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def destroy(self, request, *args, **kwargs):
+        user = self.request.user
+        try:
+            game = Game.objects.get(pk=kwargs.get('pk'))
+        except Game.DoesNotExist:
+            return Response({
+                'game': 'Game does not exist!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        if TemporaryReserve.objects.filter(user=user.pk, game=game.pk).count() < 1:
+            return Response({
+                'error': 'User has no reserved places for this game!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        place = TemporaryReserve.objects.filter(user=user.pk, game=game.pk).first()
+        place.delete()
+        game.players_count -= 1
+        game.save()
+        send_game_status_message_to_socket(game)
+        return Response({
+            'message': 'Successfully deleted!'
+        }, status=status.HTTP_200_OK)
+
+
+def send_game_status_message_to_socket(game):
+    obj = {
+        'game_id': game.pk,
+        'free_count': game.max_players_count - game.players_count,
+        'occupied_count': game.players_count,
+    }
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        str(game.pk),
+        {
+            'type': 'game_message',
+            'message': json.dumps(obj),
+        },
+    )

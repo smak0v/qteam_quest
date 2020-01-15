@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils import timezone
 
-from apps.teams.models import UserInTeam, ReservedPlaceInTeam
+from apps.teams.models import UserInTeam
 
 PAYMENT_METHODS = [
     ('ONLINE', 'Онлайн оплата'),

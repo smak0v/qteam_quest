@@ -116,19 +116,65 @@
 
     - ```game``` - must be existing game.
 
+- ```api/games/game_pk/reserve_place/``` (POST)
+
+    ```
+    user (required)
+    game (required)
+    ```
+
+    Reserve one temporary place (will be saved only for 5 minutes) for a game.
+
+    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
+    access the endpoint.
+
+    ### Validators
+
+    - ```user``` - must be the real user and be equal to user from request;
+
+    - ```game``` - must be the real game and must be equal for a game from request;
+
+    - ```game``` - must be held in the future;
+
+    - there should be enough free places in the game.
+
+- ```/api/games/game_pk/unreserve_place``` (DELETE)
+
+    Unreserve one place for user from request on game from request url.
+
+    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
+    access the endpoint.
+
+    ### Validators
+
+    - ```game_pk``` - must be the real game primary key;
+
+    - authorized user must have at least one reserved place for the game.
+
+- ```/api/games/game_pk/book_places/``` (GET)
+
+    Book places for the game (on ```Бронировать``` button click).
+
+    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
+    access the endpoint.
+
 - ```/api/games/game_pk/team/``` (GET)
 
-    Returns info about team for a game.
+    Returns info about team for a game (id and game info).
 
 - ```/api/games/game_pk/players/``` (GET)
 
     Returns info about all users for a game.
 
+    ### Validators
+
+    - ```game_pk``` from the url must belong to an existing game.
+
 - ```/api/games/game_pk/players/``` (POST)
 
     ```
-    game (required)
     user (required)
+    title
     ```
 
     Register user for a game.
@@ -138,13 +184,9 @@
 
     ### Validators
 
-    - ```user``` must not be registered for the game and must be real user;
+    - ```user``` - must be existing user;
 
-    - ```game``` - must be real game;
-    
-    - ```game``` - must have empty places for registration;
-
-    - ```game``` - must be held in the future.
+    - ```game``` - must be existing game.
 
 - ```/api/games/game_pk/players/player_pk/``` (GET)
 
@@ -153,47 +195,6 @@
 - ```/api/games/game_pk/players/player_pk/``` (DELETE)
 
     Delete user and all it`s reserved places for a game.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
-
-- ```/api/games/game_pk/reserved_places/``` (GET)
-
-    Returns info about all reserved places for a game.
-
-- ```/api/games/game_pk/reserved_places/``` (POST)
-
-    ```
-    title (required)
-    game (required)
-    user (required)
-    count (required)
-    ```
-
-    Reserve a ```count``` places for a player`s friend.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
-
-    ### Validation
-
-    - ```user``` - must exist and be the participant of the game;
-
-    - ```game``` - must be existing game;
-    
-    - ```game``` - must have empty places for registration;
-
-    - ```count``` - must be more than 0;
-
-    - ```count``` - can`t be more than empty places in game.
-
-- ```api/games/game_pk/reservd_places/reserve_user_pk/``` (GET)
-
-    Returns info about all reserved places for reserve user.   
-
-- ```api/games/game_pk/reservd_places/reserve_user_pk/?count=all``` (DELETE)
-
-    Delete reserved place for player`s friend. ```count``` parameter can be a number or ```all``` word.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.

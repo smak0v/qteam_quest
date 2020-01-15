@@ -13,7 +13,7 @@ from rest_framework.authtoken.models import Token
 from apps.coupons.models import Coupon
 from apps.games.models import Game, GameComment
 from apps.quests.models import Quest, MetroStation, QuestComment, QuestSubscription, QuestImage
-from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
+from apps.teams.models import Team, UserInTeam
 from users.models import User, UserSubscription
 
 
@@ -27,7 +27,6 @@ class Command(BaseCommand):
     comments_count = random.randint(5, 50)
     subscriptions_count = random.randint(5, 20)
     game_registration_count = random.randint(2, 3)
-    game_reservation_places_count = random.randint(2, 3)
     user_password = '12345'
     coordinates = [[55.670926, 37.555657], [55.678194, 37.563501], [55.720396, 37.560844], [55.735342, 37.594658],
                    [55.728865, 37.624671], [55.709586, 37.622812], [55.706947, 37.588010], [55.689369, 37.605286]]
@@ -48,7 +47,6 @@ class Command(BaseCommand):
         self.subscribe_for_quests()
         self.subscribe_for_users()
         self.register_users_for_game()
-        self.reserve_places_for_game()
 
     def create_users(self):
         print('Users creation:')
@@ -232,38 +230,12 @@ class Command(BaseCommand):
                         game=game[0],
                         user=user,
                         team=random.choices(teams)[0],
+                        title=user.username + '`s friend',
                     )
                     game[0].players_count += 1
                     game[0].save()
                     print('.', end='', flush=True)
         print('\nRegister user for a games: DONE')
-
-    def reserve_places_for_game(self):
-        print('Reserve places for a games:')
-        users = User.objects.filter(admin=False)
-        games = Game.objects.all()
-        for user in users:
-            for i in range(self.game_reservation_places_count):
-                game = random.choices(games)
-                teams = Team.objects.filter(game=game[0])
-                team = random.choices(teams)[0]
-                if ReservedPlaceInTeam.objects.filter(game=game[0], team=team,
-                                                      user=user).count() >= int(game[0].max_players_count):
-                    continue
-                try:
-                    UserInTeam.objects.get(game=game[0], user=user)
-                except UserInTeam.DoesNotExist:
-                    continue
-                ReservedPlaceInTeam.objects.create(
-                    game=game[0],
-                    user=user,
-                    team=team,
-                    title='{}`s friend'.format(user.phone),
-                )
-                game[0].players_count += 1
-                game[0].save()
-                print('.', end='', flush=True)
-        print('\nReserve places for a games: DONE')
 
     @staticmethod
     def add_gallery_photos(quest):

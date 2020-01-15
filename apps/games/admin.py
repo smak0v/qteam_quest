@@ -7,6 +7,7 @@ class GameAdmin(admin.ModelAdmin):
     """Class that represents admin part of game"""
 
     ordering = [
+        'pk',
         'title',
         'genre',
         'timespan',
@@ -23,6 +24,7 @@ class GameAdmin(admin.ModelAdmin):
         'cancel',
     ]
     list_display = [
+        'pk',
         'title',
         'genre',
         'timespan',
@@ -51,6 +53,7 @@ class GameAdmin(admin.ModelAdmin):
         'cancel',
     ]
     search_fields = [
+        'pk',
         'title',
         'description',
         'genre',
@@ -75,14 +78,17 @@ class GameCommentAdmin(admin.ModelAdmin):
     """Class that represents admin part of the game comment"""
 
     list_display = [
+        'pk',
         'user',
         'game',
     ]
     ordering = [
+        'pk',
         'user',
         'game',
     ]
     search_fields = [
+        'pk',
         'user',
         'game',
         'text',
@@ -97,6 +103,7 @@ class GamePlayerEvaluationAdmin(admin.ModelAdmin):
     """Class that represents admin part of the game player evaluation"""
 
     list_display = [
+        'pk',
         'game',
         'appraiser',
         'ranked_user',
@@ -104,6 +111,7 @@ class GamePlayerEvaluationAdmin(admin.ModelAdmin):
         'enjoyed_playing',
     ]
     ordering = [
+        'pk',
         'game',
         'appraiser',
         'ranked_user',
@@ -111,6 +119,7 @@ class GamePlayerEvaluationAdmin(admin.ModelAdmin):
         'enjoyed_playing'
     ]
     search_fields = [
+        'pk',
         'game',
         'appraiser',
         'ranked_user',

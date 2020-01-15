@@ -22,6 +22,23 @@ ALLOWED_HOSTS = [
     host.lower() for host in get_env_value('ALLOWED_HOSTS').split(',')
 ]
 
+# Channels settings
+ASGI_APPLICATION = 'qteam_quest.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+    },
+}
+
+# Redis settings
+REDIS_HOST = 'localhost'
+
+REDIS_PORT = 6379
+
 # Application definition settings
 INSTALLED_APPS = [
     # Django`s apps
@@ -37,6 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'widget_tweaks',
+    'channels',
 
     # Created apps
     'users',

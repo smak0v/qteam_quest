@@ -3,7 +3,7 @@ from django.views import View
 
 from apps.games.forms import GameForm
 from apps.games.models import Game
-from apps.teams.models import Team, UserInTeam, ReservedPlaceInTeam
+from apps.teams.models import Team, UserInTeam
 
 
 class GamesListView(View):
@@ -27,13 +27,11 @@ def details_game_view(request, pk):
     game = Game.objects.get(pk=pk)
     team = Team.objects.filter(game=game).first()
     team_players = UserInTeam.objects.filter(game=game, team=team)
-    team_reserved_places = ReservedPlaceInTeam.objects.filter(game=game, team=team)
     context = {
         'title': 'Информация об игре',
         'game': game,
         'team': team,
         'team_players': team_players,
-        'team_reserved_places': team_reserved_places,
     }
     return render(request=request, template_name='games/details.html', context=context)
 

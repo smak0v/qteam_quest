@@ -116,7 +116,7 @@
                 <h2 class="empty_h_1">Команда</h2>
                 <hr>
                 <div class="d_flex">
-                    <div class="content_small">
+                    <div class="content">
                         <h5 class="empty_h_1">Игроки</h5>
                         <hr>
                         {% if team_players|length != 0 %}
@@ -135,24 +135,7 @@
                                 {% endfor %}
                             </div>
                         {% else %}
-                            <h6 class="empty_h_1">Не зарегестрировано ни одного игрока!</h6>
-                        {% endif %}
-                    </div>
-                    <div class="content_small">
-                        <h5 class="empty_h_1">Зарезервированные места</h5>
-                        <hr>
-                        {% if team_reserved_places|length != 0 %}
-                            <div class="d_flex">
-                                {% for team_reserved_place in team_reserved_places %}
-                                    <div class="user_div">
-                                        <img src="{% static 'img/no_user.png' %}" alt="Player icon"
-                                             title="Player icon" class="player_icon">
-                                        <p>{{ team_reserved_place.title }}</p>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <h6 class="empty_h_1">Не зарезервировано ни одного места!</h6>
+                            <h6 class="empty_h_1">Не зарегестрировано ни одного участника!</h6>
                         {% endif %}
                     </div>
                 </div>
