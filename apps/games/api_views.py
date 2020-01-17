@@ -62,7 +62,7 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     def retrieve(self, request, *args, **kwargs):
         user = self.request.user
         try:
-            game = Game.objects.get(pk=kwargs.get('pk'), cancel=False)
+            game = Game.objects.get(pk=kwargs.get('pk'))
         except Game.DoesNotExist:
             return Response({
                 'error': 'Game does not exists!',
