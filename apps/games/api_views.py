@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.utils import timezone
 from rest_framework import status
@@ -306,8 +307,8 @@ class GameReserveTemporaryPlaceDestroyView(DestroyAPIView):
 def send_game_status_message_to_socket(game):
     obj = {
         'game_id': game.pk,
-        'free_count': game.max_players_count - game.players_count,
-        'occupied_count': game.players_count,
+        'places_in_team_for_game_count': game.max_players_count,
+        'occupied_places_count': game.players_count,
     }
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(

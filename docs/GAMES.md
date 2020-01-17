@@ -116,7 +116,7 @@
 
     - ```game``` - must be existing game.
 
-- ```api/games/game_pk/reserve_place/``` (POST)
+- ```/api/games/game_pk/reserve_place/``` (POST)
 
     ```
     user (required)
@@ -138,7 +138,7 @@
 
     - there should be enough free places in the game.
 
-- ```/api/games/game_pk/unreserve_place``` (DELETE)
+- ```/api/games/game_pk/unreserve_place/``` (DELETE)
 
     Unreserve one place for user from request on game from request url.
 

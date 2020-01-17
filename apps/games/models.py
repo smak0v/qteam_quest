@@ -123,14 +123,13 @@ class Game(models.Model):
 
     def check_registration_availability(self):
         timespan = timezone.now()
-        if timespan.date() != self.timespan.date():
-            return
         if self.timespan - timespan <= timezone.timedelta(hours=1):
             self.registration_available = False
             self.save()
             if not self.check_game_filling():
                 self.cancel_game()
-            return
+        if self.timespan.date().day < timespan.date().day:
+            self.registration_available = False
         return
 
     def check_game_filling(self):
@@ -139,13 +138,9 @@ class Game(models.Model):
             players_count = UserInTeam.objects.filter(game=self).count()
         except UserInTeam.DoesNotExist:
             players_count = 0
-        try:
-            reserved_places_count = ReservedPlaceInTeam.objects.filter(game=self).count()
-        except ReservedPlaceInTeam.DoesNotExist:
-            reserved_places_count = 0
-        if players_count + reserved_places_count < total_players_count:
+        if players_count < total_players_count:
             return False
-        elif players_count + reserved_places_count > total_players_count:
+        elif players_count > total_players_count:
             return False
         return True
 
