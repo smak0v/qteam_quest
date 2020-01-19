@@ -309,6 +309,8 @@ def send_game_status_message_to_socket(game, user):
     places_in_team_for_game_count = game.max_players_count - (
             UserInTeam.objects.filter(game=game.pk).count() + TemporaryReserve.objects.filter(game=game.pk).count())
     obj = {
+        'user_id': user.pk,
+        'game_id': game.pk,
         'places_in_team_for_game_count': places_in_team_for_game_count,
         'occupied_places_count': occupied_places_count,
     }
