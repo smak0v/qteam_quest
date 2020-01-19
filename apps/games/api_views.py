@@ -208,17 +208,21 @@ class GamePlayersRetrieveDestroyView(RetrieveDestroyAPIView):
 class GamePlacesStatusView(APIView):
     """Class that implements game places status view API endpoint"""
 
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     @staticmethod
     def get(request, pk):
+        user = request.user
         try:
-            places_in_team_count = int(Game.objects.get(pk=pk).max_players_count)
-            try:
-                users_in_team_for_game_count = UserInTeam.objects.filter(game=pk).count()
-            except UserInTeam.DoesNotExist:
-                users_in_team_for_game_count = 0
+            game = Game.objects.get(pk=pk)
+            occupied_places_count = TemporaryReserve.objects.filter(game=pk, user=user.pk).count()
+            places_in_team_for_game_count = game.max_players_count - (
+                    UserInTeam.objects.filter(game=pk).count() + TemporaryReserve.objects.filter(game=pk).count())
             return Response({
-                'places_in_team_for_game_count': places_in_team_count,
-                'occupied_places_count': users_in_team_for_game_count,
+                'places_in_team_for_game_count': places_in_team_for_game_count,
+                'occupied_places_count': occupied_places_count,
             })
         except Game.DoesNotExist:
             return Response({
@@ -265,9 +269,7 @@ class GameReserveTemporaryPlaceCreateView(CreateAPIView):
                 return Response({
                     'error': 'Not enough places in this game!',
                 }, status=status.HTTP_400_BAD_REQUEST)
-            game.players_count += 1
-            game.save()
-            send_game_status_message_to_socket(game)
+            send_game_status_message_to_socket(game, self.request.user)
             return Response({
                 'reserved_place': TemporaryReserveSerializer(place).data,
                 'message': 'Successfully created!'
@@ -296,19 +298,19 @@ class GameReserveTemporaryPlaceDestroyView(DestroyAPIView):
             }, status=status.HTTP_400_BAD_REQUEST)
         place = TemporaryReserve.objects.filter(user=user.pk, game=game.pk).first()
         place.delete()
-        game.players_count -= 1
-        game.save()
-        send_game_status_message_to_socket(game)
+        send_game_status_message_to_socket(game, user)
         return Response({
             'message': 'Successfully deleted!'
         }, status=status.HTTP_200_OK)
 
 
-def send_game_status_message_to_socket(game):
+def send_game_status_message_to_socket(game, user):
+    occupied_places_count = TemporaryReserve.objects.filter(game=game.pk, user=user.pk).count()
+    places_in_team_for_game_count = game.max_players_count - (
+            UserInTeam.objects.filter(game=game.pk).count() + TemporaryReserve.objects.filter(game=game.pk).count())
     obj = {
-        'game_id': game.pk,
-        'places_in_team_for_game_count': game.max_players_count,
-        'occupied_places_count': game.players_count,
+        'places_in_team_for_game_count': places_in_team_for_game_count,
+        'occupied_places_count': occupied_places_count,
     }
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(

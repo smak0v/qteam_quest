@@ -201,7 +201,10 @@
 
 - ```api/games/game_pk/places_status/``` (GET)
 
-    Returns info about total places count and occupied places count for a game.
+    Returns free places count and occupied places count (by user from request) for a game.
+
+    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
+    access the endpoint.
 
 - ```api/games/game_pk/evaluate_player/``` (POST)
 
