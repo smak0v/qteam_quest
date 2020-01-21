@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.games.models import Game, GameComment, GamePlayerEvaluation
+from apps.games.models import Game, GameComment, GamePlayerEvaluation, GamePayment
 
 
 class GameAdmin(admin.ModelAdmin):
@@ -133,6 +133,53 @@ class GamePlayerEvaluationAdmin(admin.ModelAdmin):
     list_per_page = 50
 
 
+class GamePaymentAdmin(admin.ModelAdmin):
+    """Class that implements admin part of the user payment for the game"""
+
+    list_display = [
+        'identifier',
+        'user',
+        'game',
+        'coupon',
+        'summa',
+        'discount',
+        'discount_units',
+        'summa_with_discount',
+        'currency',
+        'places_count',
+    ]
+    ordering = [
+        'identifier',
+        'user',
+        'game',
+        'coupon',
+        'summa',
+        'discount',
+        'discount_units',
+        'summa_with_discount',
+        'currency',
+        'places_count',
+    ]
+    search_fields = [
+        'identifier',
+        'user',
+        'game',
+        'coupon',
+        'summa',
+        'discount',
+        'discount_units',
+        'summa_with_discount',
+        'currency',
+        'places_count',
+    ]
+    list_filter = [
+        'discount_units',
+        'currency',
+    ]
+    list_per_page = 50
+
+
 admin.site.register(Game, GameAdmin)
 admin.site.register(GameComment, GameCommentAdmin)
 admin.site.register(GamePlayerEvaluation, GamePlayerEvaluationAdmin)
+admin.site.register(GamePayment, GamePaymentAdmin)

@@ -132,8 +132,6 @@
                                 <th>Площадка</th>
                                 <th>Уровень игры</th>
                                 <th>Цена</th>
-                                <th>Статус</th>
-                                <th>Количесво игроков со стороны</th>
                                 <th class="actions">Действия</th>
                             </tr>
                             </thead>
@@ -154,8 +152,6 @@
                                     </td>
                                     <td>{{ game.get_level_display }}</td>
                                     <td>{{ game.price }} {{ game.currency }}</td>
-                                    <td>{{ game.get_game_status_display }}</td>
-                                    <td>{{ game.get_a_side_players_count_display }}</td>
                                     <td class="d_flex justify-content-center">
                                         <a href="{% url 'games:edit' game.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>
@@ -197,8 +193,6 @@
                                 <th>Площадка</th>
                                 <th>Уровень игры</th>
                                 <th>Цена</th>
-                                <th>Статус</th>
-                                <th>Количесво игроков со стороны</th>
                                 <th class="canceled_actions">Действия</th>
                             </tr>
                             </thead>
@@ -219,8 +213,6 @@
                                     </td>
                                     <td>{{ canceled_game.get_level_display }}</td>
                                     <td>{{ canceled_game.price }} {{ canceled_game.currency }}</td>
-                                    <td>{{ canceled_game.get_game_status_display }}</td>
-                                    <td>{{ canceled_game.get_a_side_players_count_display }}</td>
                                     <td class="d_flex justify-content-center">
                                         <a href="{% url 'games:edit' canceled_game.pk %}" class="non_href">
                                             <button class="btn btn-warning edit_btn">Редактировать</button>

@@ -1,5 +1,9 @@
 from django.db import models
 
+STATUSES = [
+    ('PENDING', 'Pending'),
+]
+
 
 class Team(models.Model):
     """Class that represents the team"""
@@ -43,8 +47,15 @@ class UserInTeam(models.Model):
     title = models.CharField(
         verbose_name='Название',
         max_length=255,
-        default='',
+        default=None,
+        null=True,
         blank=True,
+    )
+    status = models.CharField(
+        verbose_name='Статус',
+        max_length=255,
+        choices=STATUSES,
+        default='PENDING',
     )
 
     def __str__(self):

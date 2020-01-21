@@ -26,6 +26,7 @@ class UserInTeamAdmin(admin.ModelAdmin):
         'team',
         'user',
         'title',
+        'status',
     ]
     ordering = [
         'pk',
@@ -33,6 +34,7 @@ class UserInTeamAdmin(admin.ModelAdmin):
         'team',
         'user',
         'title',
+        'status',
     ]
     search_fields = [
         'title',

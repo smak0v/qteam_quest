@@ -4,7 +4,7 @@ from django.urls import path
 from apps.games.api_views import GameRetrieveUpdateDestroyView, GameCommentListCreateView, \
     GameTeamListView, GamePlayersListCreateView, GamePlayersRetrieveDestroyView, \
     GameListCreateView, GamePlacesStatusView, EvaluatePlayerView, GameReserveTemporaryPlaceCreateView, \
-    GameReserveTemporaryPlaceDestroyView, GameBookPlacesView
+    GameReserveTemporaryPlaceDestroyView, GameReservedPlacesInfoView, GamePaymentTokenView
 from apps.games.views import GamesListView, create_game_view, edit_game_view, delete_game_view, details_game_view, \
     cancel_game_view, renew_game_view
 
@@ -30,9 +30,10 @@ games_api_urls = (
              name='game_reserve_temporary_place'),
         path('<int:pk>/unreserve_place/', GameReserveTemporaryPlaceDestroyView.as_view(),
              name='game_destroy_temporary_place'),
+        path('<int:pk>/reserved_places_info/', GameReservedPlacesInfoView.as_view(), name='game_reserved_places_info'),
+        path('<int:pk>/payment_token/', GamePaymentTokenView.as_view(), name='game_payment_token'),
 
         # TODO and check
-        path('<int:pk>/book_places/', GameBookPlacesView.as_view(), name='book_places'),
         path('<int:pk>/players/', GamePlayersListCreateView.as_view(), name='game_players'),
         path('<int:pk>/players/<int:player_pk>/', GamePlayersRetrieveDestroyView.as_view(),
              name='game_players_detail'),

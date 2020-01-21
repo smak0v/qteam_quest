@@ -97,17 +97,31 @@
 
     ```
     code (required)
-    user
+    game_id (required)
     ```
+
+    Check coupon. If coupon is valid, returns response with next information: summa with discount, discount, discount 
+    units (RUB or PERCENT) and type (GENERAL or INDIVIDUAL).
 
     ### Validators
 
     - ```code``` - must be code from existing coupon;
 
+    - ```game_id``` - must be an id of existing game;
+
     - the current date must be within the range of the coupon;
 
-    - ```user``` - required only if coupon type is INDIVIDUAL;
+    - INDIVIDUAL coupon can be allayed for ```user``` if this coupon was created for this ```user```;
 
-    - ```user``` - must be real user;
+    - user must have reserved places for the game and must have time to pay them within 5 minutes.
 
-    - INDIVIDUAL coupon can be allayed for ```user``` if this coupon was created for this ```user```.
+    ### Response example
+
+    ```json
+    {
+      "summa": 600,
+      "discount": 20,
+      "units": "PERCENT",
+      "type": "INDIVIDUAL"
+    }
+    ```

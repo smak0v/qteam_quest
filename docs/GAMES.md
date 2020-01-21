@@ -151,12 +151,55 @@
 
     - authorized user must have at least one reserved place for the game.
 
-- ```/api/games/game_pk/book_places/``` (GET)
+- ```/api/games/game_pk/reserved_places_info/``` (GET)
 
-    Book places for the game (on ```Бронировать``` button click).
+    Get info about reserved places for user on the game.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
+
+    ### Response example
+
+    ```json
+    {
+      "occupied_places_count": 3,
+      "summa": 600,
+      "discount": 0,
+      "is_coupon": true
+    }
+    ```
+  
+- ```/api/games/game_pk/payment_token/``` (POST)
+
+    ```
+    code (required)
+    game_id (required)
+    ```
+
+    Create payment for user on the game and store it. Returns Yandex payment token for web-widget initialization.
+
+    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
+    access the endpoint.
+
+    ### Validators
+
+    - ```code``` - must be code from existing coupon;
+
+    - ```game_id``` - must be an id of existing game and must be equal to ```game_pk``` from url;
+
+    - the current date must be within the range of the coupon;
+
+    - INDIVIDUAL coupon can be allayed for ```user``` if this coupon was created for this ```user```;
+
+    - user must have reserved places for the game and must have time to pay them within 5 minutes.
+
+    ### Response example
+
+    ```json
+    {
+      "yandex_token": "ct-24301ae5-000f-5000-9000-13f5f1c2f8e0"
+    }
+    ```
 
 - ```/api/games/game_pk/team/``` (GET)
 

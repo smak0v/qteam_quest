@@ -185,6 +185,69 @@ class GameComment(models.Model):
         return '{} - {}'.format(self.user.username, self.game.title)
 
 
+class GamePayment(models.Model):
+    """Class that represents user payment for the game"""
+
+    class Meta:
+        verbose_name = 'Платеж пользователя'
+        verbose_name_plural = 'Платежи пользователей'
+
+    identifier = models.CharField(
+        verbose_name='Идентификатор',
+        max_length=255,
+    )
+    user = models.ForeignKey(
+        verbose_name='Пользователь',
+        to='users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    game = models.ForeignKey(
+        verbose_name='Игра',
+        to='Game',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    coupon = models.ForeignKey(
+        verbose_name='Купон',
+        to='coupons.Coupon',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    summa = models.DecimalField(
+        verbose_name='Сумма',
+        max_digits=12,
+        decimal_places=2,
+    )
+    discount = models.DecimalField(
+        verbose_name='Скидка',
+        max_digits=12,
+        decimal_places=2,
+    )
+    discount_units = models.CharField(
+        verbose_name='Удиницы измирения',
+        max_length=10,
+    )
+    summa_with_discount = models.DecimalField(
+        verbose_name='Сумма со скидкой',
+        max_digits=12,
+        decimal_places=2,
+    )
+    currency = models.CharField(
+        verbose_name='Валюта',
+        max_length=10,
+    )
+    places_count = models.IntegerField(
+        verbose_name='Количество оплаченных мест',
+    )
+
+    def __str__(self):
+        return f'User: {self.user.phone}\nGame: {self.game.title}\nIdentifier: {self.identifier}'
+
+
 class GamePlayerEvaluation(models.Model):
     """Class that represents a player evaluation for a game"""
 

@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'apps.games',
     'apps.teams',
     'apps.coupons',
+    'apps.payment',
 ]
 
 MIDDLEWARE = [
@@ -207,3 +208,8 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_TIMEZONE = 'Europe/Moscow'
+
+# Yandex payment settings
+YANDEX_ACCOUNT_ID = '659099'
+
+YANDEX_SECRET_KEY = 'test_Hks6WWL82R6dFkmpiy-ywcpa5CyQyRXRirGCvP1bk6E'

@@ -443,14 +443,20 @@ td, th {
     }
 }
 
-@media screen and (max-width: 1856px) {
+@media screen and (max-width: 1847px) {
     .cancel_btn {
         margin-top: 10px !important;
     }
 }
 
-@media screen and (max-width: 1828px) {
+@media screen and (max-width: 1819px) {
     .renew_btn {
+        margin-top: 10px !important;
+    }
+}
+
+@media screen and (max-width: 1514px) {
+    .delete_btn {
         margin-top: 10px !important;
     }
 }
@@ -479,10 +485,6 @@ td, th {
 }
 
 @media screen and (min-width: 1420px) {
-    .cancel_btn {
-        margin-top: 10px !important;
-    }
-
     .modal-content {
         margin-top: 200px !important;
         margin-left: 37vw !important;

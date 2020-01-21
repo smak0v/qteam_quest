@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from apps.coupons.models import Coupon
+from apps.games.models import Game
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -55,8 +56,7 @@ class CouponCheckSerializer(serializers.Serializer):
     code = serializers.CharField(
         max_length=10,
     )
-    user = serializers.IntegerField(
-        required=False,
+    game_id = serializers.IntegerField(
         validators=[
             MinValueValidator(1),
         ]
@@ -69,28 +69,17 @@ class CouponCheckSerializer(serializers.Serializer):
             raise serializers.ValidationError({
                 'code': 'Coupon with this code does not exist!',
             })
+        try:
+            game = Game.objects.get(pk=data['game_id'])
+        except Game.DoesNotExist:
+            raise serializers.ValidationError({
+                'game_id': 'Game with this id does not exist!',
+            })
         now_date = timezone.datetime.now().date()
         if now_date < coupon.start_date or now_date > coupon.end_date:
             raise serializers.ValidationError({
                 'date': 'Coupon still / not valid!',
             })
-        if coupon.type == 'INDIVIDUAL':
-            try:
-                user_from_request = data['user']
-            except KeyError:
-                raise serializers.ValidationError({
-                    'user': 'Is required for INDIVIDUAL coupon type!',
-                })
-            try:
-                user = User.objects.get(pk=user_from_request)
-            except User.DoesNotExist:
-                raise serializers.ValidationError({
-                    'user': 'Does not exist!',
-                })
-            if coupon.user != user:
-                raise serializers.ValidationError({
-                    'user': 'Invalid user for this INDIVIDUAL coupon!',
-                })
         return data
 
 
