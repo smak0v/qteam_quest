@@ -213,34 +213,9 @@
 
     - ```game_pk``` from the url must belong to an existing game.
 
-- ```/api/games/game_pk/players/``` (POST)
-
-    ```
-    user (required)
-    title
-    ```
-
-    Register user for a game.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
-
-    ### Validators
-
-    - ```user``` - must be existing user;
-
-    - ```game``` - must be existing game.
-
 - ```/api/games/game_pk/players/player_pk/``` (GET)
 
     Returns info about registered user for a game.
-
-- ```/api/games/game_pk/players/player_pk/``` (DELETE)
-
-    Delete user and all it`s reserved places for a game.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
 
 - ```api/games/game_pk/places_status/``` (GET)
 

@@ -224,13 +224,18 @@ class Command(BaseCommand):
                 teams = Team.objects.filter(game=game[0])
                 try:
                     UserInTeam.objects.get(game=game[0], user=user)
-                    continue
-                except UserInTeam.DoesNotExist:
                     UserInTeam.objects.create(
                         game=game[0],
                         user=user,
                         team=random.choices(teams)[0],
                         title=user.username + '`s friend',
+                    )
+                except UserInTeam.DoesNotExist:
+                    UserInTeam.objects.create(
+                        game=game[0],
+                        user=user,
+                        team=random.choices(teams)[0],
+                        title=user.username,
                     )
                     game[0].players_count += 1
                     game[0].save()

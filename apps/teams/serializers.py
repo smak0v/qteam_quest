@@ -26,35 +26,6 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserInTeamCreateSerializer(serializers.ModelSerializer):
-    """Class that represents user in a team create, update serializer"""
-
-    class Meta:
-        model = UserInTeam
-        fields = [
-            'user',
-            'title',
-        ]
-
-    def validate(self, data):
-        # TODO validate
-        # user_from_request = data.get('user')
-        # game_from_request = data.get('game')
-        # try:
-        #     user_in_game = UserInTeam.objects.get(user=user_from_request, game=game_from_request)
-        #
-        # except UserInTeam.DoesNotExist:
-        #     data['team'] = Team.objects.get(game=game_from_request)
-        #     game = Game.objects.get(pk=game_from_request.pk)
-        #     if game.players_count == game.max_players_count:
-        #         raise serializers.ValidationError({
-        #             'error': 'No empty places for this game!',
-        #         })
-        #     game.players_count += 1
-        #     game.save()
-        return data
-
-
 class UserInTeamSerializer(serializers.ModelSerializer):
     """Class that represents user in a team serializer"""
 

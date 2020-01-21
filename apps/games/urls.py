@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 from apps.games.api_views import GameRetrieveUpdateDestroyView, GameCommentListCreateView, \
-    GameTeamListView, GamePlayersListCreateView, GamePlayersRetrieveDestroyView, \
-    GameListCreateView, GamePlacesStatusView, EvaluatePlayerView, GameReserveTemporaryPlaceCreateView, \
-    GameReserveTemporaryPlaceDestroyView, GameReservedPlacesInfoView, GamePaymentTokenView
+    GameTeamListView, GamePlayersListView, GamePlayersRetrieveView, GameListCreateView, GamePlacesStatusView, \
+    EvaluatePlayerView, GameReserveTemporaryPlaceCreateView, GameReserveTemporaryPlaceDestroyView, \
+    GameReservedPlacesInfoView, GamePaymentTokenView
 from apps.games.views import GamesListView, create_game_view, edit_game_view, delete_game_view, details_game_view, \
     cancel_game_view, renew_game_view
 
@@ -32,10 +32,7 @@ games_api_urls = (
              name='game_destroy_temporary_place'),
         path('<int:pk>/reserved_places_info/', GameReservedPlacesInfoView.as_view(), name='game_reserved_places_info'),
         path('<int:pk>/payment_token/', GamePaymentTokenView.as_view(), name='game_payment_token'),
-
-        # TODO and check
-        path('<int:pk>/players/', GamePlayersListCreateView.as_view(), name='game_players'),
-        path('<int:pk>/players/<int:player_pk>/', GamePlayersRetrieveDestroyView.as_view(),
-             name='game_players_detail'),
+        path('<int:pk>/players/', GamePlayersListView.as_view(), name='game_players'),
+        path('<int:pk>/players/<int:player_pk>/', GamePlayersRetrieveView.as_view(), name='game_players_detail'),
         path('<int:pk>/evaluate_player/', EvaluatePlayerView.as_view(), name='game_player_evaluation'),
     ], 'api:games')

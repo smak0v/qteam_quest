@@ -21,8 +21,7 @@ from apps.games.serializers import GameSerializer, GameCommentSerializer, GameCr
     GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer
 from apps.permissions import IsStaffUserOrReadOnly
 from apps.teams.models import Team, UserInTeam, TemporaryReserve
-from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, UserInTeamCreateSerializer, \
-    TemporaryReserveSerializer
+from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, TemporaryReserveSerializer
 
 
 class GameListCreateView(ListCreateAPIView):
@@ -235,18 +234,8 @@ class GamePaymentTokenView(APIView):
         return round(summa, 2)
 
 
-class GamePlayersListCreateView(ListCreateAPIView):
-    """Class that implements game players list, create view API endpoint"""
-
-    queryset = UserInTeam.objects.all()
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return UserInTeamCreateSerializer
-        return UserInTeamSerializer
+class GamePlayersListView(ListAPIView):
+    """Class that implements game players list view API endpoint"""
 
     @staticmethod
     def get(request, *args, **kwargs):
@@ -260,37 +249,9 @@ class GamePlayersListCreateView(ListCreateAPIView):
                 'error': 'Game does not exist!',
             }, status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request, *args, **kwargs):
-        serializer = UserInTeamCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            # TODO
-            return Response({
-                'success': 'Successfully created!',
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_201_CREATED)
 
-
-class GamePlayersRetrieveDestroyView(RetrieveDestroyAPIView):
-    """Class that implements game players retrieve, destroy view API endpoint"""
-
-    queryset = UserInTeam.objects.all()
-    serializer_class = UserInTeamSerializer
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-    ]
-
-    @staticmethod
-    def delete(request, *args, **kwargs):
-        try:
-            user_in_team = UserInTeam.objects.get(game=kwargs.get('pk'), user=kwargs.get('player_pk'))
-        except UserInTeam.DoesNotExist:
-            return Response({
-                'error': 'This player not registered for the game!',
-            })
-        user_in_team.delete()
-        return Response({
-            'message': 'Player and all reserved places for this player was deleted successfully!',
-        })
+class GamePlayersRetrieveView(RetrieveDestroyAPIView):
+    """Class that implements game players retrieve view API endpoint"""
 
     @staticmethod
     def retrieve(request, *args, **kwargs):

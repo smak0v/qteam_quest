@@ -122,16 +122,18 @@
                         {% if team_players|length != 0 %}
                             <div class="d_flex">
                                 {% for team_player in team_players %}
-                                    <div class="user_div">
-                                        {% if team_player.user.cover_image %}
-                                            <img src="{{ team_player.user.cover_image }}" alt="Player icon"
-                                                 title="Player icon" class="player_icon">
-                                        {% else %}
-                                            <img src="{% static 'img/no_user.png' %}" alt="Player icon"
-                                                 title="Player icon" class="player_icon">
-                                        {% endif %}
-                                        <p>{{ team_player.title }}</p>
-                                    </div>
+                                    {% if team_player.status != 'PENDING' %}
+                                        <div class="user_div">
+                                            {% if team_player.user.cover_image %}
+                                                <img src="{{ team_player.user.cover_image }}" alt="Player icon"
+                                                     title="Player icon" class="player_icon">
+                                            {% else %}
+                                                <img src="{% static 'img/no_user.png' %}" alt="Player icon"
+                                                     title="Player icon" class="player_icon">
+                                            {% endif %}
+                                            <p>{{ team_player.title }}</p>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         {% else %}
