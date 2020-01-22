@@ -8,6 +8,13 @@ PAYMENT_METHODS = [
     ('ONLINE', 'Онлайн оплата'),
 ]
 
+PAYMENT_STATUSES = [
+    ('PENDING', 'Pending'),
+    ('WAITING_FOR_CAPTURE', 'Waiting for capture'),
+    ('SUCCEEDED', 'Succeeded'),
+    ('CANCELED', 'Canceled'),
+]
+
 CURRENCIES = [
     ('RUB', 'Рубли'),
 ]
@@ -242,6 +249,12 @@ class GamePayment(models.Model):
     )
     places_count = models.IntegerField(
         verbose_name='Количество оплаченных мест',
+    )
+    status = models.CharField(
+        verbose_name='Статус',
+        max_length=255,
+        choices=PAYMENT_STATUSES,
+        default='PENDING',
     )
 
     def __str__(self):

@@ -1,12 +1,5 @@
 from django.db import models
 
-PAYMENT_STATUSES = [
-    ('PENDING', 'Pending'),
-    ('WAITING_FOR_CAPTURE', 'Waiting for capture'),
-    ('SUCCEEDED', 'Succeeded'),
-    ('CANCELED', 'Canceled'),
-]
-
 REFUND_STATUSES = [
     ('SUCCEEDED', 'Succeeded'),
 ]
@@ -58,11 +51,12 @@ class UserInTeam(models.Model):
         null=True,
         blank=True,
     )
-    status = models.CharField(
-        verbose_name='Статус',
-        max_length=255,
-        choices=PAYMENT_STATUSES,
-        default='PENDING',
+    payment = models.ForeignKey(
+        verbose_name='Платеж',
+        to='games.GamePayment',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):

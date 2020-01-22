@@ -209,6 +209,7 @@ class GamePaymentTokenView(APIView):
                 summa_with_discount=round(summa, 2),
                 currency='RUB',
                 places_count=reserved_places_count,
+                status='PENDING',
             )
             return Response({
                 'yandex_token': payment.id,

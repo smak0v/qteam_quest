@@ -229,6 +229,7 @@ class Command(BaseCommand):
                         user=user,
                         team=random.choices(teams)[0],
                         title=user.username + '`s friend',
+                        payment=None,
                     )
                 except UserInTeam.DoesNotExist:
                     UserInTeam.objects.create(
@@ -236,6 +237,7 @@ class Command(BaseCommand):
                         user=user,
                         team=random.choices(teams)[0],
                         title=user.username,
+                        payment=None,
                     )
                     game[0].players_count += 1
                     game[0].save()

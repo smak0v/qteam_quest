@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.games.models import Game
+from apps.games.models import Game, GamePayment
 from apps.payment.serializers import PaymentSuccessSerializer
 from apps.teams.models import UserInTeam, TemporaryReserve, Team
 
@@ -54,6 +54,56 @@ class PaymentSuccessView(APIView):
             team=team,
             user=user,
             title=text_title,
+            payment=GamePayment.objects.get(user=user.pk, game=game.pk).pk,
         )
         game.players_count += 1
         game.save()
+
+
+class YandexNotificationsView(APIView):
+    """Class that implements yandex notifications view API endpoint (for Yandex webhooks)"""
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        if data['event'] == 'payment.waiting_for_capture':
+            self.process_payment_waiting_fo_capture(data)
+        elif data['event'] == 'payment.succeeded':
+            self.process_payment_succeeded(data)
+        elif data['event'] == 'payment.canceled':
+            self.process_payment_canceled(data)
+        elif data['event'] == 'refund.succeeded':
+            self.process_refund_succeeded(data)
+        return Response({}, status=status.HTTP_200_OK)
+
+    def process_payment_succeeded(self, data):
+        self.set_payment_status(data['object']['id'], 'SUCCEEDED')
+
+    def process_payment_canceled(self, data):
+        self.set_payment_status(data['object']['id'], 'CANCELED')
+        self.delete_registrations_and_reserves(data['object']['id'])
+
+    def process_payment_waiting_fo_capture(self, data):
+        self.set_payment_status(data['object']['id'], 'WAITING_FOR_CAPTURE')
+
+    @staticmethod
+    def process_refund_succeeded(data):
+        pass
+
+    @staticmethod
+    def set_payment_status(identifier, payment_status):
+        try:
+            game_payment = GamePayment.objects.get(identifier=identifier)
+            game_payment.status = payment_status
+            game_payment.save()
+        except GamePayment.DoesNotExist:
+            pass
+
+    @staticmethod
+    def delete_registrations_and_reserves(identifier):
+        try:
+            game_payment = GamePayment.objects.get(identifier=identifier)
+            users_in_team_by_payment = UserInTeam.objects.filter(payment=game_payment.pk)
+            for user in users_in_team_by_payment:
+                user.delete()
+        except GamePayment.DoesNotExist:
+            pass
