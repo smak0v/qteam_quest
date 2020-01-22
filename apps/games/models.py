@@ -256,6 +256,12 @@ class GamePayment(models.Model):
         choices=PAYMENT_STATUSES,
         default='PENDING',
     )
+    cancel_message = models.CharField(
+        verbose_name='Причина отмены',
+        max_length=255,
+        default='',
+        blank=True,
+    )
 
     def __str__(self):
         return f'User: {self.user.phone}\nGame: {self.game.title}\nIdentifier: {self.identifier}'

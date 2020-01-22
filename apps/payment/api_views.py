@@ -79,7 +79,8 @@ class YandexNotificationsView(APIView):
         self.set_payment_status(data['object']['id'], 'SUCCEEDED')
 
     def process_payment_canceled(self, data):
-        self.set_payment_status(data['object']['id'], 'CANCELED')
+        res = data['object']['cancellation_details']['party'] + ': ' + data['object']['cancellation_details']['reason']
+        self.set_payment_status(data['object']['id'], 'CANCELED', res)
         self.delete_registrations_and_reserves(data['object']['id'])
 
     def process_payment_waiting_fo_capture(self, data):
@@ -90,10 +91,12 @@ class YandexNotificationsView(APIView):
         pass
 
     @staticmethod
-    def set_payment_status(identifier, payment_status):
+    def set_payment_status(identifier, payment_status, reason=None):
         try:
             game_payment = GamePayment.objects.get(identifier=identifier)
             game_payment.status = payment_status
+            if reason:
+                game_payment.cancel_message = reason
             game_payment.save()
         except GamePayment.DoesNotExist:
             pass
