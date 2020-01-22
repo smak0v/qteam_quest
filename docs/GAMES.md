@@ -172,7 +172,7 @@
 - ```/api/games/game_pk/payment_token/``` (POST)
 
     ```
-    code (required)
+    code
     game_id (required)
     ```
 

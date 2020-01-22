@@ -5,7 +5,7 @@ Django settings for qteam_quest project.
 import os
 import json
 
-with open('/home/smakov/qteam_quest_server/.env.json') as config_file:
+with open('/home/smakov/Work/Python/qteam_quest/.env.json') as config_file:
     config = json.load(config_file)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

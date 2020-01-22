@@ -165,56 +165,71 @@ class GamePaymentTokenView(APIView):
     def post(self, request, *args, **kwargs):
         Configuration.account_id = settings.YANDEX_ACCOUNT_ID
         Configuration.secret_key = settings.YANDEX_SECRET_KEY
-        user = self.request.user
-        serializer = CouponCheckSerializer(data=self.request.data)
-        if serializer.is_valid():
-            if serializer.validated_data['game_id'] != kwargs.get('pk'):
-                return Response({
-                    'game_id': 'Must be equal to game id from url!',
-                }, status=status.HTTP_400_BAD_REQUEST)
-            coupon = Coupon.objects.get(code=serializer.validated_data.get('code'))
-            reserved_places_count = TemporaryReserve.objects.filter(user=user.pk, game=kwargs.get('pk')).count()
-            if reserved_places_count == 0:
-                return Response({
-                    'error': 'You have no reserved seats for this game or payment time exceeded 5 minutes. Try again!',
-                }, status=status.HTTP_400_BAD_REQUEST)
-            game = Game.objects.get(pk=serializer.validated_data['game_id'])
-            if coupon.type == 'INDIVIDUAL':
-                if coupon.user != user:
-                    return Response({
-                        'error': 'Invalid user for this INDIVIDUAL coupon!',
-                    }, status=status.HTTP_400_BAD_REQUEST)
-                summa = self.apply_individual_discount(coupon, game, reserved_places_count)
-            else:
-                summa = self.apply_general_discount(coupon, game, reserved_places_count)
-            payment = Payment.create({
-                'amount': {
-                    'value': str(summa),
-                    'currency': 'RUB',
-                },
-                'confirmation': {
-                    'type': 'embedded',
-                },
-                'capture': True,
-                'description': 'Description',
-            })
-            GamePayment.objects.create(
-                identifier=payment.id,
-                user=user,
-                game=game,
-                coupon=coupon,
-                summa=round(game.price * reserved_places_count, 2),
-                discount=round(coupon.discount, 2),
-                discount_units=coupon.units,
-                summa_with_discount=round(summa, 2),
-                currency='RUB',
-                places_count=reserved_places_count,
-                status='PENDING',
-            )
+        code = None
+        coupon = None
+        try:
+            code = self.request.data['code']
+        except KeyError:
+            pass
+        if self.request.data['game_id'] != kwargs.get('pk'):
             return Response({
-                'yandex_token': payment.id,
-            }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                'game_id': 'Must be equal to game id from url!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        reserved_places_count = TemporaryReserve.objects.filter(user=self.request.user.pk, game=kwargs.get('pk')).count()
+        if reserved_places_count == 0:
+            return Response({
+                'error': 'You have no reserved seats for this game or payment time exceeded 5 minutes. Try again!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        game = Game.objects.get(pk=self.request.data['game_id'])
+        if code:
+            serializer = CouponCheckSerializer(data=self.request.data)
+            if serializer.is_valid():
+                coupon = Coupon.objects.get(code=serializer.validated_data.get('code'))
+                if coupon.type == 'INDIVIDUAL':
+                    if coupon.user != self.request.user:
+                        return Response({
+                            'error': 'Invalid user for this INDIVIDUAL coupon!',
+                        }, status=status.HTTP_400_BAD_REQUEST)
+                    summa = self.apply_individual_discount(coupon, game, reserved_places_count)
+                else:
+                    summa = self.apply_general_discount(coupon, game, reserved_places_count)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            summa = game.price * reserved_places_count
+        payment = Payment.create({
+            'amount': {
+                'value': str(summa),
+                'currency': 'RUB',
+            },
+            'confirmation': {
+                'type': 'embedded',
+            },
+            'capture': True,
+            'description': 'Description',
+        })
+        if coupon:
+            discount = round(coupon.discount, 2)
+            discount_units = coupon.units
+        else:
+            discount = 0
+            discount_units = ''
+        GamePayment.objects.create(
+            identifier=payment.id,
+            user=self.request.user,
+            game=game,
+            coupon=coupon,
+            summa=round(game.price * reserved_places_count, 2),
+            discount=discount,
+            discount_units=discount_units,
+            summa_with_discount=round(summa, 2),
+            currency='RUB',
+            places_count=reserved_places_count,
+            status='PENDING',
+        )
+        return Response({
+            'yandex_token': payment.id,
+        }, status=status.HTTP_200_OK)
 
     @staticmethod
     def apply_general_discount(coupon, game, reserved_places_count):
