@@ -1,13 +1,12 @@
 import requests
 from rest_framework import status
 from rest_framework.response import Response
-
-from qteam_quest.utils import get_env_value
+from django.conf import settings
 
 
 def send_sms_code(phone, sms_text):
-    prostor_sms_api_login = get_env_value('PROSTOR_SMS_API_LOGIN')
-    prostor_sms_api_password = get_env_value('PROSTOR_SMS_API_PASSWORD')
+    prostor_sms_api_login = settings.PROSTOR_SMS_API_LOGIN
+    prostor_sms_api_password = settings.PROSTOR_SMS_API_PASSWORD
     send_sms_url = f'http://{prostor_sms_api_login}:{prostor_sms_api_password}@api.prostor-sms.ru/' \
                    f'send/?phone={phone}&text={sms_text}'
     response = requests.get(url=send_sms_url)

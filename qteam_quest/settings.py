@@ -3,23 +3,21 @@ Django settings for qteam_quest project.
 """
 
 import os
+import json
 
-from dotenv import load_dotenv
-
-from qteam_quest.utils import get_env_value
-
-load_dotenv()
+with open('/home/smakov/qteam_quest_server/.env.json') as config_file:
+    config = json.load(config_file)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ROOT_URL = get_env_value('ROOT_URL')
+ROOT_URL = config.get('ROOT_URL')
 
-SECRET_KEY = get_env_value('SECRET_KEY')
+SECRET_KEY = config.get('SECRET_KEY')
 
-DEBUG = get_env_value('DEBUG')
+DEBUG = config.get('DEBUG')
 
 ALLOWED_HOSTS = [
-    host.lower() for host in get_env_value('ALLOWED_HOSTS').split(',')
+    host.lower() for host in config.get('ALLOWED_HOSTS').split(',')
 ]
 
 # Channels settings
@@ -104,11 +102,11 @@ WSGI_APPLICATION = 'qteam_quest.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_env_value('POSTGRES_DB_NAME'),
-        'USER': get_env_value('POSTGRES_DB_USER'),
-        'PASSWORD': get_env_value('POSTGRES_DB_PASSWORD'),
-        'HOST': get_env_value('POSTGRES_DB_HOST'),
-        'PORT': int(get_env_value('POSTGRES_DB_PORT')),
+        'NAME': config.get('POSTGRES_DB_NAME'),
+        'USER': config.get('POSTGRES_DB_USER'),
+        'PASSWORD': config.get('POSTGRES_DB_PASSWORD'),
+        'HOST': config.get('POSTGRES_DB_HOST'),
+        'PORT': int(config.get('POSTGRES_DB_PORT')),
     }
 }
 
@@ -141,6 +139,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -210,6 +210,11 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Moscow'
 
 # Yandex payment settings
-YANDEX_ACCOUNT_ID = '659099'
+YANDEX_ACCOUNT_ID = config.get('YANDEX_ACCOUNT_ID')
 
-YANDEX_SECRET_KEY = 'test_Hks6WWL82R6dFkmpiy-ywcpa5CyQyRXRirGCvP1bk6E'
+YANDEX_SECRET_KEY = config.get('YANDEX_SECRET_KEY')
+
+# Prostor SMS settings
+PROSTOR_SMS_API_LOGIN = config.get('PROSTOR_SMS_API_LOGIN')
+
+PROSTOR_SMS_API_PASSWORD = config.get('PROSTOR_SMS_API_PASSWORD')
