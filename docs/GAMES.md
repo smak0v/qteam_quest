@@ -123,7 +123,7 @@
     game (required)
     ```
 
-    Reserve one temporary place (will be saved only for 5 minutes) for a game.
+    Reserve one temporary place (will be saved only for 10 minutes) for a game.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.

@@ -178,7 +178,7 @@ class GamePaymentTokenView(APIView):
         reserved_places_count = TemporaryReserve.objects.filter(user=self.request.user.pk, game=kwargs.get('pk')).count()
         if reserved_places_count == 0:
             return Response({
-                'error': 'You have no reserved seats for this game or payment time exceeded 5 minutes. Try again!',
+                'error': 'You have no reserved seats for this game or payment time exceeded 10 minutes. Try again!',
             }, status=status.HTTP_400_BAD_REQUEST)
         game = Game.objects.get(pk=self.request.data['game_id'])
         if code:

@@ -10,7 +10,7 @@ from apps.teams.models import TemporaryReserve
                name='remove_reserved_temporary_place_after_five_minutes',
                ignore_result=True)
 def remove_reserved_temporary_place_after_five_minutes():
-    places = TemporaryReserve.objects.filter(timespan__lte=timezone.now() - timezone.timedelta(minutes=5))
+    places = TemporaryReserve.objects.filter(timespan__lte=timezone.now() - timezone.timedelta(minutes=10))
     for place in places:
         game = Game.objects.get(pk=place.game.pk)
         place.delete()

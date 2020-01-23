@@ -1,13 +1,13 @@
 # PAYMENT API Endpoints
 
-- ```/api/payment/success/``` (POST)
+- ```/api/payment/save/``` (POST)
 
     ```
     game_id (required)
     payment_id (required)
     ```
 
-    Endpoint that returns status 200 OK if payment is successful. Finally register player`s places for the game.
+    Endpoint for saving Yandex payment. Finally register player`s places for the game.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
@@ -25,31 +25,5 @@
     ```json
     {
       "success": "Payment success!"
-    }
-    ```
-
-- ```/api/payment/error/``` (POST)
-
-    ```
-    error (required)
-    payment_id (required)
-    ```
-
-    Save error message for payment with ```payment_id```.
-
-    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint.
-
-    ### Validators
-
-    - ```payment_id``` - must be an id of real payment;
-
-    - ```payment_id``` and ```error``` can`t be empty.
-
-    ### Response
-
-    ```json
-    {
-      "message": "Error saved successfully!"
     }
     ```
