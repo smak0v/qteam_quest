@@ -264,7 +264,7 @@ class GamePayment(models.Model):
     )
 
     def __str__(self):
-        return f'User: {self.user.phone}\nGame: {self.game.title}\nIdentifier: {self.identifier}'
+        return self.identifier
 
 
 class GamePlayerEvaluation(models.Model):

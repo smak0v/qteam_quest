@@ -147,6 +147,8 @@ class GamePaymentAdmin(admin.ModelAdmin):
         'summa_with_discount',
         'currency',
         'places_count',
+        'status',
+        'cancel_message',
     ]
     ordering = [
         'identifier',
@@ -159,6 +161,8 @@ class GamePaymentAdmin(admin.ModelAdmin):
         'summa_with_discount',
         'currency',
         'places_count',
+        'status',
+        'cancel_message',
     ]
     search_fields = [
         'identifier',
@@ -171,10 +175,13 @@ class GamePaymentAdmin(admin.ModelAdmin):
         'summa_with_discount',
         'currency',
         'places_count',
+        'status',
+        'cancel_message',
     ]
     list_filter = [
         'discount_units',
         'currency',
+        'status',
     ]
     list_per_page = 50
 

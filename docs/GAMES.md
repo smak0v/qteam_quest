@@ -197,7 +197,8 @@
 
     ```json
     {
-      "yandex_token": "ct-24301ae5-000f-5000-9000-13f5f1c2f8e0"
+      "yandex_token": "ct-24301ae5-000f-5000-9000-13f5f1c2f8e0",
+      "payment_id": "25baba3a-000f-5000-a000-1016f655b8da"
     }
     ```
 

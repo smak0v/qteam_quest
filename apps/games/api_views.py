@@ -229,6 +229,7 @@ class GamePaymentTokenView(APIView):
         )
         return Response({
             'yandex_token': payment.confirmation.confirmation_token,
+            'payment_id': payment.id,
         }, status=status.HTTP_200_OK)
 
     @staticmethod

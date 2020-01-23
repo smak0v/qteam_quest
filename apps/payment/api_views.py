@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.games.models import Game, GamePayment
-from apps.payment.serializers import PaymentSuccessSerializer
+from apps.payment.serializers import PaymentSuccessSerializer, PaymentErrorSerializer
 from apps.teams.models import UserInTeam, TemporaryReserve, Team
 
 
@@ -19,6 +19,7 @@ class PaymentSuccessView(APIView):
         user = self.request.user
         serializer = PaymentSuccessSerializer(data=self.request.data)
         if serializer.is_valid():
+            game_payment = GamePayment.objects.get(identifier=serializer.validated_data['payment_id'])
             game_id = serializer.validated_data['game_id']
             reserved_places = TemporaryReserve.objects.filter(game=game_id, user=user.pk)
             reserved_places_count = reserved_places.count()
@@ -31,11 +32,11 @@ class PaymentSuccessView(APIView):
             team = Team.objects.get(game=game)
             if user_in_team_places_count != 0:
                 for _ in range(reserved_places_count):
-                    self.create_user_in_team(game, team, user, True)
+                    self.create_user_in_team(game, team, user, game_payment, True)
             else:
-                self.create_user_in_team(game, team, user)
+                self.create_user_in_team(game, team, user, game_payment)
                 for _ in range(reserved_places_count - 1):
-                    self.create_user_in_team(game, team, user, True)
+                    self.create_user_in_team(game, team, user, game_payment, True)
             for reserved_place in reserved_places:
                 reserved_place.delete()
             return Response({
@@ -44,7 +45,7 @@ class PaymentSuccessView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @staticmethod
-    def create_user_in_team(game, team, user, title=False):
+    def create_user_in_team(game, team, user, game_payment, title=False):
         if title:
             text_title = user.username + '`s friend'
         else:
@@ -54,16 +55,37 @@ class PaymentSuccessView(APIView):
             team=team,
             user=user,
             title=text_title,
-            payment=GamePayment.objects.get(user=user.pk, game=game.pk).pk,
+            payment=game_payment,
         )
         game.players_count += 1
         game.save()
 
 
+class PaymentErrorsView(APIView):
+    """Class that implements payment error view API endpoint"""
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, *args, **kwargs):
+        user = self.request.user
+        serializer = PaymentErrorSerializer(data=self.request.data)
+        if serializer.is_valid():
+            game_payment = GamePayment.objects.get(identifier=serializer.validated_data['payment_id'])
+            game_payment.status = 'CANCELED'
+            game_payment.cancel_message = serializer.validated_data['error']
+            game_payment.save()
+            return Response({
+                'message': 'Error saved successfully!',
+            }, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class YandexNotificationsView(APIView):
     """Class that implements yandex notifications view API endpoint (for Yandex webhooks)"""
 
-    def post(self, request, *args, **kwargs):
+    def post(self, *args, **kwargs):
         data = request.data
         if data['event'] == 'payment.waiting_for_capture':
             self.process_payment_waiting_fo_capture(data)
