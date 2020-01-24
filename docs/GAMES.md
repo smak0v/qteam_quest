@@ -123,7 +123,7 @@
     game (required)
     ```
 
-    Reserve one temporary place (will be saved only for 10 minutes) for a game.
+    Reserve one temporary place (will be saved only for 1 hour) for a game.
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
     access the endpoint.
@@ -191,7 +191,7 @@
 
     - INDIVIDUAL coupon can be allayed for ```user``` if this coupon was created for this ```user```;
 
-    - user must have reserved places for the game and must have time to pay them within 5 minutes.
+    - user must have reserved places for the game and must have time to pay them within 1 hour.
 
     ### Response example
 
@@ -199,6 +199,37 @@
     {
       "yandex_token": "ct-24301ae5-000f-5000-9000-13f5f1c2f8e0",
       "payment_id": "25baba3a-000f-5000-a000-1016f655b8da"
+    }
+    ```
+
+- ```/api/games/game_pk/unregister_booked_places/``` (POST)
+
+    Creates refund for all each user payment for the game if this payment has ```succeeded``` status on Yandex.
+
+    If refund has ```succeeded``` status - deletes registered places for user on this game (the number of places 
+    indicated in the payment) and executes refund for this payment by Yandex API. Appends refund object in 
+    ```refunds``` array.
+
+    If refund has ```canceled``` status - appends payment object in ```non_refundable_payments``` array.
+
+    Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
+    access the endpoint.
+
+    ### Validators
+
+    - game with game_id from url must be existing game;
+
+    - user from request must have at least one booked and payed place for game from url;
+
+    - user from request must have at least one successful payment for game from url.
+
+    ### Response example
+
+    ```json
+    {
+      "refunds": [],
+      "unregistered_places_count": 0,
+      "non_refundable_payments": []
     }
     ```
 

@@ -20,10 +20,20 @@
 
     - user must have reserved places for the game and must have time to pay them within 5 minutes.
 
-    ### Response
+    ### Success response
 
     ```json
     {
-      "success": "Payment success!"
+      "message": "Places were registered successfully!"
+    }
+    ```
+
+    ### Error response
+
+    ```json
+    {
+      "message": "Payment was canceled!",
+      "party": "Party",
+      "reason": "Reason"
     }
     ```

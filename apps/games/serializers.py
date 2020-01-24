@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from apps.games.models import Game, GameComment, GamePlayerEvaluation
-from apps.quests.models import Quest
+from apps.games.models import Game, GameComment, GamePlayerEvaluation, GamePayment, GamePaymentRefund
 from apps.quests.serializers import QuestSerializer
 from apps.teams.models import Team, UserInTeam
 from qteam_quest.settings import ROOT_URL
@@ -72,6 +71,22 @@ class GameCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GameComment
+        fields = '__all__'
+
+
+class GamePaymentSerializer(serializers.ModelSerializer):
+    """Class that implements game payment serializer"""
+
+    class Meta:
+        model = GamePayment
+        fields = '__all__'
+
+
+class GamePaymentRefundSerializer(serializers.ModelSerializer):
+    """Class that implements game payment refund serializer"""
+
+    class Meta:
+        model = GamePaymentRefund
         fields = '__all__'
 
 

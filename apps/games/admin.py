@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.games.models import Game, GameComment, GamePlayerEvaluation, GamePayment
+from apps.games.models import Game, GameComment, GamePlayerEvaluation, GamePayment, GamePaymentRefund
 
 
 class GameAdmin(admin.ModelAdmin):
@@ -186,7 +186,49 @@ class GamePaymentAdmin(admin.ModelAdmin):
     list_per_page = 50
 
 
+class GamePaymentRefundAdmin(admin.ModelAdmin):
+    """Class that implements admin part of the user payment refund for the game"""
+
+    list_display = [
+        'identifier',
+        'status',
+        'value',
+        'currency',
+        'created_at',
+        'payment',
+        'user',
+        'game',
+    ]
+    ordering = [
+        'identifier',
+        'status',
+        'value',
+        'currency',
+        'created_at',
+        'payment',
+        'user',
+        'game',
+    ]
+    search_fields = [
+        'identifier',
+        'status',
+        'value',
+        'currency',
+        'created_at',
+        'payment',
+        'user',
+        'game',
+    ]
+    list_filter = [
+        'status',
+        'currency',
+        'created_at',
+    ]
+    list_per_page = 50
+
+
 admin.site.register(Game, GameAdmin)
 admin.site.register(GameComment, GameCommentAdmin)
 admin.site.register(GamePlayerEvaluation, GamePlayerEvaluationAdmin)
 admin.site.register(GamePayment, GamePaymentAdmin)
+admin.site.register(GamePaymentRefund, GamePaymentRefundAdmin)

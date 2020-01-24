@@ -39,7 +39,7 @@ class PaymentSaveView(APIView):
             reserved_places_count = reserved_places.count()
             if reserved_places_count == 0:
                 return Response({
-                    'error': 'You have no reserved seats for this game or payment time exceeded 10 minutes. Try again!',
+                    'error': 'You have no reserved seats for this game or payment time exceeded 1 hour. Try again!',
                 }, status=status.HTTP_400_BAD_REQUEST)
             user_in_team_places_count = UserInTeam.objects.filter(game=game_id, user=user.pk).count()
             game = Game.objects.get(pk=game_id)

@@ -15,6 +15,11 @@ PAYMENT_STATUSES = [
     ('CANCELED', 'Canceled'),
 ]
 
+REFUND_STATUSES = [
+    ('SUCCEEDED', 'Succeeded'),
+    ('CANCELED', 'Canceled'),
+]
+
 CURRENCIES = [
     ('RUB', 'Рубли'),
 ]
@@ -260,6 +265,60 @@ class GamePayment(models.Model):
         verbose_name='Причина отмены',
         max_length=255,
         default='',
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.identifier
+
+
+class GamePaymentRefund(models.Model):
+    """Class that represents user payment refund for the game"""
+
+    class Meta:
+        verbose_name = 'Возврат платежа пользователя'
+        verbose_name_plural = 'Возвраты платежей пользователей'
+
+    identifier = models.CharField(
+        verbose_name='Идентификатор',
+        max_length=255,
+    )
+    status = models.CharField(
+        verbose_name='Статус',
+        max_length=10,
+        choices=REFUND_STATUSES,
+    )
+    value = models.DecimalField(
+        verbose_name='Сумма',
+        max_digits=12,
+        decimal_places=2,
+    )
+    currency = models.CharField(
+        verbose_name='Валюта',
+        max_length=10,
+    )
+    created_at = models.DateTimeField(
+        verbose_name='Дата создания',
+    )
+    payment = models.ForeignKey(
+        verbose_name='Платеж',
+        to='games.GamePayment',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    user = models.ForeignKey(
+        verbose_name='Пользователь',
+        to='users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    game = models.ForeignKey(
+        verbose_name='Игра',
+        to='Game',
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
     )
 

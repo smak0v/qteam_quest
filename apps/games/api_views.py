@@ -11,14 +11,14 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from yandex_checkout import Configuration
-from yandex_checkout import Payment
+from yandex_checkout import Payment, Refund, Configuration
 
 from apps.coupons.models import Coupon
 from apps.coupons.serializers import CouponCheckSerializer
-from apps.games.models import Game, GameComment, GamePayment
+from apps.games.models import Game, GameComment, GamePayment, GamePaymentRefund
 from apps.games.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
-    GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer
+    GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer, GamePaymentRefundSerializer, \
+    GamePaymentSerializer
 from apps.permissions import IsStaffUserOrReadOnly
 from apps.teams.models import Team, UserInTeam, TemporaryReserve
 from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, TemporaryReserveSerializer
@@ -144,7 +144,7 @@ class GameReservedPlacesInfoView(APIView):
             game = Game.objects.get(pk=pk)
         except Game.DoesNotExist:
             return Response({
-                'error': f'Game with id {pk} does not exist!',
+                'error': f'Game does not exist!',
             }, status=status.HTTP_400_BAD_REQUEST)
         occupied_places_count = TemporaryReserve.objects.filter(game=pk, user=user.pk).count()
         summa = game.price * occupied_places_count
@@ -175,10 +175,11 @@ class GamePaymentTokenView(APIView):
             return Response({
                 'game_id': 'Must be equal to game id from url!',
             }, status=status.HTTP_400_BAD_REQUEST)
-        reserved_places_count = TemporaryReserve.objects.filter(user=self.request.user.pk, game=kwargs.get('pk')).count()
+        reserved_places_count = TemporaryReserve.objects.filter(user=self.request.user.pk,
+                                                                game=kwargs.get('pk')).count()
         if reserved_places_count == 0:
             return Response({
-                'error': 'You have no reserved seats for this game or payment time exceeded 10 minutes. Try again!',
+                'error': 'You have no reserved seats for this game or payment time exceeded 1 hour. Try again!',
             }, status=status.HTTP_400_BAD_REQUEST)
         game = Game.objects.get(pk=self.request.data['game_id'])
         if code:
@@ -251,6 +252,71 @@ class GamePaymentTokenView(APIView):
         return round(summa, 2)
 
 
+class GameUnregisterBookedPlacesAPIView(APIView):
+    """Class that implements game unregister booked places view API endpoint"""
+
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def post(self, *args, **kwargs):
+        Configuration.account_id = settings.YANDEX_ACCOUNT_ID
+        Configuration.secret_key = settings.YANDEX_SECRET_KEY
+        user = self.request.user
+        try:
+            game = Game.objects.get(pk=kwargs.get('pk'))
+        except Game.DoesNotExist:
+            return Response({
+                'error': 'Game does not exist!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        user_registered_places = UserInTeam.objects.filter(game=game.pk, user=user.pk)
+        if user_registered_places.count() == 0:
+            return Response({
+                'error': 'User has no purchased seats for this game!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        user_game_payments = GamePayment.objects.filter(user=user.pk, game=game.pk, status='SUCCEEDED')
+        if user_game_payments.count() == 0:
+            return Response({
+                'error': 'User has no successful payments for this game!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        refunds = []
+        non_refundable_payments = []
+        unregistered_places_count = 0
+        for game_payment in user_game_payments:
+            payment = Payment.find_one(game_payment.identifier)
+            if payment.status == 'succeeded':
+                refund = Refund.create({
+                    "amount": {
+                        "value": payment.amount.value,
+                        "currency": payment.amount.currency,
+                    },
+                    "payment_id": payment.id,
+                })
+                game_payment_refund = GamePaymentRefund.objects.create(
+                    identifier=refund.id,
+                    status='CANCELED' if refund.status == 'canceled' else 'SUCCEEDED',
+                    value=float(refund.amount.value),
+                    currency=refund.amount.currency,
+                    created_at=refund.created_at,
+                    payment=game_payment,
+                    user=user,
+                    game=game,
+                )
+                refunds.append(game_payment_refund)
+                if game_payment_refund.status == 'SUCCEEDED':
+                    del_objects = UserInTeam.objects.filter(game=game.pk, user=user.pk)[:game_payment.places_count]
+                    for del_object in del_objects:
+                        del_object.delete()
+                        unregistered_places_count += game_payment.places_count
+            else:
+                non_refundable_payments.append(game_payment)
+        return Response({
+            'refunds': GamePaymentRefundSerializer(refunds, many=True).data,
+            'non_refundable_payments': GamePaymentSerializer(non_refundable_payments, many=True).data,
+            'unregistered_places_count': unregistered_places_count,
+        }, status=status.HTTP_200_OK)
+
+
 class GamePlayersListView(ListAPIView):
     """Class that implements game players list view API endpoint"""
 
@@ -303,7 +369,7 @@ class GamePlacesStatusView(APIView):
             })
         except Game.DoesNotExist:
             return Response({
-                'message': f'Game with id {pk} does not exists!',
+                'message': f'Game does not exists!',
             })
 
 
