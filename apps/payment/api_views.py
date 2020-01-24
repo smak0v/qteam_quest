@@ -33,7 +33,7 @@ class PaymentSaveView(APIView):
                     'message': 'Payment was canceled!',
                     'party': payment.cancellation_details.party,
                     'reason': payment.cancellation_details.reason,
-                }, status=status.HTTP_200_OK)
+                }, status=status.HTTP_400_BAD_REQUEST)
             game_id = serializer.validated_data['game_id']
             reserved_places = TemporaryReserve.objects.filter(game=game_id, user=user.pk)
             reserved_places_count = reserved_places.count()
@@ -54,7 +54,7 @@ class PaymentSaveView(APIView):
             for reserved_place in reserved_places:
                 reserved_place.delete()
             return Response({
-                'message': 'Places was registered successfully!',
+                'message': 'Places were registered successfully!',
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
