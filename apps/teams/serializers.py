@@ -1,10 +1,7 @@
-from django.utils import timezone
 from rest_framework import serializers
 
-from apps.games.models import Game
 from apps.games.serializers import GameSerializer
 from apps.teams.models import Team, UserInTeam, TemporaryReserve
-from users.models import User
 from users.serializers import UserSerializer
 
 

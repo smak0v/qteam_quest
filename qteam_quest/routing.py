@@ -1,9 +1,9 @@
 from channels.routing import ProtocolTypeRouter, URLRouter
 
-import apps.games.routing
+from apps.games.routing import websocket_urlpatterns
 
 application = ProtocolTypeRouter({
     'websocket': URLRouter(
-        apps.games.routing.websocket_urlpatterns,
+        websocket_urlpatterns,
     ),
 })
