@@ -49,11 +49,9 @@
 
     If the request contains a user authorization token - also returns:
 
-    - a flag of whether the game passed or not;
+    - a flag of whether the game passed or not and active or not;
 
-    - number of seats purchased for this game;
-    
-    - reserved places count for user from request.
+    - booked and payed places count for user from request.
 
 - ```/api/games/game_pk/``` (DELETE)
 

@@ -75,8 +75,6 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             'game': GameSerializer(game).data,
         }
         if user.is_authenticated:
-            user_in_team_places_count = UserInTeam.objects.filter(user=user, game=game).count()
-            response['seats_purchased_count'] = user_in_team_places_count
             if game.timespan + timezone.timedelta(minutes=game.duration) < timezone.now():
                 response['passed'] = True
             else:
@@ -85,7 +83,9 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
                 response['active'] = False
             else:
                 response['active'] = True
-            response['reserved_count'] = 0
+            user_payments = GamePayment.objects.filter(game=game, user=user)
+            for user_payment in user_payments:
+                response['booked_and_payed_places_count'] += user_payment.places_count
         return Response(response)
 
 
