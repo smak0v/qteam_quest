@@ -121,7 +121,7 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         elif self.request.method == 'PUT' or self.request.method == 'PATCH':
             return UpdateUserProfileSerializer
 
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, *args, **kwargs):
         try:
             user_for_response = User.objects.get(pk=kwargs.get('pk'))
         except User.DoesNotExist:
@@ -167,43 +167,40 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
                     'user': user,
                 }, status=status.HTTP_200_OK)
 
-    def update(self, request, *args, **kwargs):
-        request_user = request.user
+    def update(self, *args, **kwargs):
         try:
             user = User.objects.get(pk=kwargs.get('pk'))
         except User.DoesNotExist:
             return Response({
                 'error': 'User does not exist!',
             })
-        if user != request_user:
+        if user != self.request.user:
             return Response({
                 'error': 'Invalid authentication!',
             })
-        serializer = self.get_serializer(data=request.data, partial=True)
+        serializer = UpdateUserProfileSerializer(data=self.request.data, partial=True)
         if serializer.is_valid():
-            usr = None
-            request_user.username = serializer.validated_data.get('username', request_user.username)
-            request_user.first_name = serializer.validated_data.get('first_name', request_user.first_name)
-            request_user.last_name = serializer.validated_data.get('last_name', request_user.last_name)
-            request_user.birthday_date = serializer.validated_data.get('birthday_date', request_user.birthday_date)
-            request_user.location = serializer.validated_data.get('location', request_user.location)
-            request_user.gender = serializer.validated_data.get('gender', request_user.gender)
-            request_user.profile_image = serializer.validated_data.get('profile_image', None)
-            request_user.about = serializer.validated_data.get('about', request_user.about)
-            request_user.save()
+            user.username = serializer.validated_data.get('username', user.username)
+            user.first_name = serializer.validated_data.get('first_name', user.first_name)
+            user.last_name = serializer.validated_data.get('last_name', user.last_name)
+            user.birthday_date = serializer.validated_data.get('birthday_date', user.birthday_date)
+            user.location = serializer.validated_data.get('location', user.location)
+            user.gender = serializer.validated_data.get('gender', user.gender)
+            user.profile_image = serializer.validated_data.get('profile_image', None)
+            user.about = serializer.validated_data.get('about', user.about)
+            user.save()
             return Response({
                 'success': 'User profile updated successfully!',
             }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @staticmethod
-    def destroy(request, *args, **kwargs):
+    def destroy(self, *args, **kwargs):
         try:
             user = User.objects.get(pk=kwargs.get('pk'))
-            if request.user == user:
+            if self.request.user == user:
                 user.delete()
                 return Response({
-                    'message': 'User was deleted successfully!'.format(kwargs.get('pk')),
+                    'message': 'User was deleted successfully!',
                 }, status=status.HTTP_200_OK)
             return Response({
                 'message': 'Invalid authentication!',
@@ -221,11 +218,10 @@ class UserProfileView(APIView):
         IsAuthenticated,
     ]
 
-    @staticmethod
-    def post(request, **kwargs):
-        serializer = UserAuthTokenSerializer(data=request.data)
+    def post(self, *args, **kwargs):
+        serializer = UserAuthTokenSerializer(data=self.request.data)
         if serializer.is_valid():
-            if request.META.get('HTTP_AUTHORIZATION').split(' ')[1] != serializer.validated_data.get('token'):
+            if self.request.META.get('HTTP_AUTHORIZATION').split(' ')[1] != serializer.validated_data.get('token'):
                 return Response({
                     'error': 'Invalid authorization token!',
                 })
@@ -431,11 +427,20 @@ class UserPastGamesListView(ListAPIView):
 
     @staticmethod
     def get(request, *args, **kwargs):
-        user_in_teams = UserInTeam.objects.filter(user=kwargs.get('pk'))
+        try:
+            User.objects.get(pk=kwargs.get('pk'))
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User does not exist!',
+            }, status=status.HTTP_400_BAD_REQUEST)
         user_games = list()
         now = timezone.now()
-        for _ in user_in_teams:
-            games = Game.objects.filter(timespan__lt=now).order_by('-timespan')
+        user_in_teams = UserInTeam.objects.filter(user=kwargs.get('pk')).distinct('game')
+        for user_in_team in user_in_teams:
+            if not user_in_team.payment or user_in_team.payment.status != 'SUCCEEDED':
+                continue
+            games = Game.objects.filter(timespan__lt=now, team=user_in_team.team, cancel=False,
+                                        registration_available=False).order_by('-timespan')
             for game in games:
                 user_games.append(game)
         data = GameSerializer(user_games, many=True).data
@@ -450,13 +455,24 @@ class UserFutureGamesListView(ListAPIView):
         IsAuthenticated,
     ]
 
-    @staticmethod
-    def get(request, *args, **kwargs):
-        user_in_teams = UserInTeam.objects.filter(user=kwargs.get('pk'))
+    def get(self, *args, **kwargs):
+        try:
+            user = User.objects.get(pk=kwargs.get('pk'))
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User does not exist!',
+            }, status=status.HTTP_400_BAD_REQUEST)
+        if user != self.request.user:
+            return Response({
+                'error': 'User from request must be the same user from url!',
+            }, status=status.HTTP_400_BAD_REQUEST)
         user_games = list()
         now = timezone.now()
-        for _ in user_in_teams:
-            games = Game.objects.filter(timespan__gte=now).order_by('timespan')
+        user_in_teams = UserInTeam.objects.filter(user=self.request.user.pk).distinct('game')
+        for user_in_team in user_in_teams:
+            if not user_in_team.payment or user_in_team.payment.status != 'SUCCEEDED':
+                continue
+            games = Game.objects.filter(timespan__gte=now, team=user_in_team.team, cancel=False).order_by('timespan')
             for game in games:
                 user_games.append(game)
         data = GameSerializer(user_games, many=True).data

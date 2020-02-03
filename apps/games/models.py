@@ -145,14 +145,13 @@ class Game(models.Model):
         return
 
     def check_game_filling(self):
-        total_players_count = int(self.max_players_count)
         try:
             players_count = UserInTeam.objects.filter(game=self).count()
         except UserInTeam.DoesNotExist:
             players_count = 0
-        if players_count < total_players_count:
+        if players_count < self.max_players_count:
             return False
-        elif players_count > total_players_count:
+        elif players_count > self.max_players_count:
             return False
         return True
 

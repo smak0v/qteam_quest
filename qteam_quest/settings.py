@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'apps.teams',
     'apps.coupons',
     'apps.payment',
+    'apps.timeline',
 ]
 
 MIDDLEWARE = [

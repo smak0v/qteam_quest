@@ -92,6 +92,8 @@
 
     ### Validators
 
+    - ```user_pk``` must be a pk of existing user and must the same as pk of user from request;
+
     - ```profile_image``` - filename must be less than 256 symbols, file should not be empty.
 
 - ```/api/users/user_pk/change_password/``` (PUT, PATCH)
@@ -236,11 +238,21 @@
 
 - ```/api/users/user_pk/past_games/``` (GET)
 
-    Return info about all user`s past games.
+    Return info about all user`s past games (that has a payment with status ```SUCCEEDED``` and passed).
+
+    ### Validators
+
+    - user must be existing user.
 
 - ```/api/users/user_pk/future_games/``` (GET)
 
-    Return info about all user`s future games.
+    Return info about all user`s future games (that has a payment with status ```SUCCEEDED``` and not passed yet).
 
     Authorization required. Add an authorization header ```Authorization: Token <authorization token>```, and you can 
-    access the endpoint. 
+    access the endpoint.
+
+     ### Validators
+
+    - user must be existing user;
+
+    - user from request must be the same user from url.

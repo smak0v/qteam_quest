@@ -84,6 +84,7 @@ class GameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             else:
                 response['active'] = True
             user_payments = GamePayment.objects.filter(game=game, user=user)
+            response['booked_and_payed_places_count'] = 0
             for user_payment in user_payments:
                 response['booked_and_payed_places_count'] += user_payment.places_count
         return Response(response)

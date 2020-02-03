@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -79,7 +81,9 @@ class YandexNotificationsView(APIView):
     """Class that implements yandex notifications view API endpoint (for Yandex webhooks)"""
 
     def post(self, *args, **kwargs):
-        data = request.data
+        data = self.request.data
+        with open('yandex_requests.json', 'a') as file:
+            json.dump(data, file, indent=2)
         if data['event'] == 'payment.waiting_for_capture':
             self.process_payment_waiting_fo_capture(data)
         elif data['event'] == 'payment.succeeded':
