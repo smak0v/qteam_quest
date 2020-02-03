@@ -16,8 +16,18 @@
     ```json
     {
       "timeline": {
-        "game_messages": [],
-        "messages": []
+        "game_messages": [
+          {
+            "game_id": 1,
+            "message": "Message"
+          }
+        ],
+        "messages": [
+          {
+            "image": "image_url",
+            "message": "Message"
+          }
+        ]
       }
     }
     ```
