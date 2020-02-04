@@ -1,10 +1,10 @@
-from django.utils import timezone
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.games.models import Game
+from apps.timeline.models import TimelineBlock
+from apps.timeline.serializers import TimelineBlockSerializer
 from users.models import User
 
 
@@ -26,24 +26,7 @@ class TimelineAPIView(APIView):
             return Response({
                 'error': 'User from request must be the same user from url!',
             }, status=status.HTTP_400_BAD_REQUEST)
-        timeline = {
-            'game_messages': [],
-            'messages': [],
-        }
-
-        # TODO Remove in production
-        game = Game.objects.filter(cancel=False, timespan__lt=timezone.now()).last()
-        game_message = {
-            'game_id': game.pk,
-            'message': 'Игра прошла, оцените участников',
-        }
-        message = {
-            'image': user.get_profile_image(),
-            'message': 'Подтвердите свой номер телефона, чтобы получить скидку 30% на следующую игру',
-        }
-        timeline['game_messages'].append(game_message)
-        timeline['messages'].append(message)
-
+        timeline_blocks = TimelineBlock.objects.filter(user=user).order_by('-timespan')[:20]
         return Response({
-            'timeline': timeline,
+            'timeline': TimelineBlockSerializer(timeline_blocks, many=True).data,
         }, status=status.HTTP_200_OK)

@@ -15,19 +15,25 @@
 
     ```json
     {
-      "timeline": {
-        "game_messages": [
+      "timeline": [
           {
-            "game_id": 1,
-            "message": "Message"
-          }
-        ],
-        "messages": [
-          {
+            "id": 1,
+            "type": "GAME_MESSAGE",
+            "timespan": "2020-02-05T01:32:37.881161+03:00",
+            "message": "Message",
             "image": "image_url",
-            "message": "Message"
-          }
+            "user": 17,
+            "game": 12
+          },
+          {}
         ]
-      }
     }
     ```
+
+    Possible types:
+
+    - ```GAME_MESSAGE```;
+
+    - ```SIMPLE_MESSAGE```.
+
+    Game and image can be ```null```.

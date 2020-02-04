@@ -377,10 +377,6 @@ class UserUnsubscribeView(DestroyAPIView):
             return Response({
                 'error': 'User does not exist!',
             }, status=status.HTTP_404_NOT_FOUND)
-        if user != request.user:
-            return Response({
-                'error': 'Authentication failed!',
-            }, status=status.HTTP_400_BAD_REQUEST)
         if kwargs.get('pk') != request.data['user']:
             return Response({
                 'user': 'Must be equal to user_pk from request url!',
