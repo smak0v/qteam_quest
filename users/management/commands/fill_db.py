@@ -121,7 +121,7 @@ class Command(BaseCommand):
                     price=random.randrange(100, 999),
                     min_players_count=random.randrange(2, 4),
                     max_players_count=6,
-                    cancel=(i + 1) % 3 == 0,
+                    cancel=False,
                 )
                 Team.objects.create(
                     game=game,

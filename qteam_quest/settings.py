@@ -2,8 +2,8 @@
 Django settings for qteam_quest project.
 """
 
-import os
 import json
+import os
 
 with open('/home/smakov/Work/Python/qteam_quest/.env.json') as config_file:
     config = json.load(config_file)
@@ -219,3 +219,51 @@ YANDEX_SECRET_KEY = config.get('YANDEX_SECRET_KEY')
 PROSTOR_SMS_API_LOGIN = config.get('PROSTOR_SMS_API_LOGIN')
 
 PROSTOR_SMS_API_PASSWORD = config.get('PROSTOR_SMS_API_PASSWORD')
+
+# Logging settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+            'datefmt': '%d/%b/%Y %H:%M:%S',
+        }
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR + '/logfile',
+            'maxBytes': 50000,
+            'backupCount': 2,
+            'formatter': 'standard',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', ],
+            'propagate': True,
+            'level': 'WARNING',
+        },
+        'django.db.backends': {
+            'handlers': ['console', ],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
+        '': {
+            'handlers': ['console', 'logfile', ],
+            'level': 'DEBUG',
+        }
+    },
+}

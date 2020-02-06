@@ -1,3 +1,4 @@
+import logging
 import random
 import re
 
@@ -16,9 +17,9 @@ from rest_framework.views import APIView
 
 from apps.games.models import Game
 from apps.games.serializers import GameSerializer
-from apps.teams.models import UserInTeam
 from apps.quests.models import QuestSubscription
 from apps.quests.serializers import QuestSubscriptionSerializer
+from apps.teams.models import UserInTeam
 from qteam_quest.utils import get_env_value
 from users.models import User, UserSubscription
 from users.serializers import UserSerializer, UserSubscriptionSerializer, UserSubscriptionCreateSerializer, \
@@ -26,6 +27,8 @@ from users.serializers import UserSerializer, UserSubscriptionSerializer, UserSu
     UserChangePhoneNumberSerializer, UserChangePhoneNumberConfirmSerializer, UserLoginSerializer, \
     UserLoginConfirmSerializer
 from users.utils import send_sms_code
+
+logger = logging.getLogger(__name__)
 
 
 class UserListView(ListAPIView):
@@ -125,6 +128,7 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         try:
             user_for_response = User.objects.get(pk=kwargs.get('pk'))
         except User.DoesNotExist:
+            logger.error('Retrieve user: user does not exist')
             return Response({
                 'error': 'User does not exist!',
             }, status=status.HTTP_404_NOT_FOUND)
@@ -146,6 +150,7 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
             'profile_image': user_for_response.get_profile_image(),
         }
         if isinstance(self.request.user, AnonymousUser):
+            logger.info('Retrieve user: ' + user_for_response)
             return Response({
                 'user': user,
             }, status=status.HTTP_200_OK)
@@ -153,16 +158,19 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
             if kwargs.get('pk') != self.request.user.pk:
                 try:
                     UserSubscription.objects.filter(user=user_for_response, subscriber=self.request.user).first()
+                    logger.info('Retrieve user: ' + user_for_response)
                     return Response({
                         'user': user,
                         'subscription': 'subscribed',
                     }, status=status.HTTP_200_OK)
                 except UserSubscription.DoesNotExist:
+                    logger.info('Retrieve user: ' + user_for_response)
                     return Response({
                         'user': user,
                         'subscription': 'not_subscribed',
                     }, status=status.HTTP_200_OK)
             else:
+                logger.info('Retrieve user: ' + user_for_response)
                 return Response({
                     'user': user,
                 }, status=status.HTTP_200_OK)
@@ -171,10 +179,12 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         try:
             user = User.objects.get(pk=kwargs.get('pk'))
         except User.DoesNotExist:
+            logger.error('Update user: user does not exist')
             return Response({
                 'error': 'User does not exist!',
             })
         if user != self.request.user:
+            logger.error('Update user: invalid authentication')
             return Response({
                 'error': 'Invalid authentication!',
             })
@@ -189,9 +199,11 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
             user.profile_image = serializer.validated_data.get('profile_image', None)
             user.about = serializer.validated_data.get('about', user.about)
             user.save()
+            logger.info('Update user: user profile updated successfully')
             return Response({
                 'success': 'User profile updated successfully!',
             }, status=status.HTTP_200_OK)
+        logger.error(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, *args, **kwargs):
@@ -199,13 +211,16 @@ class UserRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
             user = User.objects.get(pk=kwargs.get('pk'))
             if self.request.user == user:
                 user.delete()
+                logger.info('Delete user: user was deleted successfully')
                 return Response({
                     'message': 'User was deleted successfully!',
                 }, status=status.HTTP_200_OK)
+            logger.error('Delete user: invalid authentication')
             return Response({
                 'message': 'Invalid authentication!',
             }, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
+            logger.error('Delete user: user does not exist')
             return Response({
                 'message': 'User does not exist!',
             }, status=status.HTTP_404_NOT_FOUND)
