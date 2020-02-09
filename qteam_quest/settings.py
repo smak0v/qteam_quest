@@ -269,7 +269,7 @@ LOGGING = {
 }
 
 # Timeline messages
-SUCCESS_REGISTRATION = config.get('SUCCESS_REGISTRATION')
-USER_CANCEL_REGISTRATION = config.get('USER_CANCEL_REGISTRATION')
-BANK_CANCEL_REGISTRATION = config.get('BANK_CANCEL_REGISTRATION')
-GAME_CANCELED = config.get('GAME_CANCELED')
+SUCCESS_REGISTRATION = "Регистрация на игру прошла успешно!"
+USER_CANCEL_REGISTRATION = "Вы отменили регистрацию на игру!"
+BANK_CANCEL_REGISTRATION = "Оплата на игру не прошла!"
+GAME_CANCELED = "К сожалению, игра не состоялась!"
