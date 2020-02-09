@@ -11,17 +11,19 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from yandex_checkout import Payment, Refund, Configuration
+from yandex_checkout import Payment, Configuration
 
 from apps.coupons.models import Coupon
 from apps.coupons.serializers import CouponCheckSerializer
-from apps.games.models import Game, GameComment, GamePayment, GamePaymentRefund
+from apps.games.models import Game, GameComment, GamePayment
 from apps.games.serializers import GameSerializer, GameCommentSerializer, GameCreateUpdateSerializer, \
     GameCommentCreateSerializer, GamePlayerEvaluationCreateSerializer, GamePaymentRefundSerializer, \
     GamePaymentSerializer
+from apps.payment.utils import create_refund
 from apps.permissions import IsStaffUserOrReadOnly
 from apps.teams.models import Team, UserInTeam, TemporaryReserve
 from apps.teams.serializers import TeamSerializer, UserInTeamSerializer, TemporaryReserveSerializer
+from apps.timeline.utils import create_timeline_block
 
 
 class GameListCreateView(ListCreateAPIView):
@@ -286,23 +288,7 @@ class GameUnregisterBookedPlacesAPIView(APIView):
         for game_payment in user_game_payments:
             payment = Payment.find_one(game_payment.identifier)
             if payment.status == 'succeeded':
-                refund = Refund.create({
-                    "amount": {
-                        "value": payment.amount.value,
-                        "currency": payment.amount.currency,
-                    },
-                    "payment_id": payment.id,
-                })
-                game_payment_refund = GamePaymentRefund.objects.create(
-                    identifier=refund.id,
-                    status='CANCELED' if refund.status == 'canceled' else 'SUCCEEDED',
-                    value=float(refund.amount.value),
-                    currency=refund.amount.currency,
-                    created_at=refund.created_at,
-                    payment=game_payment,
-                    user=user,
-                    game=game,
-                )
+                game_payment_refund = create_refund(game_payment, user, game)
                 refunds.append(game_payment_refund)
                 if game_payment_refund.status == 'SUCCEEDED':
                     del_objects = UserInTeam.objects.filter(game=game.pk, user=user.pk)[:game_payment.places_count]
@@ -311,6 +297,8 @@ class GameUnregisterBookedPlacesAPIView(APIView):
                         unregistered_places_count += game_payment.places_count
             else:
                 non_refundable_payments.append(game_payment)
+        if len(refunds):
+            create_timeline_block('GAME_MESSAGE', settings.USER_CANCEL_REGISTRATION, user, 'APP', game)
         return Response({
             'refunds': GamePaymentRefundSerializer(refunds, many=True).data,
             'non_refundable_payments': GamePaymentSerializer(non_refundable_payments, many=True).data,

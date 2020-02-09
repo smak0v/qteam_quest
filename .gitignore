@@ -6,3 +6,7 @@ media/images/
 
 celerybeat-schedule
 celerybeat.pid
+
+logfile
+logfile.1
+logfile.2

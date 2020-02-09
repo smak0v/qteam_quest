@@ -10,6 +10,7 @@ from yandex_checkout import Payment, Configuration
 from apps.games.models import Game, GamePayment
 from apps.payment.serializers import PaymentSaveSerializer
 from apps.teams.models import UserInTeam, TemporaryReserve, Team
+from apps.timeline.utils import create_timeline_block
 
 
 class PaymentSaveView(APIView):
@@ -27,16 +28,24 @@ class PaymentSaveView(APIView):
         if serializer.is_valid():
             payment = Payment.find_one(serializer.validated_data['payment_id'])
             game_payment = GamePayment.objects.get(identifier=serializer.validated_data['payment_id'])
-            if payment.status == 'CANCELED':
+            game_id = serializer.validated_data['game_id']
+            game = Game.objects.get(pk=game_id)
+            if payment.status == 'canceled':
                 game_payment.status = 'CANCELED'
                 game_payment.cancel_message = payment.cancellation_details.party + ': ' + payment.cancellation_details.reason
                 game_payment.save()
+                create_timeline_block('GAME_MESSAGE', settings.BANK_CANCEL_REGISTRATION, user, 'APP', game)
                 return Response({
                     'message': 'Payment was canceled!',
                     'party': payment.cancellation_details.party,
                     'reason': payment.cancellation_details.reason,
                 }, status=status.HTTP_400_BAD_REQUEST)
-            game_id = serializer.validated_data['game_id']
+            elif payment.status == 'waiting_for_capture':
+                game_payment.status = 'WAITING_FOR_CAPTURE'
+                game_payment.save()
+            elif payment.status == 'succeeded':
+                game_payment.status = 'SUCCEEDED'
+                game_payment.save()
             reserved_places = TemporaryReserve.objects.filter(game=game_id, user=user.pk)
             reserved_places_count = reserved_places.count()
             if reserved_places_count == 0:
@@ -44,7 +53,6 @@ class PaymentSaveView(APIView):
                     'error': 'You have no reserved seats for this game or payment time exceeded 1 hour. Try again!',
                 }, status=status.HTTP_400_BAD_REQUEST)
             user_in_team_places_count = UserInTeam.objects.filter(game=game_id, user=user.pk).count()
-            game = Game.objects.get(pk=game_id)
             team = Team.objects.get(game=game)
             if user_in_team_places_count != 0:
                 for _ in range(reserved_places_count):
@@ -55,6 +63,7 @@ class PaymentSaveView(APIView):
                     self.create_user_in_team(game, team, user, game_payment, True)
             for reserved_place in reserved_places:
                 reserved_place.delete()
+            create_timeline_block('GAME_MESSAGE', settings.SUCCESS_REGISTRATION, user, 'APP', game)
             return Response({
                 'message': 'Places were registered successfully!',
             }, status=status.HTTP_200_OK)
@@ -127,5 +136,7 @@ class YandexNotificationsView(APIView):
             users_in_team_by_payment = UserInTeam.objects.filter(payment=game_payment.pk)
             for user in users_in_team_by_payment:
                 user.delete()
+            create_timeline_block('GAME_MESSAGE', settings.BANK_CANCEL_REGISTRATION, game_payment.user, 'APP',
+                                  game_payment.game)
         except GamePayment.DoesNotExist:
             pass

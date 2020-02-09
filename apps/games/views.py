@@ -1,9 +1,13 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views import View
+from yandex_checkout import Payment, Configuration
 
 from apps.games.forms import GameForm
-from apps.games.models import Game
+from apps.games.models import Game, GamePayment
+from apps.payment.utils import create_refund
 from apps.teams.models import Team, UserInTeam
+from apps.timeline.utils import create_timeline_block
 
 
 class GamesListView(View):
@@ -99,10 +103,21 @@ def delete_game_view(request, pk):
 def cancel_game_view(request, pk):
     """Function that implements game cancel view"""
 
+    Configuration.account_id = settings.YANDEX_ACCOUNT_ID
+    Configuration.secret_key = settings.YANDEX_SECRET_KEY
     game = Game.objects.get(pk=pk)
     game.cancel = True
     game.registration_available = False
     game.save()
+    users_in_game = UserInTeam.objects.filter(game=game)
+    for user_in_game in users_in_game:
+        create_timeline_block('GAME_MESSAGE', settings.GAME_CANCELED, user_in_game.user, 'APP', game)
+        user_in_game.delete()
+    game_payments = GamePayment.objects.filter(game=game, status='SUCCEEDED')
+    for game_payment in game_payments:
+        payment = Payment.find_one(game_payment.identifier)
+        if payment.status == 'succeeded':
+            create_refund(game_payment, game_payment.user, game_payment.game)
     return redirect(to='games:list')
 
 

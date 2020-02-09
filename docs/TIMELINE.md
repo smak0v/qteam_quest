@@ -22,6 +22,7 @@
             "timespan": "2020-02-05T01:32:37.881161+03:00",
             "message": "Message",
             "image": "image_url",
+            "creator": "ADMIN",
             "user": 17,
             "game": 12
           },
@@ -35,5 +36,11 @@
     - ```GAME_MESSAGE```;
 
     - ```SIMPLE_MESSAGE```.
+
+    Possible creators:
+
+    - ```ADMIN``` - created by administrator;
+
+    - ```APP``` - created programmatically.
 
     Game and image can be ```null```.

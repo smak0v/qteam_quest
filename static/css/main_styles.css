@@ -338,6 +338,22 @@ html, body {
     display: inline !important;
 }
 
+.tabs {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.tab_item {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+}
+
+.tab_item > a {
+    padding: 5px !important;
+}
+
 #cover_image-clear_id {
     margin-left: 50px !important;
 }
@@ -401,6 +417,7 @@ html, body {
     color: #721C24;
     background-color: #F8D7DA;
     border-color: #F8D7DA;
+    padding: 2px !important;
 }
 
 table {

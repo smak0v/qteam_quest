@@ -1,0 +1,131 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block styles %}{% endblock styles %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="tabs content">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item tab_item">
+                            <a data-toggle="tab" class="nav-link active" href="#admin_timeline_blocks" role="tab"
+                               aria-controls="admin_timeline_blocks"
+                               aria-selected="true">Созданные администраторами элементы ленты</a>
+                        </li>
+                        <li class="nav-item tab_item">
+                            <a data-toggle="tab" class="nav-link" href="#app_timeline_blocks" role="tab"
+                               aria-controls="app_timeline_blocks" aria-selected="true">Созданные сервером элементы
+                                ленты</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="admin_timeline_blocks" role="tabpanel"
+                         aria-labelledby="admin-timeline-blocks-tab">
+                        <div class="content">
+                            <div class="d-flex">
+                                <h2 class="content_header">Созданные администраторами элементы ленты</h2>
+                                <a href="{% url 'timeline:create_block' %}" class="non_href ml-auto">
+                                    <button class="btn btn-success add_btn">Создать элемент ленты</button>
+                                </a>
+                            </div>
+                            <hr class="content_hr">
+                            {% if admin_timeline_blocks %}
+                                <div class="table_content">
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th class="id">ID</th>
+                                            <th>Тип</th>
+                                            <th>Сообщение</th>
+                                            <th>Пользователь</th>
+                                            <th>Игра</th>
+                                            <th>Создатель</th>
+                                            <th class="actions">Действия</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for admin_timeline_block in admin_timeline_blocks %}
+                                            <tr>
+                                                <td class="id">{{ admin_timeline_block.pk }}</td>
+                                                <td>{{ admin_timeline_block.type }}</td>
+                                                <td>{{ admin_timeline_block.message }}</td>
+                                                <td>{{ admin_timeline_block.user }}</td>
+                                                <td>{{ admin_timeline_block.game }}</td>
+                                                <td>{{ admin_timeline_block.creator }}</td>
+                                                <td>
+                                                    <a href="{% url 'timeline:edit_block' admin_timeline_block.pk %}"
+                                                       class="non_href">
+                                                        <button class="btn btn-warning edit_btn">Редактировать</button>
+                                                    </a>
+                                                    <a href="{% url 'timeline:delete_block' admin_timeline_block.pk %}"
+                                                       class="non_href">
+                                                        <button class="btn btn-danger delete_btn">Удалить</button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <h4 class="empty_h_1">Список созданных администраторами элементов ленты пуст!</h4>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade show active" id="app_timeline_blocks" role="tabpanel"
+                         aria-labelledby="app-timeline-blocks-tab">
+                        <div class="content">
+                            <div class="d-flex">
+                                <h2 class="content_header">Созданные сервером элементы ленты</h2>
+                            </div>
+                            <hr class="content_hr">
+                            {% if app_timeline_blocks %}
+                                <div class="table_content">
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th class="id">ID</th>
+                                            <th>Тип</th>
+                                            <th>Сообщение</th>
+                                            <th>Пользователь</th>
+                                            <th>Игра</th>
+                                            <th>Создатель</th>
+                                            <th class="actions">Действия</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for app_timeline_block in app_timeline_blocks %}
+                                            <tr>
+                                                <td class="id">{{ app_timeline_block.pk }}</td>
+                                                <td>{{ app_timeline_block.type }}</td>
+                                                <td>{{ app_timeline_block.message }}</td>
+                                                <td>{{ app_timeline_block.user }}</td>
+                                                <td>{{ app_timeline_block.game }}</td>
+                                                <td>{{ app_timeline_block.creator }}</td>
+                                                <td>
+                                                    <a href="{% url 'timeline:edit_block' app_timeline_block.pk %}"
+                                                       class="non_href">
+                                                        <button class="btn btn-warning edit_btn">Редактировать</button>
+                                                    </a>
+                                                    <a href="{% url 'timeline:delete_block' app_timeline_block.pk %}"
+                                                       class="non_href">
+                                                        <button class="btn btn-danger delete_btn">Удалить</button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <h4 class="empty_h_1">Список созданных сервером элементов ленты пуст!</h4>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block scripts %}{% endblock scripts %}

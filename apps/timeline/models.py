@@ -4,6 +4,10 @@ TIMELINE_BLOCK_TYPES = [
     ('GAME_MESSAGE', 'Сообщение связанное с игрой'),
     ('SIMPLE_MESSAGE', 'Простое сообщение'),
 ]
+TIMELINE_BLOCK_CREATORS = [
+    ('ADMIN', 'Admin'),
+    ('APP', 'App'),
+]
 
 
 class TimelineBlock(models.Model):
@@ -50,6 +54,12 @@ class TimelineBlock(models.Model):
         null=True,
         blank=True,
         default=None,
+    )
+    creator = models.CharField(
+        verbose_name='Создатель',
+        choices=TIMELINE_BLOCK_CREATORS,
+        max_length=255,
+        default='ADMIN',
     )
 
     def __str__(self):

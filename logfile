@@ -1,198 +1,125 @@
-{levelname} {asctime} {module} {process:d} {thread:d} {message}
-{levelname} {asctime} {module} {process:d} {thread:d} {message}
-{levelname} {asctime} {module} {process:d} {thread:d} {message}
-{levelname} {asctime} {module} {process:d} {thread:d} {message}
-DEBUG 06/Feb/2020 10:01:55 selector_events 5209 139957930092352 Using selector: EpollSelector
-INFO 06/Feb/2020 10:01:56 server 5209 139957732656896 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 06/Feb/2020 10:01:56 server 5209 139957732656896 Configuring endpoint tcp:port=8000:interface=127.0.0.1
-INFO 06/Feb/2020 10:01:56 server 5209 139957732656896 Listening on TCP address 127.0.0.1:8000
-DEBUG 06/Feb/2020 10:02:12 selector_events 5227 139780356298560 Using selector: EpollSelector
-DEBUG 06/Feb/2020 10:02:13 selector_events 5230 139830836123456 Using selector: EpollSelector
-INFO 06/Feb/2020 10:02:13 server 5230 139830638688000 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 06/Feb/2020 10:02:13 server 5230 139830638688000 Configuring endpoint tcp:port=8000:interface=127.0.0.1
-INFO 06/Feb/2020 10:02:13 server 5230 139830638688000 Listening on TCP address 127.0.0.1:8000
-DEBUG 06/Feb/2020 10:02:23 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60236]
-DEBUG 06/Feb/2020 10:02:23 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60236]
-DEBUG 06/Feb/2020 10:02:23 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60236]
-DEBUG 06/Feb/2020 10:02:23 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60236]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP 304 response started for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:43 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:44 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60246]
-WARNING 06/Feb/2020 10:02:44 log 5230 139830495270656 Not Found: /favicon.ico
-DEBUG 06/Feb/2020 10:02:44 http_protocol 5230 139830638688000 HTTP 404 response started for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:44 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:44 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60246]
-WARNING 06/Feb/2020 10:02:44 runserver 5230 139830638688000 [33mHTTP GET /favicon.ico 404 [0.01, 127.0.0.1:60246][0m
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP response chunk for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP response chunk for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:54 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:55 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:55 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:55 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:55 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP response chunk for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP response chunk for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP response chunk for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:02:56 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP response chunk for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60246]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP response chunk for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60262]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:18 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:32 http_protocol 5230 139830638688000 HTTP b'PUT' request for ['127.0.0.1', 60290]
-ERROR 06/Feb/2020 10:03:32 api_views 5230 139829371205376 Update user: invalid authentication
-DEBUG 06/Feb/2020 10:03:32 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60290]
-DEBUG 06/Feb/2020 10:03:32 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60290]
-DEBUG 06/Feb/2020 10:03:32 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60290]
-DEBUG 06/Feb/2020 10:03:42 http_protocol 5230 139830638688000 HTTP b'PUT' request for ['127.0.0.1', 60290]
-DEBUG 06/Feb/2020 10:03:42 PngImagePlugin 5230 139829908076288 STREAM b'IHDR' 16 13
-DEBUG 06/Feb/2020 10:03:42 PngImagePlugin 5230 139829908076288 STREAM b'tEXt' 41 25
-DEBUG 06/Feb/2020 10:03:42 PngImagePlugin 5230 139829908076288 STREAM b'IDAT' 78 32462
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing BlpImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing BmpImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing BufrStubImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing CurImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing DcxImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing DdsImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing EpsImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing FitsStubImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing FliImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing FpxImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Image: failed to import FpxImagePlugin: No module named 'olefile'
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing FtexImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing GbrImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing GifImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing GribStubImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing Hdf5StubImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing IcnsImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing IcoImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing ImImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing ImtImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing IptcImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing JpegImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing Jpeg2KImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing McIdasImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing MicImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Image: failed to import MicImagePlugin: No module named 'olefile'
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing MpegImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing MpoImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing MspImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PalmImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PcdImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PcxImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PdfImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PixarImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PngImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PpmImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing PsdImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing SgiImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing SpiderImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing SunImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing TgaImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing TiffImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing WebPImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing WmfImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing XbmImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing XpmImagePlugin
-DEBUG 06/Feb/2020 10:03:42 Image 5230 139829908076288 Importing XVThumbImagePlugin
-INFO 06/Feb/2020 10:03:43 api_views 5230 139829908076288 Update user: user profile updated successfully
-DEBUG 06/Feb/2020 10:03:43 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60290]
-DEBUG 06/Feb/2020 10:03:43 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60290]
-DEBUG 06/Feb/2020 10:03:43 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60290]
-DEBUG 06/Feb/2020 10:03:56 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:56 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:56 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:56 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:57 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:57 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:57 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:57 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:57 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:58 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:58 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:03:58 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:00 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:13 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP b'GET' request for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP 200 response started for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP close for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:04:14 http_protocol 5230 139830638688000 HTTP response complete for ['127.0.0.1', 60274]
-DEBUG 06/Feb/2020 10:05:03 selector_events 6961 140477097502528 Using selector: EpollSelector
-INFO 06/Feb/2020 10:05:03 server 6961 140476900067072 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 06/Feb/2020 10:05:03 server 6961 140476900067072 Configuring endpoint tcp:port=8000:interface=127.0.0.1
-INFO 06/Feb/2020 10:05:03 server 6961 140476900067072 Listening on TCP address 127.0.0.1:8000
-DEBUG 06/Feb/2020 10:05:46 selector_events 7293 140353214842688 Using selector: EpollSelector
-INFO 06/Feb/2020 10:05:46 server 7293 140353017407232 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 06/Feb/2020 10:05:46 server 7293 140353017407232 Configuring endpoint tcp:port=8000:interface=127.0.0.1
-INFO 06/Feb/2020 10:05:46 server 7293 140353017407232 Listening on TCP address 127.0.0.1:8000
-DEBUG 06/Feb/2020 10:06:08 selector_events 7501 140104109922112 Using selector: EpollSelector
-INFO 06/Feb/2020 10:06:08 server 7501 140103912486656 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 06/Feb/2020 10:06:08 server 7501 140103912486656 Configuring endpoint tcp:port=8000:interface=127.0.0.1
-INFO 06/Feb/2020 10:06:08 server 7501 140103912486656 Listening on TCP address 127.0.0.1:8000
-DEBUG 06/Feb/2020 10:06:28 selector_events 7634 140577757726528 Using selector: EpollSelector
-INFO 06/Feb/2020 10:06:28 server 7634 140577560291072 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 06/Feb/2020 10:06:28 server 7634 140577560291072 Configuring endpoint tcp:port=8000:interface=127.0.0.1
-INFO 06/Feb/2020 10:06:28 server 7634 140577560291072 Listening on TCP address 127.0.0.1:8000
-DEBUG 06/Feb/2020 10:09:22 selector_events 8922 139937837508416 Using selector: EpollSelector
-INFO 06/Feb/2020 10:09:23 server 8922 139937640072960 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 06/Feb/2020 10:09:23 server 8922 139937640072960 Configuring endpoint tcp:port=8000:interface=127.0.0.1
-INFO 06/Feb/2020 10:09:23 server 8922 139937640072960 Listening on TCP address 127.0.0.1:8000
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:37:48 log 417 140234528569088 Not Found: /favicon.ico
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP 404 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:37:48 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:37:48 runserver 417 140234574665472 [33mHTTP GET /favicon.ico 404 [0.01, 127.0.0.1:36218][0m
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:08 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:09 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:38:09 log 417 140234528569088 Not Found: /favicon.ico
+DEBUG 10/Feb/2020 00:38:09 http_protocol 417 140234574665472 HTTP 404 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:09 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:38:09 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:38:09 runserver 417 140234574665472 [33mHTTP GET /favicon.ico 404 [0.00, 127.0.0.1:36218][0m
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:39:05 log 417 140234255734528 Not Found: /favicon.ico
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP 404 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:05 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:39:05 runserver 417 140234574665472 [33mHTTP GET /favicon.ico 404 [0.01, 127.0.0.1:36218][0m
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:39:47 log 417 140234528569088 Not Found: /favicon.ico
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP 404 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:47 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+WARNING 10/Feb/2020 00:39:47 runserver 417 140234574665472 [33mHTTP GET /favicon.ico 404 [0.01, 127.0.0.1:36218][0m
+DEBUG 10/Feb/2020 00:39:53 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:53 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:53 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:53 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:56 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:56 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:56 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:56 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:56 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:58 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:58 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:58 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:39:58 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36218]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+WARNING 10/Feb/2020 00:41:08 log 417 140234255734528 Not Found: /favicon.ico
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP 404 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:08 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+WARNING 10/Feb/2020 00:41:08 runserver 417 140234574665472 [33mHTTP GET /favicon.ico 404 [0.00, 127.0.0.1:36318][0m
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+WARNING 10/Feb/2020 00:41:11 log 417 140233198778112 Not Found: /favicon.ico
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP 404 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:11 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+WARNING 10/Feb/2020 00:41:11 runserver 417 140234574665472 [33mHTTP GET /favicon.ico 404 [0.01, 127.0.0.1:36318][0m
+DEBUG 10/Feb/2020 00:41:23 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:24 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:24 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:24 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:24 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:26 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:26 http_protocol 417 140234574665472 HTTP 302 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:26 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:26 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:26 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:27 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:27 http_protocol 417 140234574665472 HTTP response chunk for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:27 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:27 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:28 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:28 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:28 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:28 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:34 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:34 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:34 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:34 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:35 http_protocol 417 140234574665472 HTTP b'GET' request for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:35 http_protocol 417 140234574665472 HTTP 200 response started for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:35 http_protocol 417 140234574665472 HTTP close for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:41:35 http_protocol 417 140234574665472 HTTP response complete for ['127.0.0.1', 36318]
+DEBUG 10/Feb/2020 00:43:30 selector_events 3336 140370440263488 Using selector: EpollSelector

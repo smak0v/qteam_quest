@@ -8,12 +8,12 @@
                 <h2 class="empty_h_1">Создание станции метро</h2>
                 <form method="post" class="add_edit_form">
                     {% csrf_token %}
-                    {% for error in form.errors %}
-                        {{ error }}
-                    {% endfor %}
                     {% for edit in form %}
                         <p class="form_p">{{ edit.label }}</p>
                         <p class="form_edit">{{ edit }}</p>
+                        {% for error in edit.errors %}
+                            <p class="err">{{ error|escape }}</p>
+                        {% endfor %}
                     {% endfor %}
                     <button type="submit" class="btn btn-success add_btn">Создать станцию метро</button>
                 </form>

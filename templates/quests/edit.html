@@ -8,20 +8,20 @@
                 <h2 class="empty_h_1">Редактирование квеста</h2>
                 <form enctype="multipart/form-data" method="post" class="add_edit_form">
                     {% csrf_token %}
-                    {% for error in form.errors %}
-                        {{ error }}
-                    {% endfor %}
                     {% for edit in form %}
                         <p class="form_p">{{ edit.label }}</p>
                         {% if edit.label == "Обложка" and edit.value %}
                             <img src="/media/{{ edit.value }}" alt="Quest cover image" title="Quest cover image"
                                  class="cover">
                         {% endif %}
-                         {% if edit.label == "Фото" and edit.value %}
+                        {% if edit.label == "Фото" and edit.value %}
                             <img src="/media/{{ edit.value }}" alt="Quest photo" title="Quest photo"
                                  class="cover">
                         {% endif %}
                         <p class="form_edit">{{ edit }}</p>
+                        {% for error in edit.errors %}
+                            <p class="err">{{ error|escape }}</p>
+                        {% endfor %}
                     {% endfor %}
                     <button type="submit" class="btn btn-success add_btn">Сохранить изменения</button>
                 </form>

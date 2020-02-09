@@ -12,11 +12,9 @@
                     {% for edit in form %}
                         <p class="form_p">{{ edit.label }}</p>
                         <p class="form_edit">{{ edit }}</p>
-                        {% if edit.errors %}
-                            {% for error in edit.errors %}
-                                <p class="err">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
+                        {% for error in edit.errors %}
+                            <p class="err">{{ error|escape }}</p>
+                        {% endfor %}
                     {% endfor %}
                     <button type="submit" class="btn btn-success add_btn">Создать купон</button>
                 </form>

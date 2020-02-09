@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils import timezone
 
 from apps.teams.models import UserInTeam
+from apps.timeline.utils import create_timeline_block
 
 PAYMENT_METHODS = [
     ('ONLINE', 'Онлайн оплата'),
@@ -158,6 +160,9 @@ class Game(models.Model):
     def cancel_game(self):
         self.cancel = True
         self.save()
+        users_for_game = UserInTeam.objects.filter(game=self.pk)
+        for user_for_game in users_for_game:
+            create_timeline_block('GAME_MESSAGE', settings.GAME_CANCELED, user_for_game.user, self)
 
     def __str__(self):
         return '{}'.format(self.title)
@@ -241,6 +246,7 @@ class GamePayment(models.Model):
     discount_units = models.CharField(
         verbose_name='Удиницы измирения',
         max_length=10,
+        blank=True,
     )
     summa_with_discount = models.DecimalField(
         verbose_name='Сумма со скидкой',

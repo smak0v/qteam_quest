@@ -11,7 +11,7 @@ from apps.games.urls import games_urls, games_api_urls
 from apps.payment.urls import payment_api_urls
 from apps.quests.urls import quests_urls, quests_api_urls
 from apps.teams.urls import teams_urls, teams_api_urls
-from apps.timeline.urls import timeline_api_urls
+from apps.timeline.urls import timeline_api_urls, timeline_urls
 from qteam_quest import settings
 from users.urls import users_urls, users_api_urls
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include(users_urls)),
     path('teams/', include(teams_urls)),
     path('coupons/', include(coupons_urls)),
+    path('timeline/', include(timeline_urls)),
 
     # API urls
     path('api/games/', include(games_api_urls)),
